@@ -2,6 +2,7 @@
 
 import {
   Book,
+  BookMarked,
   BookOpen,
   Calendar,
   Feather,
@@ -65,6 +66,44 @@ const Landing = () => {
         </div>
         <div className="w-[80vw]">
           <LoginCard />
+        </div>
+        <div className="mt-12 w-[60vw] bg-linear-to-r from-[#2a2f4a]/60 to-[#1e2337]/60 backdrop-blur-xl border border-white/10 rounded-2xl p-6 flex items-center justify-between">
+          <div className="flex items-center gap-4">
+            <div className="relative">
+              <Book className="w-8 h-8 text-yellow-400 animate-floating-book" />
+              <Sparkles className="w-4 h-4 text-yellow-400 absolute -top-1 -right-1 animate-sparkle" />
+            </div>
+            <div>
+              <div className="text-white font-bold flex items-center gap-2">
+                <BookOpen className="w-4 h-4 text-pink-400" />
+                Trusted by 200+ Publishers
+              </div>
+              <div className="text-sm text-gray-400 flex items-center gap-2">
+                <Feather className="w-3 h-3 text-purple-400" />
+                {`Sri Lanka's Premier Book Exhibition Platform`}
+              </div>
+            </div>
+          </div>
+          <div className="hidden md:flex items-center gap-6">
+            <div className="text-center group">
+              <div className="text-2xl font-bold text-white flex items-center justify-center gap-1">
+                50+
+                <BookMarked className="w-5 h-5 text-pink-400 group-hover:animate-bookmark-drop" />
+              </div>
+              <div className="text-xs text-gray-400">Stalls</div>
+            </div>
+            <div className="text-center">
+              <div className="text-2xl font-bold text-white">6</div>
+              <div className="text-xs text-gray-400">Days</div>
+            </div>
+            <div className="text-center group">
+              <div className="text-2xl font-bold text-white flex items-center justify-center gap-1">
+                24/7
+                <Library className="w-5 h-5 text-blue-400 group-hover:animate-floating-book" />
+              </div>
+              <div className="text-xs text-gray-400">Support</div>
+            </div>
+          </div>
         </div>
       </div>
     </AnimatedBackground>
