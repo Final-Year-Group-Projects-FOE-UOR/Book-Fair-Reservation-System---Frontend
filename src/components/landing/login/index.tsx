@@ -176,7 +176,7 @@ export default function LoginModal({
                 fill="currentColor"
                 viewBox="0 0 20 20"
               >
-                <path d="M9 4.804A7.968 7.968 0 005.5 4c-1.255 0-2.443.29-3.5.804v10A7.969 7.969 0 015.5 14c1.669 0 3.218.51 4.5 1.385A7.962 7.962 0 0114.5 14c1.255 0 2.443.29 3.5.804v-10A7.968 7.968 0 0014.5 4c-1.255 0-2.443.29-3.5.804V12a1 1 0 11-2 0V4.804z" />
+                <path d="M9 4.804A7.968 7.968 0 005.5 4c-1.255 0-2.443.29-3.5.804v10A7.969 7.969 0 005.5 14c1.669 0 3.218.51 4.5 1.385A7.962 7.962 0 0114.5 14c1.255 0 2.443.29 3.5.804v-10A7.968 7.968 0 0014.5 4c-1.255 0-2.443.29-3.5.804V12a1 1 0 11-2 0V4.804z" />
               </svg>
             </div>
           </div>
@@ -220,7 +220,7 @@ export default function LoginModal({
                   value={formData.email}
                   onChange={handleChange}
                   placeholder="abcd@gmail.com"
-                  className="w-full pl-10 pr-4 py-3 bg-white/90 border border-slate-300 rounded-lg text-gray-800 placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-pink-500 focus:border-transparent transition-all"
+                  className="w-full pl-10 pr-4 py-3 bg-[#2d3455] border border-[#3d4466] rounded-lg text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-pink-500 focus:border-transparent transition-all"
                   required
                 />
               </div>
@@ -251,7 +251,7 @@ export default function LoginModal({
                   value={formData.password}
                   onChange={handleChange}
                   placeholder="••••••"
-                  className="w-full pl-10 pr-4 py-3 bg-white/90 border border-slate-300 rounded-lg text-gray-800 placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-pink-500 focus:border-transparent transition-all"
+                  className="w-full pl-10 pr-4 py-3 bg-[#2d3455] border border-[#3d4466] rounded-lg text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-pink-500 focus:border-transparent transition-all"
                   required
                 />
               </div>
