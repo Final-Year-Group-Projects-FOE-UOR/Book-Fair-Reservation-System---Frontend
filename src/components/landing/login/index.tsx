@@ -4,10 +4,10 @@ import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { Book, BookOpen, Library } from "lucide-react";
 
-interface SignUpModalProps {
+interface LoginModalProps {
   isOpen: boolean;
   onClose: () => void;
-  onSwitchToLogin: () => void;
+  onSwitchToSignUp: () => void;
 }
 
 type Particle = {
@@ -26,14 +26,13 @@ type FloatingBook = {
   type: "Book" | "BookOpen" | "Library";
 };
 
-export default function SignUpModal({
+export default function LoginModal({
   isOpen,
   onClose,
-  onSwitchToLogin,
-}: SignUpModalProps) {
+  onSwitchToSignUp,
+}: LoginModalProps) {
   const router = useRouter();
   const [formData, setFormData] = useState({
-    businessName: "",
     email: "",
     password: "",
   });
@@ -67,23 +66,22 @@ export default function SignUpModal({
 
     try {
       // API call to Spring Boot backend
-      const response = await fetch(
-        "http://localhost:8080/api/vendors/register",
-        {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify(formData),
-        }
-      );
+      const response = await fetch("http://localhost:8080/api/vendors/login", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(formData),
+      });
 
       if (response.ok) {
-        // Handle successful registration
-        alert("Account created successfully!");
-        onClose();
+        const data = await response.json();
+        // Store token or user data
+        localStorage.setItem("token", data.token);
+        alert("Login successful!");
+        router.push("/dashboard");
       } else {
-        alert("Registration failed. Please try again.");
+        alert("Invalid credentials. Please try again.");
       }
     } catch (error) {
       console.error("Error:", error);
@@ -185,7 +183,7 @@ export default function SignUpModal({
 
           {/* Title */}
           <h2 className="text-3xl font-bold text-white text-center mb-2">
-            Vendor Registration
+            Vendor Login
           </h2>
           <p className="text-gray-400 text-center mb-8 flex items-center justify-center gap-2">
             <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
@@ -195,42 +193,11 @@ export default function SignUpModal({
                 clipRule="evenodd"
               />
             </svg>
-            Create your account to reserve stalls
+            Sign in to manage your stalls
           </p>
 
           {/* Form */}
           <form onSubmit={handleSubmit} className="space-y-5">
-            {/* Business Name */}
-            <div>
-              <label className="block text-sm font-medium text-gray-300 mb-2">
-                Business Name
-              </label>
-              <div className="relative">
-                <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                  <svg
-                    className="w-5 h-5 text-gray-400"
-                    fill="currentColor"
-                    viewBox="0 0 20 20"
-                  >
-                    <path
-                      fillRule="evenodd"
-                      d="M4 4a2 2 0 012-2h8a2 2 0 012 2v12a1 1 0 110 2h-3a1 1 0 01-1-1v-2a1 1 0 00-1-1H9a1 1 0 00-1 1v2a1 1 0 01-1 1H4a1 1 0 110-2V4zm3 1h2v2H7V5zm2 4H7v2h2V9zm2-4h2v2h-2V5zm2 4h-2v2h2V9z"
-                      clipRule="evenodd"
-                    />
-                  </svg>
-                </div>
-                <input
-                  type="text"
-                  name="businessName"
-                  value={formData.businessName}
-                  onChange={handleChange}
-                  placeholder="Enter your business name"
-                  className="w-full pl-10 pr-4 py-3 bg-slate-700/50 border border-slate-600 rounded-lg text-white placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-pink-500 focus:border-transparent transition-all"
-                  required
-                />
-              </div>
-            </div>
-
             {/* Email */}
             <div>
               <label className="block text-sm font-medium text-gray-300 mb-2">
@@ -252,8 +219,8 @@ export default function SignUpModal({
                   name="email"
                   value={formData.email}
                   onChange={handleChange}
-                  placeholder="your.email@example.com"
-                  className="w-full pl-10 pr-4 py-3 bg-slate-700/50 border border-slate-600 rounded-lg text-white placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-pink-500 focus:border-transparent transition-all"
+                  placeholder="abcd@gmail.com"
+                  className="w-full pl-10 pr-4 py-3 bg-[#2d3455] border border-[#3d4466] rounded-lg text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-pink-500 focus:border-transparent transition-all"
                   required
                 />
               </div>
@@ -283,8 +250,8 @@ export default function SignUpModal({
                   name="password"
                   value={formData.password}
                   onChange={handleChange}
-                  placeholder="Enter your password"
-                  className="w-full pl-10 pr-4 py-3 bg-slate-700/50 border border-slate-600 rounded-lg text-white placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-pink-500 focus:border-transparent transition-all"
+                  placeholder="••••••"
+                  className="w-full pl-10 pr-4 py-3 bg-[#2d3455] border border-[#3d4466] rounded-lg text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-pink-500 focus:border-transparent transition-all"
                   required
                 />
               </div>
@@ -296,23 +263,21 @@ export default function SignUpModal({
               disabled={isLoading}
               className="w-full py-3 px-4 bg-gradient-to-r from-pink-500 to-purple-600 hover:from-pink-600 hover:to-purple-700 text-white font-semibold rounded-lg shadow-lg transition-all duration-200 transform hover:scale-[1.02] disabled:opacity-50 disabled:cursor-not-allowed"
             >
-              {isLoading
-                ? "Creating Account..."
-                : "Create Account & Reserve Stalls"}
+              {isLoading ? "Signing in..." : "Login"}
             </button>
 
-            {/* Login Link */}
+            {/* Register Link */}
             <p className="text-center text-gray-400 text-sm mt-4">
-              Already have an account?{" "}
+              Don't have an account?{" "}
               <button
                 type="button"
                 onClick={() => {
                   onClose();
-                  onSwitchToLogin();
+                  onSwitchToSignUp();
                 }}
                 className="text-pink-400 hover:text-pink-300 font-medium transition-colors"
               >
-                Login
+                Register
               </button>
             </p>
           </form>
