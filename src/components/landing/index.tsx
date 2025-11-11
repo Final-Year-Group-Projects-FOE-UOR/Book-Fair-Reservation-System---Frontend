@@ -11,6 +11,7 @@ import {
 } from "lucide-react";
 import React, { useState } from "react";
 import SignUpModal from "./sign-up";
+import LoginModal from "./login";
 
 type Particle = {
   left: string;
@@ -30,6 +31,7 @@ type FloatingBook = {
 
 const Home = () => {
   const [isSignUpOpen, setIsSignUpOpen] = useState(false);
+  const [isLoginOpen, setIsLoginOpen] = useState(false);
 
   const [particles] = useState<Particle[]>(() =>
     Array.from({ length: 20 }).map(() => ({
@@ -176,6 +178,14 @@ const Home = () => {
       <SignUpModal
         isOpen={isSignUpOpen}
         onClose={() => setIsSignUpOpen(false)}
+        onSwitchToLogin={() => setIsLoginOpen(true)}
+      />
+
+      {/* Login Modal */}
+      <LoginModal
+        isOpen={isLoginOpen}
+        onClose={() => setIsLoginOpen(false)}
+        onSwitchToSignUp={() => setIsSignUpOpen(true)}
       />
 
       {/* Animations / styles (global within this component) */}
