@@ -1,6 +1,18 @@
 "use client";
-import { Book, BookOpen, Library } from "lucide-react";
-import React, { useState } from "react";
+import AnimatedBackground from "@/components/common/backgrounds/animated-background";
+import {
+  Book,
+  BookMarked,
+  BookOpen,
+  Feather,
+  Library,
+  MapPin,
+  Sparkles,
+  Users,
+} from "lucide-react";
+import { useState } from "react";
+import InfoBox from "./InfoBox";
+import LoginCard from "./LoginCard";
 import SignUpModal from "./sign-up";
 
 type Particle = {
@@ -10,16 +22,7 @@ type Particle = {
   duration: string;
 };
 
-type FloatingBook = {
-  left: string;
-  top: string;
-  delay: string;
-  duration: string;
-  size: number;
-  type: "Book" | "BookOpen" | "Library";
-};
-
-const Home = () => {
+const Landing = () => {
   const [isSignUpOpen, setIsSignUpOpen] = useState(false);
 
   const [particles] = useState<Particle[]>(() =>
@@ -30,19 +33,6 @@ const Home = () => {
       duration: `${5 + Math.random() * 10}s`,
     }))
   );
-
-  const [floatingBooks] = useState<FloatingBook[]>(() =>
-    Array.from({ length: 8 }).map((_, i) => ({
-      left: `${Math.random() * 100}%`,
-      top: `${Math.random() * 100}%`,
-      delay: `${Math.random() * 4}s`,
-      duration: `${6 + Math.random() * 6}s`,
-      size: 40 + Math.random() * 40,
-      type: i % 3 === 0 ? "BookOpen" : i % 3 === 1 ? "Book" : "Library",
-    }))
-  );
-
-const Landing = () => {
   return (
     <AnimatedBackground>
       <div className="flex flex-col w-full items-center justify-start">
@@ -72,30 +62,38 @@ const Landing = () => {
           </div>
         </div>
 
-      {/* Floating Particles */}
-      <div className="absolute inset-0 overflow-hidden pointer-events-none">
-        {particles.map((p, i) => (
-          <div
-            key={i}
-            className="absolute w-2 h-2 bg-white/10 rounded-full animate-float"
-            style={{
-              left: p.left,
-              top: p.top,
-              animationDelay: p.delay,
-              animationDuration: p.duration,
-            }}
-          />
+        {/* Floating Particles */}
+        <div className="absolute inset-0 overflow-hidden pointer-events-none">
+          {particles.map((p, i) => (
+            <div
+              key={i}
+              className="absolute w-2 h-2 bg-white/10 rounded-full animate-float"
+              style={{
+                left: p.left,
+                top: p.top,
+                animationDelay: p.delay,
+                animationDuration: p.duration,
+              }}
+            />
+          ))}
+        </div>
+
+        {/* Info Boxes */}
+        <div className="absolute top-20 left-10 z-20">
           <InfoBox
             icon={<MapPin className="w-5 h-5 text-pink-400" />}
             title="Available Stalls"
             value={`35/48`}
           />
+        </div>
+        <div className="absolute top-20 right-10 z-20">
           <InfoBox
             icon={<Users className="w-5 h-5 text-green-400" />}
             title="Vendors"
             value={13}
           />
         </div>
+
         <div className="w-[60vw]">
           <LoginCard />
         </div>
@@ -149,7 +147,7 @@ const Landing = () => {
         </p>
         <button
           onClick={() => setIsSignUpOpen(true)}
-          className="px-8 py-4 bg-gradient-to-r from-pink-500 to-purple-600 hover:from-pink-600 hover:to-purple-700 text-white font-semibold rounded-lg shadow-lg transition-all duration-200 transform hover:scale-105 animate-fade-in-delay-2"
+          className="px-8 py-4 bg-linear-to-r from-pink-500 to-purple-600 hover:from-pink-600 hover:to-purple-700 text-white font-semibold rounded-lg shadow-lg transition-all duration-200 transform hover:scale-105 animate-fade-in-delay-2"
         >
           Get Started - Register Now
         </button>
@@ -186,7 +184,7 @@ const Landing = () => {
           animation: fade-in 1s ease-out 0.6s backwards;
         }
       `}</style>
-    </div>
+    </AnimatedBackground>
   );
 };
 

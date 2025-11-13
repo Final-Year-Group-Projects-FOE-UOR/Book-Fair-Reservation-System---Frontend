@@ -1,8 +1,9 @@
-import Home from "@/components/landing";
+import Landing from "@/components/landing";
+
 
 
 const HomePage = () => {
-  return <Home />;
+  return < Landing/>;
 };
 
 export default HomePage;
