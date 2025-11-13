@@ -1,3 +1,4 @@
+import Login from "@/components/admin/login";
 import Landing from "@/components/landing";
 
 
