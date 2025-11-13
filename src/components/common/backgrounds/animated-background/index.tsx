@@ -3,12 +3,7 @@
 import {
   Book,
   BookOpen,
-  Calendar,
-  Feather,
   Library,
-  MapPin,
-  Sparkles,
-  Users,
 } from "lucide-react";
 import React, { useState, useEffect } from "react";
 
@@ -30,9 +25,10 @@ type FloatingBook = {
 
 type AnimatedBackgroundProps = {
   children?: React.ReactNode;
+  className?: string;
 };
 
-const AnimatedBackground = ({ children }: AnimatedBackgroundProps) => {
+const AnimatedBackground = ({ children, className }: AnimatedBackgroundProps) => {
   const [particles, setParticles] = useState<Particle[]>([]);
   const [floatingBooks, setFloatingBooks] = useState<FloatingBook[]>([]);
   const [isMounted, setIsMounted] = useState(false);
@@ -62,7 +58,7 @@ const AnimatedBackground = ({ children }: AnimatedBackgroundProps) => {
     setIsMounted(true);
   }, []);
   return (
-    <div className="min-h-screen font-geist-sans bg-linear-to-br from-[#1a1f37] via-[#2d1b4e] to-[#1a1f37] flex items-start justify-center p-8 transition-opacity duration-500 relative overflow-hidden">
+    <div className={`min-h-screen font-geist-sans bg-linear-to-br from-[#1a1f37] via-[#2d1b4e] to-[#1a1f37] flex  p-8 transition-opacity duration-500 relative overflow-hidden ${className}`}>
       {/* Animated Background Orbs */}
       <div className="background-orbs pointer-events-none absolute inset-0 -z-10">
         <div className="orb orb-1" />

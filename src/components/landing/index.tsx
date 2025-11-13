@@ -64,7 +64,7 @@ const Landing = () => {
             value={13}
           />
         </div>
-        <div className="w-[80vw]">
+        <div className="w-[60vw]">
           <LoginCard />
         </div>
         <div className="mt-12 w-[60vw] bg-linear-to-r from-[#2a2f4a]/60 to-[#1e2337]/60 backdrop-blur-xl border border-white/10 rounded-2xl p-6 flex items-center justify-between">
