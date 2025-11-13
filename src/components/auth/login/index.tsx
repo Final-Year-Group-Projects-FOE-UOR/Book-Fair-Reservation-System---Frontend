@@ -1,6 +1,7 @@
 "use client";
 
 import AnimatedBackground from "@/components/common/backgrounds/animated-background";
+import LoginButton from "@/components/common/buttons/primary-buttons/login-button";
 import {
   BookOpen,
   Building,
@@ -9,9 +10,11 @@ import {
   Mail,
   Sparkles,
 } from "lucide-react";
+import { useRouter } from "next/navigation";
 import React, { useState } from "react";
 
 const Login = () => {
+  const router = useRouter();
   const [isLogin, setIsLogin] = useState(true);
   const [formData, setFormData] = useState({
     businessName: "",
@@ -22,32 +25,14 @@ const Login = () => {
 
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    // setError("");
-
-    // if (isLogin) {
-    //   const success = handleVendorLogin(formData.email, formData.password);
-    //   if (!success) {
-    //     setError("Invalid email or password");
-    //   }
-    // } else {
-    //   const result = handleVendorSignup(
-    //     formData.businessName,
-    //     formData.email,
-    //     formData.password
-    //   );
-    //   if (!result.success) {
-    //     setError(result.message);
-    //   } else {
-    //     setCurrentView("vendor_map");
-    //   }
-    // }
+    
   };
   return (
     <AnimatedBackground className="items-center justify-center">
       <div className="flex w-full  min-h-full flex-col items-center justify-center">
         <div className="max-w-md w-full  relative z-10">
           <button
-            // onClick={() => setCurrentView("landing")}
+            onClick={() => router.push("/")}
             className="mb-4 text-pink-400 hover:text-pink-300 flex items-center gap-2 transition-colors group"
           >
             <Home className="w-4 h-4 group-hover:-translate-x-1 transition-transform" />{" "}
@@ -139,15 +124,9 @@ const Login = () => {
                   />
                 </div>
               </div>
+              {/* <LoginButton buttonText={isLogin ? "Login to Account" : "Create Account & Reserve Stalls"} onClick={handleSubmit} /> */}
 
-              <button
-                type="submit"
-                className="w-full bg-linear-to-r font-geist-sans from-pink-500 to-purple-600 text-white py-3 rounded-xl  hover:from-pink-600 hover:to-purple-700 transform hover:scale-105 transition-all shadow-lg shadow-pink-500/50"
-              >
-                {isLogin
-                  ? "Login to Account"
-                  : "Create Account & Reserve Stalls"}
-              </button>
+              
             </form>
 
             <div className="mt-6 text-center">
