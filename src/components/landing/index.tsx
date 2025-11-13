@@ -59,15 +59,12 @@ const Landing = () => {
             title="Available Stalls"
             value={`35/48`}
           />
-        </div>
-        <div className="absolute top-20 right-10 z-20">
           <InfoBox
             icon={<Users className="w-5 h-5 text-green-400" />}
             title="Vendors"
             value={13}
           />
         </div>
-
         <div className="w-[60vw]">
           <LoginCard />
         </div>
