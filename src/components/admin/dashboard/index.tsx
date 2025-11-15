@@ -9,10 +9,11 @@ import StallGrid from "./StallGrid";
 import ReservationsTable from "./ReservationsTable";
 import Sidebar from "./Sidebar";
 import type { Stall } from "./types";
+import MapManagement from "./map-management";
 
 const AdminDashboard: React.FC = () => {
   const [fadeIn, setFadeIn] = useState(false);
-  const [adminTab, setAdminTab] = useState<"availability" | "reservations">(
+  const [adminTab, setAdminTab] = useState<"availability" | "reservations" | "mapupload">(
     "availability"
   );
 
@@ -124,6 +125,22 @@ const AdminDashboard: React.FC = () => {
                   <div className="absolute bottom-0 left-0 right-0 h-1 bg-linear-to-r from-pink-500 to-purple-600 rounded-full"></div>
                 )}
               </button>
+              <button
+                onClick={() => setAdminTab("mapupload")}
+                className={`px-6 py-3 font-semibold transition-all rounded-t-xl relative ${
+                  adminTab === "mapupload"
+                    ? "text-white"
+                    : "text-gray-400 hover:text-gray-200"
+                }`}
+              >
+                <div className="flex items-center gap-2">
+                  <MapPin className="w-5 h-5" />
+                  Map Management
+                </div>
+                {adminTab === "mapupload" && (
+                  <div className="absolute bottom-0 left-0 right-0 h-1 bg-linear-to-r from-pink-500 to-purple-600 rounded-full"></div>
+                )}
+              </button>
             </div>
 
             {adminTab === "availability" && (
@@ -132,6 +149,10 @@ const AdminDashboard: React.FC = () => {
 
             {adminTab === "reservations" && (
               <ReservationsTable reservations={reservations} />
+            )}
+
+            {adminTab === "mapupload" && (
+              <MapManagement  />
             )}
           </div>
 
