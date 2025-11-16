@@ -3,9 +3,11 @@
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import VendorHeader from "./Header";
+import Tabs from "./Tabs";
 
 const Vendor = () => {
   const [vendorInfo, setVendorInfo] = useState({ businessName: "", email: "" });
+  const [vendorHomeTab, setVendorHomeTab] = useState('booking');
   const router = useRouter();
 
   useEffect(() => {
@@ -26,6 +28,11 @@ const Vendor = () => {
    // setVendorInfo({ businessName: "", email: "" });
     router.push("/");
   };
+
+  const handleVendorHomeTabChange = (tab: string) => {
+    setVendorHomeTab(tab);
+  }
+
   return (
     <div
       className={`min-h-screen bg-gradient-to-br from-[#1a1f37] via-[#2d1b4e] to-[#1a1f37] p-8 transition-opacity duration-500
@@ -42,6 +49,14 @@ const Vendor = () => {
           vendorInfo={vendorInfo}
           handleVendorLogout={handleVendorLogout}
         />
+        <Tabs handleVendorHomeTabChange={handleVendorHomeTabChange} vendorHomeTab={vendorHomeTab}/>
+          
+          
+
+
+
+
+
       </div>
     </div>
   );
