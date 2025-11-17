@@ -3,11 +3,13 @@
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import VendorHeader from "./Header";
+import MyProfile from "./MyProfile";
 import Tabs from "./Tabs";
 
 const Vendor = () => {
   const [vendorInfo, setVendorInfo] = useState({ businessName: "", email: "" });
-  const [vendorHomeTab, setVendorHomeTab] = useState('booking');
+  const [vendorHomeTab, setVendorHomeTab] = useState("booking");
+  const [genres, setGenres] = useState<string[]>(["new genre","another genre"]);
   const router = useRouter();
 
   useEffect(() => {
@@ -16,7 +18,7 @@ const Vendor = () => {
       // This would typically involve an API call
       const storedVendorInfo = {
         businessName: "Demo Vendor",
-        email: "",
+        email: "DemoVendor@gmail.com",
       };
       setVendorInfo(storedVendorInfo);
     };
@@ -25,13 +27,23 @@ const Vendor = () => {
   }, []);
 
   const handleVendorLogout = () => {
-   // setVendorInfo({ businessName: "", email: "" });
+    // setVendorInfo({ businessName: "", email: "" });
     router.push("/");
   };
 
   const handleVendorHomeTabChange = (tab: string) => {
     setVendorHomeTab(tab);
-  }
+  };
+
+
+  const saveProfileChanges = (
+    businessName: string,
+    email: string,
+    newGenres: string[]
+  ) => {
+    setVendorInfo({ businessName, email });
+    setGenres(newGenres);
+  };
 
   return (
     <div
@@ -49,14 +61,24 @@ const Vendor = () => {
           vendorInfo={vendorInfo}
           handleVendorLogout={handleVendorLogout}
         />
-        <Tabs handleVendorHomeTabChange={handleVendorHomeTabChange} vendorHomeTab={vendorHomeTab}/>
-          
-          
+        <Tabs
+          handleVendorHomeTabChange={handleVendorHomeTabChange}
+          vendorHomeTab={vendorHomeTab}
+        />
 
-
-
-
-
+        {vendorHomeTab === "profile" && (
+          <MyProfile
+            vendorInfo={vendorInfo}
+            genres={genres}
+            onSave={
+              ((updatedVendorInfo) => saveProfileChanges(
+                updatedVendorInfo.businessName,
+                updatedVendorInfo.email,
+                updatedVendorInfo.genres
+              ))
+            }
+          />
+        )}
       </div>
     </div>
   );
