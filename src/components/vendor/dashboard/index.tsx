@@ -8,6 +8,8 @@ import MapView from "./MapView";
 import MyProfile from "./MyProfile";
 import StepIndicator from "./StepIndicator";
 import Tabs from "./Tabs";
+import { CheckCircle } from "lucide-react";
+import GridView from "./GridView";
 
 const Vendor = () => {
   const [vendorInfo, setVendorInfo] = useState({ businessName: "", email: "" });
@@ -81,7 +83,7 @@ const Vendor = () => {
     setGenres(newGenres);
   };
 
-  
+
 
   return (
     <div
@@ -130,12 +132,18 @@ const Vendor = () => {
             {bookingStep === 1 && (
               <>
                 {/* Conditionally render Map View or Grid View */}
-                {useMapView && stallMapImage && <MapView 
+                {useMapView && stallMapImage ? (<MapView 
                   stallMapImage={stallMapImage}
                   stalls={stalls}
                   selectedStalls={selectedStalls}
                   setSelectedStalls={setSelectedStalls}
-                vendorInfo={vendorInfo} />}
+                vendorInfo={vendorInfo} />) : (
+                  <GridView 
+                  stalls={stalls}
+                  selectedStalls={selectedStalls}
+                  setSelectedStalls={setSelectedStalls}
+                  vendorInfo={vendorInfo} />
+                )}
               </>
             )}
           </>
