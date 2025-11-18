@@ -13,6 +13,7 @@ interface MyProfileProps {
   }) => void;
 }
 
+
 const MyProfile = ({ vendorInfo, genres, onSave }: MyProfileProps) => {
   const [updatedVendorInfo, setUpdatedVendorInfo] = useState(vendorInfo);
   const [updatedGenres, setUpdatedGenres] = useState(genres);
