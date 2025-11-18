@@ -6,6 +6,7 @@ interface VendorHeaderProps {
   useMapView: boolean;
   setUseMapView: React.Dispatch<React.SetStateAction<boolean>>;
   handleVendorLogout: () => void;
+  bookingStep?: number;
 }
 
 const VendorHeader = ({
@@ -14,6 +15,7 @@ const VendorHeader = ({
   stallMapImage,
   useMapView,
   setUseMapView,
+  bookingStep
 }: VendorHeaderProps) => {
   return (
     <div className="flex justify-between items-center mb-6">
@@ -25,7 +27,7 @@ const VendorHeader = ({
         <p className="text-gray-300">Reserve your perfect stall location</p>
       </div>
       <div className="flex items-center gap-4">
-        {stallMapImage && (
+        {stallMapImage && bookingStep===1 && (
                 <button
                   onClick={() => setUseMapView(!useMapView)}
                   className={`px-4 py-2 rounded-xl font-semibold transition flex items-center gap-2 ${

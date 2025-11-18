@@ -3,13 +3,14 @@
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import { generateInitialStalls, Stall } from "./GenerateInitialStalls";
+import GridView from "./GridView";
 import VendorHeader from "./Header";
 import MapView from "./MapView";
 import MyProfile from "./MyProfile";
 import StepIndicator from "./StepIndicator";
 import Tabs from "./Tabs";
-import { CheckCircle } from "lucide-react";
-import GridView from "./GridView";
+import { Bookmark, CheckCircle, X } from "lucide-react";
+import ReviewStep from "./ReviewStep";
 
 const Vendor = () => {
   const [vendorInfo, setVendorInfo] = useState({ businessName: "", email: "" });
@@ -36,6 +37,8 @@ const Vendor = () => {
     return savedStalls ? JSON.parse(savedStalls) : generateInitialStalls();
   });
   const [selectedStalls, setSelectedStalls] = useState<(string | null)[]>([]);
+  const selectedStallObjects = stalls.filter(s => selectedStalls.includes(s.id));
+
 
   useEffect(() => {
     const fetchVendorData = () => {
@@ -49,19 +52,19 @@ const Vendor = () => {
     fetchVendorData();
   }, []);
 
-    // Listen for storage changes from other tabs
-    useEffect(() => {
+  // Listen for storage changes from other tabs
+  useEffect(() => {
     const handleStorageChange = (e: StorageEvent) => {
-      if (e.key === 'tradeHallMap' && e.newValue) {
+      if (e.key === "tradeHallMap" && e.newValue) {
         setStallMapImage(e.newValue);
       }
-      if (e.key === 'tradeHallStalls' && e.newValue) {
+      if (e.key === "tradeHallStalls" && e.newValue) {
         setStalls(JSON.parse(e.newValue));
       }
     };
 
-    window.addEventListener('storage', handleStorageChange);
-    return () => window.removeEventListener('storage', handleStorageChange);
+    window.addEventListener("storage", handleStorageChange);
+    return () => window.removeEventListener("storage", handleStorageChange);
   }, []);
 
   const handleVendorLogout = () => {
@@ -71,7 +74,7 @@ const Vendor = () => {
 
   const handleVendorHomeTabChange = (tab: string) => {
     setVendorHomeTab(tab);
-    setBookingStep(1); 
+    setBookingStep(1);
   };
 
   const saveProfileChanges = (
@@ -82,7 +85,29 @@ const Vendor = () => {
     setVendorInfo({ businessName, email });
     setGenres(newGenres);
   };
+    const confirmReservation = () => {
+    const updatedStalls = stalls.map(stall => {
+      if (selectedStalls.includes(stall.id)) {
+        return {
+          ...stall,
+          reserved: false,
+          pending: true,
+          status: 'pending',
+          businessName: vendorInfo.businessName,
+          email: vendorInfo.email,
+          requestDate: new Date().toISOString()
+        };
+      }
+      return stall;
+    });
+    
+    setStalls(updatedStalls);
+    alert('🎉 Booking request submitted! Your request is now pending admin approval.');
+    setBookingStep(3); // show submitted state
+  };
 
+  const handleRemoveStallClick = (stall: Stall) => {  
+    setSelectedStalls(selectedStalls.filter((id) => id !== stall.id));}
 
 
   return (
@@ -103,6 +128,7 @@ const Vendor = () => {
           setUseMapView={setUseMapView}
           vendorInfo={vendorInfo}
           handleVendorLogout={handleVendorLogout}
+          bookingStep={bookingStep}
         />
         <Tabs
           handleVendorHomeTabChange={handleVendorHomeTabChange}
@@ -132,20 +158,53 @@ const Vendor = () => {
             {bookingStep === 1 && (
               <>
                 {/* Conditionally render Map View or Grid View */}
-                {useMapView && stallMapImage ? (<MapView 
-                  stallMapImage={stallMapImage}
-                  stalls={stalls}
-                  selectedStalls={selectedStalls}
-                  setSelectedStalls={setSelectedStalls}
-                vendorInfo={vendorInfo} />) : (
-                  <GridView 
-                  stalls={stalls}
-                  selectedStalls={selectedStalls}
-                  setSelectedStalls={setSelectedStalls}
-                  vendorInfo={vendorInfo} />
+                {useMapView && stallMapImage ? (
+                  <MapView
+                    stallMapImage={stallMapImage}
+                    stalls={stalls}
+                    selectedStalls={selectedStalls}
+                    setSelectedStalls={setSelectedStalls}
+                    vendorInfo={vendorInfo}
+                  />
+                ) : (
+                  <GridView
+                    stalls={stalls}
+                    selectedStalls={selectedStalls}
+                    setSelectedStalls={setSelectedStalls}
+                    vendorInfo={vendorInfo}
+                  />
                 )}
               </>
             )}
+
+            {/* Floating next button for step 1 */}
+              {bookingStep === 1 && selectedStalls.length > 0 && (
+                <div className="fixed bottom-8 left-1/2 transform -translate-x-1/2 z-50">
+                  <div className="bg-gradient-to-r from-pink-500 to-purple-600 text-white px-8 py-4 rounded-full shadow-2xl flex items-center gap-4">
+                    <span className="font-bold">{selectedStalls.length} stall(s) selected</span>
+                    <button
+                      type="button"
+                      onClick={() => setBookingStep(2)}
+                      className="bg-white text-purple-600 px-6 py-2 rounded-full font-bold hover:bg-gray-100 transition"
+                    >Review Selection</button>
+                  </div>
+                </div>
+              )}
+
+           {/* Review Step */}
+              {bookingStep === 2 && (
+                <ReviewStep
+                  selectedStallObjects={selectedStallObjects}
+                  handleRemoveStallClick={handleRemoveStallClick}
+                  selectedStalls={selectedStalls}
+                  vendorInfo={vendorInfo}
+                  genres={genres}
+                  onSubmit={confirmReservation}
+                  />
+                
+              )}
+
+
           </>
         )}
       </div>
