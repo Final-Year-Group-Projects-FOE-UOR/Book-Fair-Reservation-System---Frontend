@@ -5,11 +5,13 @@ import { useEffect, useState } from "react";
 import VendorHeader from "./Header";
 import MyProfile from "./MyProfile";
 import Tabs from "./Tabs";
+import StepIndicator from "./StepIndicator";
 
 const Vendor = () => {
   const [vendorInfo, setVendorInfo] = useState({ businessName: "", email: "" });
   const [vendorHomeTab, setVendorHomeTab] = useState("booking");
   const [genres, setGenres] = useState<string[]>(["new genre","another genre"]);
+  const [bookingStep, setBookingStep] = useState(3);
   const router = useRouter();
 
   useEffect(() => {
@@ -79,6 +81,25 @@ const Vendor = () => {
             }
           />
         )}
+
+        {vendorHomeTab === 'booking' && (
+            <>
+              {/* Booking Step Indicator */}
+              <StepIndicator bookingStep={bookingStep} />
+            </>
+          )}
+
+
+
+
+
+
+
+
+
+
+
+
       </div>
     </div>
   );
