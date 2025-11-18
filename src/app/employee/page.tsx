@@ -1,4 +1,4 @@
-import EmployeeDashboard from "@/components/employee/dashboard";
+import EmployeeDashboard from "@/components/employee";
 
 const EmployeeDashboardPage = () => {
   return <EmployeeDashboard />;
