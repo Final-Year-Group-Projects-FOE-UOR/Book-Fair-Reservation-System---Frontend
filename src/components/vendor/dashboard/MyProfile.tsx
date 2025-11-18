@@ -1,9 +1,10 @@
 "use client";
 import { User, X } from "lucide-react";
 import { useEffect, useState } from "react";
+import { VendorInfo } from "./types";
 
 interface MyProfileProps {
-  vendorInfo: { businessName: string; email: string };
+  vendorInfo: VendorInfo;
   genres: string[];
 
   onSave: (updatedData: {

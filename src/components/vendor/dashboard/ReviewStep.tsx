@@ -1,9 +1,8 @@
 "use client";
 
 import { Bookmark, CheckCircle, X } from "lucide-react";
-import React from "react";
-import {  VendorInfo } from "./types";
-import { Stall } from "./GenerateInitialStalls";
+import React, { useEffect } from "react";
+import {  Stall, VendorInfo } from "./types";
 
 interface ReviewStepProps {
   selectedStallObjects: Stall[];
@@ -12,6 +11,7 @@ interface ReviewStepProps {
   selectedStalls: (string | null)[];
   onSubmit?: () => void;
   handleRemoveStallClick: (stall: Stall) => void;
+  goBack: () => void;
 }
 
 const ReviewStep: React.FC<ReviewStepProps> = ({
@@ -19,8 +19,15 @@ const ReviewStep: React.FC<ReviewStepProps> = ({
   vendorInfo,
   genres,
   onSubmit,
-handleRemoveStallClick
+  handleRemoveStallClick,
+  goBack
 }) => {
+
+  useEffect(() => {
+    if (selectedStallObjects.length === 0) {
+      goBack();}
+
+    }, [selectedStallObjects]);
 
   return (
     <div className="bg-gradient-to-br from-[#2a2f4a]/80 to-[#1e2337]/80 backdrop-blur-xl rounded-3xl border border-white/10 shadow-2xl p-8">
@@ -28,11 +35,11 @@ handleRemoveStallClick
         <Bookmark className="w-6 h-6 text-pink-400" />
         Review Selection
       </h3>
-      {selectedStallObjects.length === 0 ? (
-        <p className="text-gray-400">
-          No stalls selected. Go back to selection.
-        </p>
-      ) : (
+      {selectedStallObjects.length > 0 && (
+      //   <p className="text-gray-400">
+      //     No stalls selected. Go back to selection.
+      //   </p>
+      // ) : (
         <div className="grid grid-cols-3 gap-4 mb-6">
           {selectedStallObjects.map((stall) => (
             <div

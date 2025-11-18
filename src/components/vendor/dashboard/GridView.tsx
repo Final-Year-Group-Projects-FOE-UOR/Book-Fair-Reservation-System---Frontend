@@ -2,8 +2,7 @@
 
 import { CheckCircle } from "lucide-react";
 import React from "react";
-import { Stall } from "./GenerateInitialStalls";
-import { VendorInfo } from "./types";
+import { Stall, VendorInfo } from "./types";
 
 interface GridViewProps {
   stalls: Stall[];

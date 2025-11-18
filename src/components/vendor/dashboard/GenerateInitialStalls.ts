@@ -1,21 +1,5 @@
-// Generate initial stall data with map positions matching Trade Hall floor plan
+import { Stall } from "./types";
 
-
-export type Stall = {
-  id: string | null;
-  size?: "small" | "medium" | "large";
-  reserved?: boolean;
-  isEmpty: boolean;
-  pending?: boolean;
-  businessName?: string | null;
-  email?: string | null;
-  mapPosition?: StallMapPosition;
-};
-
-export interface StallMapPosition {
-  x: number;
-  y: number;
-}
 
 
 export const generateInitialStalls = ():Stall[] => {

@@ -1,7 +1,8 @@
 import { BookOpen, Grid, LogOut, MapPin } from "lucide-react";
+import { VendorInfo } from "./types";
 
 interface VendorHeaderProps {
-  vendorInfo: { businessName: string; email: string };
+  vendorInfo: VendorInfo;
   stallMapImage: string | null;
   useMapView: boolean;
   setUseMapView: React.Dispatch<React.SetStateAction<boolean>>;
