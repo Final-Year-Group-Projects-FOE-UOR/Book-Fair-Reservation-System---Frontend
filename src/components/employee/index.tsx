@@ -80,7 +80,7 @@
 
 import React, { useState, useEffect } from 'react';
 import EmployeeLanding from '@/components/employee/landing';
-// import EmployeeLogin from '@/components/employee/login';
+import EmployeeLogin from '@/components/employee/login';
 // import EmployeeDashboard from '@/components/employee/dashboard';
 // import { useStalls } from '@/components/employee/hooks/useStalls';
 
@@ -135,14 +135,14 @@ const EmployeePortal = () => {
       {currentView === 'employee_landing' && (
         <EmployeeLanding fadeIn={fadeIn} setCurrentView={setCurrentView} />
       )}
-      {/* {currentView === 'employee_login' && (
+      {currentView === 'employee_login' && (
         <EmployeeLogin 
           fadeIn={fadeIn} 
           setCurrentView={setCurrentView} 
           handleEmployeeLogin={handleEmployeeLogin} 
         />
       )}
-      {currentView === 'employee_dashboard' && (
+      {/* {currentView === 'employee_dashboard' && (
         <EmployeeDashboard 
           fadeIn={fadeIn} 
           setCurrentView={setCurrentView}
