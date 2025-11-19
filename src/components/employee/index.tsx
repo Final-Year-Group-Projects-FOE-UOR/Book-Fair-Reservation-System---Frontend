@@ -81,8 +81,8 @@
 import React, { useState, useEffect } from 'react';
 import EmployeeLanding from '@/components/employee/landing';
 import EmployeeLogin from '@/components/employee/login';
-// import EmployeeDashboard from '@/components/employee/dashboard';
-// import { useStalls } from '@/components/employee/hooks/useStalls';
+import EmployeeDashboard from '@/components/employee/dashboard';
+import { useStalls } from '@/components/employee/hooks/useStalls';
 
 // Add interface for employee type
 interface Employee {
@@ -98,14 +98,14 @@ const EmployeePortal = () => {
   const [employeeTab, setEmployeeTab] = useState('requests');
   const [fadeIn, setFadeIn] = useState(false);
   
-  // const {
-  //   stalls,
-  //   stats,
-  //   reservations,
-  //   pendingRequests,
-  //   approveBooking,
-  //   rejectBooking
-  // } = useStalls();
+  const {
+    stalls,
+    stats,
+    reservations,
+    pendingRequests,
+    approveBooking,
+    rejectBooking
+  } = useStalls();
 
   const [employeeList] = useState<Employee[]>(() => {
     const savedEmployees = localStorage.getItem('bookfairEmployees');
@@ -142,7 +142,7 @@ const EmployeePortal = () => {
           handleEmployeeLogin={handleEmployeeLogin} 
         />
       )}
-      {/* {currentView === 'employee_dashboard' && (
+      {currentView === 'employee_dashboard' && (
         <EmployeeDashboard 
           fadeIn={fadeIn} 
           setCurrentView={setCurrentView}
@@ -155,7 +155,7 @@ const EmployeePortal = () => {
           approveBooking={approveBooking}
           rejectBooking={rejectBooking}
         />
-      )} */}
+      )}
     </div>
   );
 };
