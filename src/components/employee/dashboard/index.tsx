@@ -197,7 +197,7 @@ const EmployeeDashboard: React.FC<EmployeeDashboardProps> = ({
   approveBooking,
   rejectBooking
 }) => (
-  <div className={`min-h-screen bg-gradient-to-br from-[#1a1f37] via-[#2d1b4e] to-[#1a1f37] p-8 transition-opacity duration-500 ${fadeIn ? 'opacity-100' : 'opacity-0'} relative overflow-hidden`}>
+  <div className={`min-h-screen font-geist-sans bg-gradient-to-br from-[#1a1f37] via-[#2d1b4e] to-[#1a1f37] p-8 transition-opacity duration-500 ${fadeIn ? 'opacity-100' : 'opacity-0'} relative overflow-hidden`}>
     {/* Background Effects */}
     <div className="background-orbs">
       <div className="orb orb-1"></div>
