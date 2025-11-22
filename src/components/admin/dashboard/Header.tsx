@@ -2,9 +2,9 @@
 import React from "react";
 import { BookOpen, Sparkles, Bookmark, Feather, LogOut } from "lucide-react";
 
-export default function Header({ onLogout }: { onLogout?: () => void }) {
+export default function DashboardHeader() {
   return (
-    <div className="flex justify-between items-center mb-6">
+    <div className="flex justify-between items-center ">
       <div className="flex items-center gap-3">
         <div className="bg-linear-to-br from-blue-500 to-cyan-600 p-3 rounded-xl shadow-lg shadow-blue-500/50 relative">
           <BookOpen className="w-8 h-8 text-white animate-floating-book" />
@@ -21,14 +21,7 @@ export default function Header({ onLogout }: { onLogout?: () => void }) {
           </p>
         </div>
       </div>
-      <button
-        onClick={onLogout}
-        className="bg-linear-to-r from-pink-500 to-purple-600 text-white px-6 py-3 rounded-xl hover:from-pink-600 hover:to-purple-700 transition flex items-center gap-2 shadow-lg shadow-pink-500/30 transform hover:scale-105"
-        type="button"
-      >
-        <LogOut className="w-4 h-4" />
-        Logout
-      </button>
+      
     </div>
   );
 }

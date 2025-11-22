@@ -65,7 +65,7 @@ const AdminDashboard: React.FC = () => {
 
   return (
     <div
-      className={`min-h-screen bg-linear-to-br font-geist-sans from-[#1a1f37] via-[#2d1b4e] to-[#1a1f37] p-8 transition-opacity duration-500 ${
+      className={`min-h-screen  bg-linear-to-br w-full font-geist-sans from-[#1a1f37] via-[#2d1b4e] to-[#1a1f37] p-8 transition-opacity duration-500 ${
         fadeIn ? "opacity-100" : "opacity-0"
       } relative overflow-hidden`}
     >
@@ -87,7 +87,6 @@ const AdminDashboard: React.FC = () => {
       </div>
 
       <div className="max-w-7xl mx-auto relative z-10">
-        <Header />
         <StatsRow stats={stats} vendorsCount={reservations.length} />
 
         <div className="grid font-geist-sans grid-cols-1 lg:grid-cols-4 gap-6">
