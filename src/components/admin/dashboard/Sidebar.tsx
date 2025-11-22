@@ -12,7 +12,7 @@ export default function Sidebar({
   stats: { total: number; reserved: number; available: number };
 }) {
   return (
-    <div className="space-y-6 font-geist-sans">
+    <div className="space-y-6 flex flex-row w-full bg-red-200 font-geist-sans">
       <div className="bg-linear-to-br from-[#2a2f4a]/80 to-[#1e2337]/80 backdrop-blur-xl rounded-3xl border border-white/10 shadow-2xl p-6">
         <div className="text-sm text-gray-400 mb-4 flex items-center gap-2">
           <Target className="w-4 h-4" />
@@ -36,7 +36,7 @@ export default function Sidebar({
         </div>
       </div>
 
-      <div className="bg-gradient-to-br from-[#2a2f4a]/80 to-[#1e2337]/80 backdrop-blur-xl rounded-3xl border border-white/10 shadow-2xl p-6">
+      <div className="bg-gradient-to-br w-[500px] from-[#2a2f4a]/80 to-[#1e2337]/80 backdrop-blur-xl rounded-3xl border border-white/10 shadow-2xl p-6">
         <div className="text-sm text-gray-400 mb-4 flex items-center gap-2">
           <LayoutDashboard className="w-4 h-4" />
           Stall Sizes
@@ -78,7 +78,7 @@ export default function Sidebar({
         </div>
       </div>
 
-      <div className="bg-linear-to-br from-[#2a2f4a]/80 to-[#1e2337]/80 backdrop-blur-xl rounded-3xl border border-white/10 shadow-2xl p-6">
+      {/* <div className="bg-linear-to-br from-[#2a2f4a]/80 to-[#1e2337]/80 backdrop-blur-xl rounded-3xl border border-white/10 shadow-2xl p-6">
         <div className="text-sm text-gray-400 mb-4">Quick Actions</div>
         <div className="space-y-2">
           <button className="w-full bg-linear-to-r from-blue-500/20 to-cyan-600/20 border border-blue-500/30 text-blue-300 px-4 py-3 rounded-xl hover:from-blue-500/30 hover:to-cyan-600/30 transition text-sm font-semibold flex items-center justify-between group">
@@ -116,7 +116,7 @@ export default function Sidebar({
             </svg>
           </button>
         </div>
-      </div>
+      </div> */}
     </div>
   );
 }
