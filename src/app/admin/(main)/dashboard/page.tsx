@@ -1,6 +1,6 @@
 "use client";
 
-import AdminDashboard from '@/components/admin/dashboard'
+import AdminDashboard from "@/components/admin/new-dashboard";
 import dynamic from "next/dynamic";
 
 const AdminDashboardPage = dynamic(

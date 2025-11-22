@@ -13,7 +13,7 @@ const AdminHeader = ({ sidebarOpen, setSidebarOpen, children }: AdminHeaderProps
     >
       <div
         className={`${
-          sidebarOpen ? "pl-64" : "pl-20"
+          sidebarOpen ? "md:pl-64 pl-0" : "md:pl-20 pl-0"
         } flex items-center justify-center h-full `}
       >
         {children}
