@@ -7,7 +7,7 @@ import {
   DialogTrigger,
 } from "@/components/ui/dialog";
 import { Stall } from "../types";
-import MapViewer from "../MapViewer";
+import MapViewer from "./MapViewer";
 
 type MapEditDialogProps = {
   open: boolean;
@@ -35,7 +35,7 @@ const MapEditDialog = ({
       <DialogTrigger className="sr-only">Open Map Editor</DialogTrigger>
 
       <DialogContent
-        className="overflow-hidden p-0 bg-[#071027] text-white rounded-lg shadow-xl"
+        className="overflow-hidden z-1000 p-0 bg-[#071027] text-white rounded-lg shadow-xl"
         style={{ minWidth: "92vw", height: "86vh" }}
       >
         <DialogHeader className="px-4 py-3 border-b border-white/6 bg-[#071027]">
@@ -43,8 +43,6 @@ const MapEditDialog = ({
             <DialogTitle className="text-white font-geist-sans font-semibold">
               Map Editor
             </DialogTitle>
-
-            
           </div>
         </DialogHeader>
 

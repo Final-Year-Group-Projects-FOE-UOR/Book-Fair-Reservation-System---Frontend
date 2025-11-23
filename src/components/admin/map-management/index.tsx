@@ -1,8 +1,8 @@
 "use client";
 import React, { useEffect, useState } from "react";
-import { MapPin, CheckCircle, X, Building } from "lucide-react";
+import { MapPin, CheckCircle, X, Building, Trash } from "lucide-react";
 import MapUploader from "./MapUploader";
-import MapViewer from "./MapViewer";
+import MapViewer from "./dialogs/MapViewer";
 import StallSelector from "./StallSelector";
 import type { Stall } from "./types";
 import MapEditDialog from "./dialogs/MapEditDialog";
@@ -100,30 +100,10 @@ export default function MapManagement() {
   const [isPositioningMode, setIsPositioningMode] = useState(false);
 
   return (
-    <div>
+    <div
+      className={`min-h-[calc(100vh-80px)] bg-linear-to-br w-full font-geist-sans from-[#1a1f37] via-[#2d1b4e] to-[#1a1f37] p-8 opacity-100 relative overflow-hidden`}
+    >
       <div className="bg-linear-to-br from-purple-500/10 to-indigo-600/10 border border-purple-500/20 rounded-2xl p-8 mb-6">
-        <div className="flex items-start gap-4 mb-6">
-          <div className="bg-linear-to-br from-purple-500 to-indigo-600 p-3 rounded-xl">
-            <MapPin className="w-6 h-6 text-white" />
-          </div>
-          <div className="flex-1">
-            <h3 className="text-xl font-bold text-white mb-2">
-              Upload Trade Hall Floor Plan
-            </h3>
-            <p className="text-gray-300 text-sm">
-              Upload the Trade Hall floor plan image. Stall positions (A1-E10)
-              are pre-configured to match the layout. Vendors will see clickable
-              markers on each stall location.
-            </p>
-            <div className="mt-2 bg-blue-500/10 border border-blue-400/20 rounded-lg p-3">
-              <p className="text-blue-300 text-xs">
-                💡 Tip: The system already knows where stalls A1-A10, B1-B10,
-                C1-C10, D1-D10, and E1-E10 are located on the map.
-              </p>
-            </div>
-          </div>
-        </div>
-
         <MapUploader
           stallMapImage={stallMapImage}
           setStallMapImage={setStallMapImage}
@@ -139,30 +119,12 @@ export default function MapManagement() {
                 </span>
               </div>
               <div className="flex items-center gap-2">
-                <div className="bg-green-500/20 px-3 py-1 rounded-full">
-                  <span className="text-green-300 text-xs font-semibold">
-                    💾 Saved to localStorage
-                  </span>
-                </div>
-
-                {/* <button
-                  onClick={() => setIsPositioningMode((s) => !s)}
-                  className={`px-4 py-2 rounded-lg font-semibold text-sm transition flex items-center gap-2 ${
-                    isPositioningMode
-                      ? "bg-gradient-to-r from-orange-500 to-red-600 text-white shadow-lg"
-                      : "bg-gradient-to-r from-blue-500 to-cyan-600 text-white"
-                  }`}
-                >
-                  <MapPin className="w-4 h-4" />
-                  {isPositioningMode ? "Exit Positioning" : "Position Stalls"}
-                </button> */}
-
                 <button
                   onClick={() => {
                     setIsPositioningMode((s) => !s);
                     setIsMapDialogOpen(true);
                   }}
-                  className={`px-4 py-2 rounded-lg font-semibold text-sm transition flex items-center gap-2 ${
+                  className={`px-4 py-2 rounded-lg font-semibold text-sm cursor-pointer hover:scale-[1.05] transition-all duration-300 flex items-center gap-2 ${
                     isPositioningMode
                       ? "bg-gradient-to-r from-orange-500 to-red-600 text-white shadow-lg"
                       : "bg-gradient-to-r from-blue-500 to-cyan-600 text-white"
@@ -171,7 +133,6 @@ export default function MapManagement() {
                   <MapPin className="w-4 h-4" />
                   {isPositioningMode ? "Exit Positioning" : "Position Stalls"}
                 </button>
-
                 <button
                   onClick={() => {
                     setStallMapImage(null);
@@ -179,9 +140,10 @@ export default function MapManagement() {
                       localStorage.removeItem("tradeHallMap");
                     } catch {}
                   }}
-                  className="text-red-400 hover:text-red-300 transition"
+                  className="px-4 py-2 rounded-lg font-semibold text-sm cursor-pointer hover:scale-[1.05] transition-all duration-300 flex items-center gap-2 bg-gradient-to-r from-red-500/20 to-pink-600/20 border border-red-500/30 text-red-300 hover:from-red-500/30 hover:to-pink-600/30 hover:border-red-400/50 shadow-lg hover:shadow-red-500/20"
                 >
-                  <X className="w-5 h-5" />
+                  <Trash className="w-4 h-4" />
+                  Remove Map
                 </button>
               </div>
             </div>
@@ -232,10 +194,7 @@ export default function MapManagement() {
               isPositioningMode={isPositioningMode}
             />
 
-            <div className="flex items-center justify-between mt-3">
-              <p className="text-xs text-gray-400">
-                Vendors can now select stalls by clicking on this map
-              </p>
+            <div className="flex items-center justify-end mt-3">
               <div className="flex items-center gap-4">
                 <p className="text-xs text-green-400 font-semibold">
                   {stalls.filter((s) => s.mapPosition && !s.isEmpty).length}{" "}
@@ -248,31 +207,6 @@ export default function MapManagement() {
             </div>
           </div>
         )}
-      </div>
-
-      <div className="bg-blue-500/10 border border-blue-500/20 rounded-xl p-4">
-        <div className="flex items-start gap-3">
-          <div className="text-blue-400 mt-1">ℹ️</div>
-          <div className="text-sm text-gray-300">
-            <p className="font-semibold text-white mb-1">How it works:</p>
-            <ul className="list-disc list-inside space-y-1 text-xs">
-              <li>
-                Upload a clear floor plan or map showing all stall locations
-              </li>
-              <li>
-                Vendors will see a toggle to switch between Grid View and Map
-                View
-              </li>
-              <li>
-                They can click directly on stalls in the map to select them
-              </li>
-              <li>
-                Selected stalls will be highlighted in pink, reserved in gray,
-                and available in green
-              </li>
-            </ul>
-          </div>
-        </div>
       </div>
     </div>
   );

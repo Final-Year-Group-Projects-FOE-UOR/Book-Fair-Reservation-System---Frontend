@@ -34,7 +34,7 @@ export default function MapUploader({
   };
 
   return (
-    <div className="space-y-4">
+    <div className="space-y-4 mb-6">
       <label className="block">
         <div className="border-2 border-dashed border-purple-500/30 rounded-xl p-8 text-center hover:border-purple-500/50 transition cursor-pointer bg-[#1a1f37]/30">
           <input
@@ -68,7 +68,7 @@ export default function MapUploader({
         </div>
       </label>
 
-      {stallMapImage && (
+      {/* {stallMapImage && (
         <div className="bg-[#1a1f37]/50 rounded-xl p-4 border border-white/10">
           <div className="flex items-center justify-between mb-3">
             <div className="flex items-center gap-2">
@@ -88,7 +88,7 @@ export default function MapUploader({
             </div>
           </div>
         </div>
-      )}
+      )} */}
     </div>
   );
 }

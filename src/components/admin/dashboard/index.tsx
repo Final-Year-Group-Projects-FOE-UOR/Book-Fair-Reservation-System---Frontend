@@ -8,7 +8,7 @@ import StatsRow from "./StatsRow";
 import StallGrid from "./StallGrid";
 import ReservationsTable from "./ReservationsTable";
 import Sidebar from "./Sidebar";
-import MapManagement from "./map-management";
+import MapManagement from "../map-management";
 import StallDashboard, { Stall } from "./Test";
 
 const sampleStalls: Stall[] = [

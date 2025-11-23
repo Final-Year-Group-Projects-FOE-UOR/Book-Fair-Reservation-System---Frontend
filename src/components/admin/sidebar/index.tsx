@@ -38,7 +38,7 @@ const AdminSidebar = ({ sidebarOpen, setSidebarOpen }: AdminSidebarProps) => {
       "stall-configuration": "stallconfig",
       availability: "availability",
       reservations: "reservations",
-      "map-upload": "mapupload",
+      "map-management": "mapmanagement",
     };
     return tabMap[segment] || "dashboard";
   };
@@ -46,7 +46,6 @@ const AdminSidebar = ({ sidebarOpen, setSidebarOpen }: AdminSidebarProps) => {
   useEffect(() => {
     setSuperAdminTab(getSuperAdminTab(pathname));
   }, [pathname]);
-
 
   return (
     <>
@@ -190,13 +189,16 @@ const AdminSidebar = ({ sidebarOpen, setSidebarOpen }: AdminSidebarProps) => {
             </button>
 
             <button
-              onClick={() => setSuperAdminTab("mapupload")}
+              onClick={() => {
+                setSuperAdminTab("mapmanagement");
+                router.push("/admin/map-management");
+              }}
               className={`w-full flex items-center gap-3 ${
                 sidebarOpen
                   ? "px-4 py-3 justify-left"
                   : "px-2 py-3 justify-center"
               } rounded-xl transition ${
-                superAdminTab === "mapupload"
+                superAdminTab === "mapmanagement"
                   ? "bg-linear-to-r from-purple-500/20 to-pink-600/20 text-white border border-purple-500/30"
                   : "text-gray-400 hover:text-white hover:bg-white/5"
               }`}

@@ -7,6 +7,7 @@ import AdminSidebar from "@/components/admin/sidebar";
 import { Suspense, useEffect, useState } from "react";
 import { usePathname } from "next/navigation";
 import StallConfigurationHeader from "@/components/admin/stall-configuration/Header";
+import MapManagementHeader from "@/components/admin/map-management/Header";
 
 const headerContent: Record<string, React.ReactNode> = {
   dashboard: <DashboardHeader />,
@@ -14,6 +15,7 @@ const headerContent: Record<string, React.ReactNode> = {
     <h1 className="text-2xl font-semibold text-white">Booking Requests</h1>
   ),
   stallConfiguration: <StallConfigurationHeader />,
+  mapManagement: <MapManagementHeader />,
 };
 
 export default function AdminLayout({
@@ -32,6 +34,8 @@ export default function AdminLayout({
       return "bookingRequests";
     } else if (segment === "stall-configuration") {
       return "stallConfiguration";
+    } else if (segment === "map-management") {
+      return "mapManagement";
     } else {
       return "dashboard";
     }
