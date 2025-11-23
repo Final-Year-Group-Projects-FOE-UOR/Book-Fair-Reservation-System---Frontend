@@ -1,6 +1,8 @@
 import React from 'react'
 import { Staff } from './types';
 import { FileText, Mail, Trash2 } from 'lucide-react';
+import EditStaffDialog from './dialogs/EditStaffDialog';
+import DeleteStaffDialog from './dialogs/DeleteStaffDialog';
 
 type StaffCardProps = {
  staff: Staff;
@@ -24,22 +26,8 @@ const StaffCard = ({ staff }: StaffCardProps) => {
           </span>
         </div>
         <div className="flex gap-2 w-full sm:w-auto">
-          <button
-            type="button"
-            // onClick={() => openEditModal(staff)}
-            className="flex-1 sm:flex-none px-3 sm:px-4 py-2 bg-blue-500/20 border border-blue-500/30 text-blue-300 rounded-lg hover:bg-blue-500/30 transition flex items-center justify-center gap-2 text-sm"
-          >
-            <FileText className="w-4 h-4" />
-            <span className="hidden sm:inline">Edit</span>
-          </button>
-          <button
-            type="button"
-            // onClick={() => deleteAdmin(staff.id)}
-            className="flex-1 sm:flex-none px-3 sm:px-4 py-2 bg-red-500/20 border border-red-500/30 text-red-300 rounded-lg hover:bg-red-500/30 transition flex items-center justify-center gap-2 text-sm"
-          >
-            <Trash2 className="w-4 h-4" />
-            Delete
-          </button>
+          <EditStaffDialog staff={staff} />
+          <DeleteStaffDialog staffName={staff.name} staffEmail={staff.email} />
         </div>
       </div>
     </div>
