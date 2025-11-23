@@ -6,4 +6,5 @@ export type Stall = {
   businessName: string;
   email: string;
   approvedDate?: string;
+  isEmpty: boolean;
 }

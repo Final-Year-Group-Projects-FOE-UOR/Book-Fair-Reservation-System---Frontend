@@ -37,7 +37,7 @@ const AdminSidebar = ({ sidebarOpen, setSidebarOpen }: AdminSidebarProps) => {
       dashboard: "dashboard",
       "booking-requests": "requests",
       "stall-configuration": "stallconfig",
-      availability: "availability",
+      "stall-availability": "stallAvailability",
       reservations: "reservations",
       "manage-staff": "manageStaff",
       "map-management": "mapManagement",
@@ -101,14 +101,14 @@ const AdminSidebar = ({ sidebarOpen, setSidebarOpen }: AdminSidebarProps) => {
 
           <SidebarItem
             icon={<Building className="w-5 h-5" />}
-            label="Availability"
-            tag="availability"
+            label="Stall Availability"
+            tag="stallAvailability"
             sidebarOpen={sidebarOpen}
             superAdminTab={superAdminTab}
             setSuperAdminTab={setSuperAdminTab}
             onClick={() => {
-              setSuperAdminTab("availability");
-              router.push("/admin/availability");
+              setSuperAdminTab("stallAvailability");
+              router.push("/admin/stall-availability");
             }}
           />
 

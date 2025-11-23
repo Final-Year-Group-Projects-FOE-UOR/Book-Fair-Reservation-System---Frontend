@@ -6,7 +6,14 @@ import AdminSidebar from "@/components/admin/sidebar";
 import { Suspense, useEffect, useState } from "react";
 import { usePathname } from "next/navigation";
 import AnimatedHeader from "@/components/common/headers/AnimatedHeader";
-import { CheckCircle, LayoutDashboard, MapPin, Settings, Users } from "lucide-react";
+import {
+  Building,
+  CheckCircle,
+  LayoutDashboard,
+  MapPin,
+  Settings,
+  Users,
+} from "lucide-react";
 
 const headerContent: Record<string, React.ReactNode> = {
   dashboard: (
@@ -57,6 +64,13 @@ const headerContent: Record<string, React.ReactNode> = {
       description="Manage and configure reservations"
     />
   ),
+  stallAvailability: (
+    <AnimatedHeader
+      icon={<Building className="w-8 h-8 text-white animate-floating-book" />}
+      title="Stall Availability"
+      description="Manage and configure stall availability"
+    />
+  ),
 };
 
 export default function AdminLayout({
@@ -81,6 +95,8 @@ export default function AdminLayout({
       return "manageStaff";
     } else if (segment === "reservations") {
       return "reservations";
+    } else if (segment === "stall-availability") {
+      return "stallAvailability";
     } else {
       return "dashboard";
     }
