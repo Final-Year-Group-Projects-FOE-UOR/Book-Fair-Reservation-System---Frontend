@@ -28,7 +28,7 @@ const headerContent: Record<string, React.ReactNode> = {
   bookingRequests: (
     <AnimatedHeader
       icon={
-        <LayoutDashboard className="w-8 h-8 text-white animate-floating-book" />
+        <CheckCircle className="w-8 h-8 text-white animate-floating-book" />
       }
       title="Booking Requests"
       description="Manage and review booking requests"

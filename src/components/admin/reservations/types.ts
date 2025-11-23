@@ -7,4 +7,5 @@ export type Stall = {
   email: string;
   approvedDate?: string;
   isEmpty: boolean;
+  requestDate?: string;
 }
