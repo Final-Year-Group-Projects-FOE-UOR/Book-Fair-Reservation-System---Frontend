@@ -1,4 +1,5 @@
 "use client";
+import { Upload } from "lucide-react";
 import React from "react";
 
 type Props = {
@@ -35,8 +36,16 @@ export default function MapUploader({
 
   return (
     <div className="space-y-4 mb-6">
-      <label className="block">
-        <div className="border-2 border-dashed border-purple-500/30 rounded-xl p-8 text-center hover:border-purple-500/50 transition cursor-pointer bg-[#1a1f37]/30">
+      <label htmlFor="map-upload" className="block w-full">
+        <div
+          className="
+        flex flex-col items-center justify-center p-8
+        border-2 border-dashed border-purple-500/30 rounded-xl
+        text-center transition-all duration-300 ease-in-out
+        cursor-pointer bg-[#1a1f37]/30
+        hover:border-purple-500 hover:bg-[#1a1f37]/50
+      "
+        >
           <input
             id="map-upload"
             type="file"
@@ -44,27 +53,30 @@ export default function MapUploader({
             onChange={handleImageUpload}
             className="hidden"
           />
-          <label htmlFor="map-upload" className="cursor-pointer">
-            <div className="flex flex-col items-center gap-3">
-              <div className="bg-linear-to-br from-purple-500 to-indigo-600 p-4 rounded-full">
-                <svg
-                  className="w-8 h-8 text-white"
-                  viewBox="0 0 24 24"
-                  fill="currentColor"
-                >
-                  <path d="M0 0h24v24H0z" fill="none" />
-                </svg>
-              </div>
-              <div>
-                <p className="text-white font-semibold mb-1">
-                  Click to upload map image
-                </p>
-                <p className="text-gray-400 text-sm">
-                  PNG, JPG, or SVG (Max 10MB)
-                </p>
-              </div>
+
+          {/* Visual content for the upload area */}
+          <div className="flex flex-col items-center gap-4">
+            {/* Icon Container with Gradient Background */}
+            <div
+              className="
+            relative p-3 rounded-full
+            bg-gradient-to-br from-purple-600 to-indigo-700
+            shadow-lg
+          "
+            >
+              <Upload className="w-6 h-6 text-white" strokeWidth={2} />
             </div>
-          </label>
+
+            {/* Text Content */}
+            <div>
+              <p className="text-white text-lg font-semibold mb-1">
+                Click to upload map image
+              </p>
+              <p className="text-gray-400 text-sm">
+                PNG, JPG, or SVG (Max 10MB)
+              </p>
+            </div>
+          </div>
         </div>
       </label>
 
