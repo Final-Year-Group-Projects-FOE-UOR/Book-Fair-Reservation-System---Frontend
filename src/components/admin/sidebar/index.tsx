@@ -16,6 +16,7 @@ import {
 } from "lucide-react";
 import { usePathname, useRouter } from "next/navigation";
 import React, { useEffect, useState } from "react";
+import SidebarItem from "./SidebarItem";
 
 type AdminSidebarProps = {
   sidebarOpen: boolean;
@@ -39,7 +40,7 @@ const AdminSidebar = ({ sidebarOpen, setSidebarOpen }: AdminSidebarProps) => {
       availability: "availability",
       reservations: "reservations",
       "manage-staff": "manageStaff",
-      "map-management": "mapmanagement",
+      "map-management": "mapManagement",
     };
     return tabMap[segment] || "dashboard";
   };
@@ -73,145 +74,98 @@ const AdminSidebar = ({ sidebarOpen, setSidebarOpen }: AdminSidebarProps) => {
         </div>
 
         <nav className="flex-1 p-4 space-y-2">
-          <button
+          <SidebarItem
+            icon={<LayoutDashboard className="w-5 h-5" />}
+            label="Dashboard"
+            tag="dashboard"
+            sidebarOpen={sidebarOpen}
+            superAdminTab={superAdminTab}
+            setSuperAdminTab={setSuperAdminTab}
             onClick={() => {
               setSuperAdminTab("dashboard");
               router.push("/admin/dashboard");
             }}
-            className={`w-full flex items-center  gap-3 ${
-              sidebarOpen
-                ? "px-4 py-3 justify-left"
-                : "px-2 py-3 justify-center"
-            } rounded-xl transition ${
-              superAdminTab === "dashboard"
-                ? "bg-linear-to-r from-purple-500/20 to-pink-600/20 text-white border border-purple-500/30"
-                : "text-gray-400 hover:text-white hover:bg-white/5"
-            }`}
-          >
-            <LayoutDashboard className="w-5 h-5" />
-            {sidebarOpen && <span className="font-semibold">Dashboard</span>}
-          </button>
+          />
+          <SidebarItem
+            icon={<CheckCircle className="w-5 h-5" />}
+            label="Booking Requests"
+            tag="requests"
+            sidebarOpen={sidebarOpen}
+            superAdminTab={superAdminTab}
+            setSuperAdminTab={setSuperAdminTab}
+            onClick={() => {
+              setSuperAdminTab("requests");
+              router.push("/admin/booking-requests");
+            }}
+          />
 
-          <button
-            onClick={() => setSuperAdminTab("requests")}
-            className={`w-full flex items-center gap-3 ${
-              sidebarOpen
-                ? "px-4 py-3 justify-left"
-                : "px-2 py-3 justify-center"
-            } rounded-xl transition ${
-              superAdminTab === "requests"
-                ? "bg-linear-to-r from-purple-500/20 to-pink-600/20 text-white border border-purple-500/30"
-                : "text-gray-400 hover:text-white hover:bg-white/5"
-            }`}
-          >
-            <CheckCircle className="w-5 h-5" />
-            {sidebarOpen && (
-              <div className="flex items-center justify-between flex-1">
-                <span className="font-semibold">Booking Requests</span>
-                {/* {pendingRequests.length > 0 && (
-                <span className="bg-orange-500/30 text-orange-300 text-xs px-2 py-1 rounded-full font-semibold">
-                  {pendingRequests.length}
-                </span>
-              )} */}
-              </div>
-            )}
-          </button>
+          <SidebarItem
+            icon={<Building className="w-5 h-5" />}
+            label="Availability"
+            tag="availability"
+            sidebarOpen={sidebarOpen}
+            superAdminTab={superAdminTab}
+            setSuperAdminTab={setSuperAdminTab}
+            onClick={() => {
+              setSuperAdminTab("availability");
+              router.push("/admin/availability");
+            }}
+          />
 
-          <button
-            onClick={() => setSuperAdminTab("availability")}
-            className={`w-full flex items-center gap-3 ${
-              sidebarOpen
-                ? "px-4 py-3 justify-left"
-                : "px-2 py-3 justify-center"
-            } rounded-xl transition ${
-              superAdminTab === "availability"
-                ? "bg-linear-to-r from-purple-500/20 to-pink-600/20 text-white border border-purple-500/30"
-                : "text-gray-400 hover:text-white hover:bg-white/5"
-            }`}
-          >
-            <Building className="w-5 h-5" />
-            {sidebarOpen && <span className="font-semibold">Availability</span>}
-          </button>
-
-          <button
-            onClick={() => setSuperAdminTab("reservations")}
-            className={`w-full flex items-center gap-3 ${
-              sidebarOpen
-                ? "px-4 py-3 justify-left"
-                : "px-2 py-3 justify-center"
-            } rounded-xl transition ${
-              superAdminTab === "reservations"
-                ? "bg-linear-to-r from-purple-500/20 to-pink-600/20 text-white border border-purple-500/30"
-                : "text-gray-400 hover:text-white hover:bg-white/5"
-            }`}
-          >
-            <CheckCircle className="w-5 h-5" />
-            {sidebarOpen && <span className="font-semibold">Reservations</span>}
-          </button>
+          <SidebarItem
+            icon={<CheckCircle className="w-5 h-5" />}
+            label="Reservations"
+            tag="reservations"
+            sidebarOpen={sidebarOpen}
+            superAdminTab={superAdminTab}
+            setSuperAdminTab={setSuperAdminTab}
+            onClick={() => {
+              setSuperAdminTab("reservations");
+              router.push("/admin/reservations");
+            }}
+          />
 
           <div className="pt-4 border-t border-white/10 space-y-2">
-            <button
+            <SidebarItem
+              icon={<Users className="w-5 h-5" />}
+              label="Manage Staff"
+              tag="manageStaff"
+              sidebarOpen={sidebarOpen}
+              superAdminTab={superAdminTab}
+              setSuperAdminTab={setSuperAdminTab}
               onClick={() => {
                 setSuperAdminTab("manageStaff");
                 router.push("/admin/manage-staff");
               }}
-              className={`w-full flex items-center gap-3 ${
-                sidebarOpen
-                  ? "px-4 py-3 justify-left"
-                  : "px-2 py-3 justify-center"
-              } rounded-xl transition ${
-                superAdminTab === "manageStaff"
-                  ? "bg-linear-to-r from-purple-500/20 to-pink-600/20 text-white border border-purple-500/30"
-                  : "text-gray-400 hover:text-white hover:bg-white/5"
-              }`}
-            >
-              <Users className="w-5 h-5" />
-              {sidebarOpen && (
-                <span className="font-semibold">Manage Staff</span>
-              )}
-            </button>
+            />
 
-            <button
+            <SidebarItem
+              icon={<Settings className="w-5 h-5" />}
+              label="Stall Configuration"
+              tag="stallConfig"
+              sidebarOpen={sidebarOpen}
+              superAdminTab={superAdminTab}
+              setSuperAdminTab={setSuperAdminTab}
               onClick={() => {
-                setSuperAdminTab("stallconfig");
+                setSuperAdminTab("stallConfig");
                 router.push("/admin/stall-configuration");
               }}
-              className={`w-full flex items-center gap-3 ${
-                sidebarOpen
-                  ? "px-4 py-3 justify-left"
-                  : "px-2 py-3 justify-center"
-              } rounded-xl transition ${
-                superAdminTab === "stallconfig"
-                  ? "bg-linear-to-r from-purple-500/20 to-pink-600/20 text-white border border-purple-500/30"
-                  : "text-gray-400 hover:text-white hover:bg-white/5"
-              }`}
-            >
-              <Settings className="w-5 h-5" />
-              {sidebarOpen && (
-                <span className="font-semibold">Stall Configuration</span>
-              )}
-            </button>
+            />
 
-            <button
+            <SidebarItem
+              icon={<MapPin className="w-5 h-5" />}
+              label="Map Management"
+              tag="mapManagement"
+              sidebarOpen={sidebarOpen}
+              superAdminTab={superAdminTab}
+              setSuperAdminTab={setSuperAdminTab}
               onClick={() => {
-                setSuperAdminTab("mapmanagement");
+                setSuperAdminTab("mapManagement");
                 router.push("/admin/map-management");
               }}
-              className={`w-full flex items-center gap-3 ${
-                sidebarOpen
-                  ? "px-4 py-3 justify-left"
-                  : "px-2 py-3 justify-center"
-              } rounded-xl transition ${
-                superAdminTab === "mapmanagement"
-                  ? "bg-linear-to-r from-purple-500/20 to-pink-600/20 text-white border border-purple-500/30"
-                  : "text-gray-400 hover:text-white hover:bg-white/5"
-              }`}
-            >
-              <MapPin className="w-5 h-5" />
-              {sidebarOpen && (
-                <span className="font-semibold">Map Management</span>
-              )}
-            </button>
+            />
+
+            
           </div>
         </nav>
 
