@@ -34,9 +34,7 @@ const AdminDashboard: React.FC = () => {
 
   return (
     <div
-      className={`min-h-[calc(100vh-80px)] bg-linear-to-br w-full font-geist-sans from-[#1a1f37] via-[#2d1b4e] to-[#1a1f37] p-8 transition-opacity duration-500 ${
-        fadeIn ? "opacity-100" : "opacity-0"
-      } relative overflow-hidden`}
+      className={`min-h-[calc(100vh-80px)] bg-linear-to-br w-full font-geist-sans from-[#1a1f37] via-[#2d1b4e] to-[#1a1f37] p-8 opacity-100 relative overflow-hidden`}
     >
       <StallDashboard
         stalls={sampleStalls}
