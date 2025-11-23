@@ -212,7 +212,7 @@ const StallConfiguration = () => {
           <button
             type="button"
             onClick={generateStallsFromConfig}
-            className="w-full py-4 bg-gradient-to-r from-indigo-500 to-purple-600 text-white rounded-xl font-bold hover:from-indigo-600 hover:to-purple-700 transition transform hover:scale-105 shadow-lg flex items-center justify-center gap-2"
+            className="w-full py-4 bg-gradient-to-r cursor-pointer from-indigo-500 to-purple-600 text-white rounded-xl font-bold hover:from-indigo-600 hover:to-purple-700 transition transform hover:scale-[1.02] shadow-lg flex items-center justify-center gap-2"
           >
             <CheckCircle className="w-5 h-5" />
             Generate Stalls

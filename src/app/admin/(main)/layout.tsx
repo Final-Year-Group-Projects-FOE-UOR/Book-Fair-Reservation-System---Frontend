@@ -2,20 +2,52 @@
 "use client";
 
 import AdminHeader from "@/components/admin/header";
-import DashboardHeader from "@/components/admin/new-dashboard/Header";
 import AdminSidebar from "@/components/admin/sidebar";
 import { Suspense, useEffect, useState } from "react";
 import { usePathname } from "next/navigation";
-import StallConfigurationHeader from "@/components/admin/stall-configuration/Header";
-import MapManagementHeader from "@/components/admin/map-management/Header";
+import AnimatedHeader from "@/components/common/headers/AnimatedHeader";
+import { LayoutDashboard, MapPin, Settings, Users } from "lucide-react";
 
 const headerContent: Record<string, React.ReactNode> = {
-  dashboard: <DashboardHeader />,
-  bookingRequests: (
-    <h1 className="text-2xl font-semibold text-white">Booking Requests</h1>
+  dashboard: (
+    <AnimatedHeader
+      icon={
+        <LayoutDashboard className="w-8 h-8 text-white animate-floating-book" />
+      }
+      title="Dashboard"
+      description="Overview of the admin panel"
+    />
   ),
-  stallConfiguration: <StallConfigurationHeader />,
-  mapManagement: <MapManagementHeader />,
+  bookingRequests: (
+    <AnimatedHeader
+      icon={
+        <LayoutDashboard className="w-8 h-8 text-white animate-floating-book" />
+      }
+      title="Booking Requests"
+      description="Manage and review booking requests"
+    />
+  ),
+  stallConfiguration: (
+    <AnimatedHeader
+      icon={<Settings className="w-8 h-8 text-white animate-floating-book" />}
+      title="Stall Configuration"
+      description="Manage and configure stall settings"
+    />
+  ),
+  mapManagement: (
+    <AnimatedHeader
+      icon={<MapPin className="w-8 h-8 text-white animate-floating-book" />}
+      title="Map Management"
+      description="Manage and configure stall maps"
+    />
+  ),
+  manageStaff: (
+    <AnimatedHeader
+      icon={<Users className="w-8 h-8 text-white animate-floating-book" />}
+      title="Manage Staff"
+      description="Manage and configure staff accounts"
+    />
+  ),
 };
 
 export default function AdminLayout({
@@ -36,6 +68,8 @@ export default function AdminLayout({
       return "stallConfiguration";
     } else if (segment === "map-management") {
       return "mapManagement";
+    } else if (segment === "manage-staff") {
+      return "manageStaff";
     } else {
       return "dashboard";
     }

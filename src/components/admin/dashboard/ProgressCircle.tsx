@@ -1,38 +1,29 @@
 "use client";
 import React from "react";
 
-type Props = {
+export default function ProgressCircle({
+  percentage,
+  size = 140,
+  strokeWidth = 10,
+  color = "pink",
+}: {
   percentage: number;
   size?: number;
   strokeWidth?: number;
   color?: "pink" | "blue" | "green" | "orange";
-};
-
-const colorMap: Record<NonNullable<Props["color"]>, string> = {
-  pink: "#ec4899",
-  blue: "#60a5fa",
-  green: "#34d399",
-  orange: "#fb923c",
-};
-
-const ProgressCircle = ({
-  percentage,
-  size = 120,
-  strokeWidth = 8,
-  color = "pink",
-}: Props) => {
+}) {
   const radius = (size - strokeWidth) / 2;
   const circumference = 2 * Math.PI * radius;
   const offset = circumference - (percentage / 100) * circumference;
 
   const colorMap = {
-    pink: { from: "#ec4899", to: "#8b5cf6", glow: "rgba(236, 72, 153, 0.3)" },
-    blue: { from: "#3b82f6", to: "#06b6d4", glow: "rgba(59, 130, 246, 0.3)" },
-    green: { from: "#10b981", to: "#84cc16", glow: "rgba(16, 185, 129, 0.3)" },
-    orange: { from: "#f97316", to: "#fb923c", glow: "rgba(249, 115, 22, 0.3)" },
+    pink: { from: "#ec4899", to: "#8b5cf6" },
+    blue: { from: "#3b82f6", to: "#06b6d4" },
+    green: { from: "#10b981", to: "#84cc16" },
+    orange: { from: "#f97316", to: "#fb923c" },
   };
 
-  const colors = colorMap[color] || colorMap.pink;
+  const colors = colorMap[color];
 
   return (
     <div className="relative" style={{ width: size, height: size }}>
@@ -86,6 +77,4 @@ const ProgressCircle = ({
       </div>
     </div>
   );
-};
-
-export default ProgressCircle;
+}

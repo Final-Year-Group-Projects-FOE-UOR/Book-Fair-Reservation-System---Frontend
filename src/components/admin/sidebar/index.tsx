@@ -38,6 +38,7 @@ const AdminSidebar = ({ sidebarOpen, setSidebarOpen }: AdminSidebarProps) => {
       "stall-configuration": "stallconfig",
       availability: "availability",
       reservations: "reservations",
+      "manage-staff": "manageStaff",
       "map-management": "mapmanagement",
     };
     return tabMap[segment] || "dashboard";
@@ -150,20 +151,23 @@ const AdminSidebar = ({ sidebarOpen, setSidebarOpen }: AdminSidebarProps) => {
 
           <div className="pt-4 border-t border-white/10 space-y-2">
             <button
-              onClick={() => setSuperAdminTab("admins")}
+              onClick={() => {
+                setSuperAdminTab("manageStaff");
+                router.push("/admin/manage-staff");
+              }}
               className={`w-full flex items-center gap-3 ${
                 sidebarOpen
                   ? "px-4 py-3 justify-left"
                   : "px-2 py-3 justify-center"
               } rounded-xl transition ${
-                superAdminTab === "admins"
+                superAdminTab === "manageStaff"
                   ? "bg-linear-to-r from-purple-500/20 to-pink-600/20 text-white border border-purple-500/30"
                   : "text-gray-400 hover:text-white hover:bg-white/5"
               }`}
             >
               <Users className="w-5 h-5" />
               {sidebarOpen && (
-                <span className="font-semibold">Manage Admins</span>
+                <span className="font-semibold">Manage Staff</span>
               )}
             </button>
 
