@@ -5,9 +5,9 @@
 "use client";
 
 import React, { useEffect, useRef, useState } from "react";
-import type { Stall, MapPosition } from "./types";
-import Controller from "./Controller";
-import StallSelector from "./StallSelector";
+import type { Stall, MapPosition } from "../types";
+import Controller from "../Controller";
+import StallSelector from "../StallSelector";
 
 /**
  * Export shared Shape type so Controller can import it.

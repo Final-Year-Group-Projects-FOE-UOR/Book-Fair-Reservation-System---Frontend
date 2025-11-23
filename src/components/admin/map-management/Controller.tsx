@@ -1,5 +1,5 @@
 import React from "react";
-import { ShapeType } from "./MapViewer";
+import { ShapeType } from "./dialogs/MapViewer";
 
 type ControllerProps = {
   editingStall: string | null;
