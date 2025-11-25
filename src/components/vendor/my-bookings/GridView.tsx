@@ -3,16 +3,50 @@
 import React from "react";
 import { CheckCircle, Clock, QrCode, CalendarDays } from "lucide-react";
 import { Reservation } from "./types";
+import toast from "react-hot-toast";
+import axios from "axios";
+import Cookies from "js-cookie";
+import { getQRCode } from "@/actions/reservationsActions";
 
 interface GridViewProps {
   reservations: Reservation[];
 }
 
 const GridView: React.FC<GridViewProps> = ({ reservations }) => {
-  const handleDownloadQR = (reservation: Reservation) => {
-    // QR download logic here
-    console.log("Downloading QR for", reservation.id);
-  };
+
+ const handleDownloadQR = async (reservation: Reservation) => {
+   if (!reservation.qrCodePath) {
+     toast.error("QR code not available for this reservation.");
+     return;
+   }
+   const jwt = Cookies.get("jwt");
+   if(!jwt){
+     toast.error("Authentication token not found. Please log in again.");
+     return;
+   }
+   try {
+
+     const imageName = reservation.qrCodePath.split("\\").pop() || " ";
+     const response = await getQRCode(jwt, imageName);
+
+     const blob = new Blob([response], { type: "image/png" });
+
+     const url = window.URL.createObjectURL(blob);
+
+     const link = document.createElement("a");
+     link.href = url;
+     link.download = `reservation-${reservation.id}-qr.png`;
+
+     document.body.appendChild(link);
+     link.click();
+
+     link.remove();
+     window.URL.revokeObjectURL(url);
+   } catch (err) {
+     console.log("An error occurred while downloading the QR code:", err);
+     toast.error("Failed to download QR code. Please try again later.");
+   }
+ };
 
 
   return (

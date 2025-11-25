@@ -2,7 +2,7 @@
 "use client";
 
 import { Suspense } from "react";
-import VendorLayout from "@/components/vendor/vendor-layout";
+import EmployeeLayout from "@/components/employee/employee-layout";
 
 export default function AdminLayout({
   children,
@@ -11,7 +11,7 @@ export default function AdminLayout({
 }) {
   return (
     <Suspense>
-      <VendorLayout>{children}</VendorLayout>
+      <EmployeeLayout>{children}</EmployeeLayout>
     </Suspense>
   );
 }

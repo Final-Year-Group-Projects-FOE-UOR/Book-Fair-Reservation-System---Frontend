@@ -1,30 +1,19 @@
 "use client";
 
-import {
-  CheckCircle,
-  X,
-  CalendarX,
-  Sparkles,
-  MapPin,
-  Grid,
-} from "lucide-react";
+import { Stall } from "@/components/vendor/types";
 import React, { useEffect, useState } from "react";
-import { Reservation, ReservationResponse } from "./types";
-import NoBookings from "./NoBookings";
-import LoadingScreen from "@/components/common/loading";
+import MapView from "./map";
+import { Reservation, ReservationResponse } from "@/components/vendor/my-bookings/types";
 import Cookies from "js-cookie";
 import toast from "react-hot-toast";
-import { getAllReservationsbyEmail } from "@/actions/reservationsActions";
+import { getAllReservations } from "@/actions/reservationsActions";
 import { getStalls } from "@/actions/stallActions";
-import { Stall } from "../types";
-import MapView from "./MapView";
-import GridView from "./GridView";
+import LoadingScreen from "@/components/common/loading";
 
-const MyBookings: React.FC = () => {
+const Reservations = () => {
   const [reservations, setReservations] = useState<Reservation[]>([]);
-  const [loading, setLoading] = useState(false);
-  const [useMapView, setUseMapView] = useState(false);
   const [stalls, setStalls] = useState<Stall[]>([]);
+  const [loading, setLoading] = useState(false);
 
   const fetchReservations = async () => {
     const jwt = Cookies.get("jwt");
@@ -35,7 +24,7 @@ const MyBookings: React.FC = () => {
     }
     setLoading(true);
     try {
-      const reservations = await getAllReservationsbyEmail(jwt, email);
+      const reservations = await getAllReservations(jwt);
       if (reservations.success) {
         console.log(reservations.data);
         return reservations.data;
@@ -81,7 +70,6 @@ const MyBookings: React.FC = () => {
             reservationDate: reservation.reservationDate,
             status: reservation.status,
             userEmail: reservation.userEmail,
-            qrCodePath: reservation.qrCodePath,
           };
         },
       );
@@ -100,46 +88,20 @@ const MyBookings: React.FC = () => {
     setData();
   }, []);
 
-  if (loading) {
-    return <LoadingScreen />;
-  }
-
-  if (reservations.length === 0) {
-    return <NoBookings />;
+  if(loading) {
+    return <LoadingScreen/>;
   }
 
   return (
-    <>
-      <div className="w-full flex justify-end items-center my-4">
-        <button
-          onClick={() => setUseMapView(!useMapView)}
-          className={`px-4 py-2 cursor-pointer rounded-xl font-semibold transition flex items-center gap-2 ${
-            useMapView
-              ? "bg-gradient-to-r from-purple-500 to-pink-600 text-white shadow-lg"
-              : "bg-[#2a2f4a] text-gray-300 border border-white/10 hover:border-purple-500/50"
-          }`}
-        >
-          {useMapView ? (
-            <MapPin className="w-4 h-4" />
-          ) : (
-            <Grid className="w-4 h-4" />
-          )}
-          {useMapView ? "Map View" : "Grid View"}
-        </button>
-      </div>
-
-      {useMapView ? (
-        <MapView
-          stallMapImage={"https://ik.imagekit.io/web92xyy0/s1_o03c7akip.jpg"}
-          reservations={reservations}
-        />
-      ) : (
-        <GridView
-          reservations={reservations}
-        />
-      )}
-    </>
+    <div
+      className={` relative overflow-hidden`}
+    >
+      <MapView
+        stallMapImage={"https://ik.imagekit.io/web92xyy0/s1_o03c7akip.jpg"}
+        reservations={reservations}
+      />
+    </div>
   );
 };
 
-export default MyBookings;
+export default Reservations;

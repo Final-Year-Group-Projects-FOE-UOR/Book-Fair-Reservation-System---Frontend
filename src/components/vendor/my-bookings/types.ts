@@ -4,6 +4,7 @@ export interface Reservation {
   reservationDate: string;
   status: "CONFIRMED" | "PENDING" | "CANCELLED";
   userEmail?: string;
+  qrCodePath?: string;
 }
 
 export interface ReservationResponse {
@@ -13,6 +14,7 @@ export interface ReservationResponse {
   stallIds: number[];
   status: "CONFIRMED" | "PENDING" | "CANCELLED";
   userEmail: string;
+  qrCodePath?: string;
 }
 
 export interface Stall {

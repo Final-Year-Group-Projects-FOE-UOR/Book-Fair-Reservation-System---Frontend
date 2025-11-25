@@ -39,7 +39,7 @@ const EmployeeLogin = () => {
         if (role === "ROLE_MODERATOR_PASSWORD_CHANGE_REQUIRED") {
           router.push("/employee/initial-password-reset");
         } else {
-          router.push("/employee/dashboard");
+          router.push("/employee/booking-requests");
         }
       } else {
         toast.error("Login failed, please check your credentials");

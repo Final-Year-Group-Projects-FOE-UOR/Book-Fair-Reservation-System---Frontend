@@ -1,19 +1,11 @@
 "use client";
 
-import { BookOpen, LogOut} from "lucide-react";
-import { VendorInfo } from "../types";
+import { BookOpen, LogOut } from "lucide-react";
 import AnimatedHeader from "@/components/common/headers/AnimatedHeader";
 import Cookies from "js-cookie";
 import { useRouter } from "next/navigation";
 
-interface VendorHeaderProps {
-  vendorInfo: VendorInfo;
-}
-
-const VendorHeader = ({
-  vendorInfo,
-}: VendorHeaderProps) => {
-
+const EmployeeHeader = () => {
   const router = useRouter();
 
   const handleLogout = () => {
@@ -21,13 +13,13 @@ const VendorHeader = ({
     Cookies.remove("email");
     Cookies.remove("role");
     router.push("/auth/login");
-  }
+  };
 
   return (
     <div className="flex justify-between font-geist-sans items-center mb-6">
       <AnimatedHeader
         icon={<BookOpen className="w-8 h-8 text-white animate-floating-book" />}
-        title={`Welcome, ${vendorInfo.businessName}!`}
+        title={`Welcome Back!`}
         description="Manage and review booking requests"
       />
       <div className="flex items-center gap-4">
@@ -43,4 +35,4 @@ const VendorHeader = ({
   );
 };
 
-export default VendorHeader;
+export default EmployeeHeader;

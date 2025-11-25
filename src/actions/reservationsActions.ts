@@ -97,3 +97,26 @@ export const approvePendingRequest = async (jwt: string, id: number) => {
     
 };
 
+export const getQRCode = async (jwt: string, imageName: string) => {
+  "use server";
+  const url = `${Base_URL}/reservations/qr/${imageName}`;
+  try {
+    const response = await axios.get(url, {
+      responseType: "arraybuffer",
+      headers: {
+        Authorization: `Bearer ${jwt}`,
+        Accept: "image/png",
+      },
+    });
+    return response.data;
+  } catch (error: any) {
+    if (error.response && error.response.data) {
+      console.log("error", error.response.data);
+      return error.response.data;
+    } else {
+      console.log("error", error);
+      return { success: false, message: "An unexpected error occurred" };
+    }
+  }
+};
+

@@ -1,26 +1,29 @@
 "use client";
 
 import { usePathname, useRouter } from "next/navigation";
+import { useEffect } from "react";
 
 type TabItemProps = {
-  vendorHomeTab: string;
+  tabName: string;
   icon: React.ReactNode;
   label: string;
 }
-const TabItem = ({ vendorHomeTab, icon, label }: TabItemProps) => {
+const TabItem = ({ tabName, icon, label }: TabItemProps) => {
  const router = useRouter();
  const pathname = usePathname();
 
- const isActive = pathname.split("/")[1] === vendorHomeTab;
+ const isActive =
+   pathname.split("/")[1] === tabName ||  pathname.split("/").slice(0, 3).join("/") === `/${tabName}`;
 
- const handleVendorHomeTabChange = () => {
-    router.push(`/${vendorHomeTab}`);
+ const handletabNameChange = () => {
+    router.push(`/${tabName}`);
  }
+
   return (
     <button
       type="button"
-      onClick={handleVendorHomeTabChange}
-      className={`px-6 cursor-pointer  py-3 font-semibold transition-all rounded-t-xl relative ${vendorHomeTab === "booking" ? "text-white" : "text-gray-400 hover:text-gray-200"}`}
+      onClick={handletabNameChange}
+      className={`px-6 cursor-pointer  py-3 font-semibold transition-all rounded-t-xl relative ${tabName === "booking" || tabName === "employee/booking-requests" ? "text-white" : "text-gray-400 hover:text-gray-200"}`}
     >
       <div className="flex items-center font-geist-sans gap-2">
         {icon}
