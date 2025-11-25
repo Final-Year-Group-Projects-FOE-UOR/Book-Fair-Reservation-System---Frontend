@@ -6,9 +6,10 @@ import ResetPasswordDialog from './dialogs/ResetPasswordDialog';
 
 type StaffCardProps = {
  staff: Staff;
+ onUpdate: () => void;
 }
 
-const StaffCard = ({ staff }: StaffCardProps) => {
+const StaffCard = ({ staff, onUpdate }: StaffCardProps) => {
   return (
     <div
       key={staff.id}
@@ -27,7 +28,7 @@ const StaffCard = ({ staff }: StaffCardProps) => {
         </div>
         <div className="flex gap-2 w-full sm:w-auto">
           <ResetPasswordDialog staff={staff} />
-          <DeleteStaffDialog staffName={staff.name} staffEmail={staff.email} />
+          <DeleteStaffDialog staff={staff} onConfirm={onUpdate} />
         </div>
       </div>
     </div>

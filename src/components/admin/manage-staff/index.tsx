@@ -58,7 +58,7 @@ const ManageStaff = () => {
 
       <div className="grid gap-4">
         {staffList.map((staff) => (
-          <StaffCard key={staff.id} staff={staff} />
+          <StaffCard onUpdate={getStaffList} key={staff.id} staff={staff} />
         ))}
       </div>
     </div>
