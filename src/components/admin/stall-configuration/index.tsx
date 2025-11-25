@@ -5,8 +5,12 @@ import { Building, CheckCircle } from "lucide-react";
 import React, { useState } from "react";
 import CustomInput from "./CustomInput";
 import { Stall, StallConfig } from "./types";
+import toast from "react-hot-toast";
+import Cookies from "js-cookie";
+import { createStall } from "@/actions/stallActions";
 
 const StallConfiguration = () => {
+  const [loading, setLoading] = useState(false);
   const [stallConfig, setStallConfig] = useState<StallConfig>({
     small: { count: 0, price: 0 },
     medium: { count: 0, price: 0 },
@@ -40,7 +44,8 @@ const StallConfiguration = () => {
       });
     }
     for (let i = 0; i < stallConfig.medium.count; i++) {
-      stalls.push({isConfigured: false,
+      stalls.push({
+        isConfigured: false,
         stallName:
           stallConfig.namingPattern === "alphanumeric"
             ? `${stallConfig.prefix || ""}-M-${i + 1}`
@@ -82,8 +87,62 @@ const StallConfiguration = () => {
         },
       });
     }
-    console.log("Generated Stalls:", stalls);
-  }
+    return stalls;
+  };
+
+  const validateConfig = (): boolean => {
+    if (
+      stallConfig.small.count < 0 || 
+      stallConfig.medium.count < 0 ||
+      stallConfig.large.count < 0
+    ) {
+      toast.error("Stall counts cannot be negative.");
+      return false;
+    }
+    if (
+      stallConfig.small.price < 0 ||
+      stallConfig.medium.price < 0 ||
+      stallConfig.large.price < 0
+    ) {
+      toast.error("Stall prices cannot be negative.");
+      return false;
+    }
+    if(stallConfig.small.count === 0 && stallConfig.medium.count === 0 && stallConfig.large.count === 0) {
+      toast.error("At least one stall must be configured.");
+      return false;
+    }
+    return true;
+  };
+
+  const createStalls = async () => {
+    const jwt = Cookies.get("jwt") || "";
+    if (!jwt) {
+      toast.error("Authentication token not found. Please log in again.");
+      return;
+    }
+    if (!validateConfig()) {
+      return;
+    }
+    try {
+      setLoading(true);
+      // Call createStall for each stall
+      const stalls = generateStalls();
+      for (const stall of stalls) {
+        const response = await createStall(jwt, stall);
+        if (!response.success) {
+          toast.error(response.message || "Failed to create some stalls.");
+          console.log(response.message);
+          return;
+        }
+      }
+      toast.success("All stalls created successfully!");
+    } catch (err) {
+      console.log("An error occurred while creating stalls:", err);
+      toast.error("An error occurred while creating stalls. Please try again.");
+    } finally {
+      setLoading(false);
+    }
+  };
 
   return (
     <div
@@ -92,8 +151,6 @@ const StallConfiguration = () => {
       <div>
         <div className="bg-gradient-to-br from-green-500/10 to-blue-600/10 border border-green-500/20 rounded-xl sm:rounded-2xl p-4 sm:p-6 md:p-8 ">
           <div className="grid grid-cols-1 md:grid-cols-3 gap-4 sm:gap-6 mb-6">
-            
-
             <CustomInput
               count={stallConfig.small.count}
               price={stallConfig.small.price}
@@ -205,7 +262,8 @@ const StallConfiguration = () => {
                 }`}
               >
                 <div className="text-lg mb-1">
-                  {`${stallConfig.prefix}1, ${stallConfig.prefix}2...` || ""}
+                  {`${stallConfig.prefix}-[SIZE]-1, ${stallConfig.prefix}-[SIZE]-2...` ||
+                    ""}
                 </div>
                 <div className="text-xs opacity-75">Alphanumeric</div>
               </button>
@@ -220,9 +278,7 @@ const StallConfiguration = () => {
                     : "bg-[#0d1229] text-gray-400 border border-white/10"
                 }`}
               >
-                <div className="text-lg mb-1">
-                  {"1, 2, 3..."}
-                </div>
+                <div className="text-lg mb-1">{"[SIZE]-1, [SIZE]-2, [SIZE]-3..."}</div>
                 <div className="text-xs opacity-75">Numeric</div>
               </button>
             </div>
@@ -230,11 +286,27 @@ const StallConfiguration = () => {
 
           <button
             type="button"
-            onClick={generateStalls}
-            className="w-full py-4 bg-gradient-to-r cursor-pointer from-indigo-500 to-purple-600 text-white rounded-xl font-bold hover:from-indigo-600 hover:to-purple-700 transition transform hover:scale-[1.02] shadow-lg flex items-center justify-center gap-2"
+            onClick={createStalls}
+            disabled={loading}
+            className={`w-full py-4 rounded-xl font-bold transition transform 
+    flex items-center justify-center gap-2 shadow-lg ${
+      loading
+        ? "bg-indigo-500/60 text-white cursor-not-allowed opacity-70 scale-[0.99]"
+        : "bg-gradient-to-r from-indigo-500 to-purple-600 text-white hover:from-indigo-600 hover:to-purple-700 hover:scale-[1.02]"
+    }
+  `}
           >
-            <CheckCircle className="w-5 h-5" />
-            Generate Stalls
+            {loading ? (
+              <>
+                <span className="h-5 w-5 border-2 border-white border-t-transparent rounded-full animate-spin"></span>
+                Generating...
+              </>
+            ) : (
+              <>
+                <CheckCircle className="w-5 h-5" />
+                Generate Stalls
+              </>
+            )}
           </button>
         </div>
       </div>

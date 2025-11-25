@@ -1,7 +1,7 @@
-import EmployeePortal from "@/components/employee/";
+import EmployeeLanding from "@/components/employee/landing";
 
 const EmployeeDashboardPage = () => {
-  return <EmployeePortal />;
+  return <EmployeeLanding />;
 };
 
 export default EmployeeDashboardPage;
