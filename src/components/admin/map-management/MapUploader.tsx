@@ -60,7 +60,7 @@ export default function MapUploader({
             <div
               className="
             relative p-3 rounded-full
-            bg-gradient-to-br from-purple-600 to-indigo-700
+            bg-linear-to-br from-purple-600 to-indigo-700
             shadow-lg
           "
             >

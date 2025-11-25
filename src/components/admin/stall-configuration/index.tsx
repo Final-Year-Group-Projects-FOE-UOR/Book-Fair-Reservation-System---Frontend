@@ -23,7 +23,7 @@ const StallConfiguration = () => {
     const stalls: Stall[] = [];
     for (let i = 0; i < stallConfig.small.count; i++) {
       stalls.push({
-        isConfigured: false,
+        available: true,
         stallName:
           stallConfig.namingPattern === "alphanumeric"
             ? `${stallConfig.prefix || ""}-S-${i + 1}`
@@ -32,6 +32,8 @@ const StallConfiguration = () => {
         price: stallConfig.small.price,
         dimensions: "",
         mapMetadata: {
+          configured: false,
+
           mapWidth: 0,
           mapHeight: 0,
           mapWidthPercent: 0,
@@ -45,7 +47,7 @@ const StallConfiguration = () => {
     }
     for (let i = 0; i < stallConfig.medium.count; i++) {
       stalls.push({
-        isConfigured: false,
+        available: true,
         stallName:
           stallConfig.namingPattern === "alphanumeric"
             ? `${stallConfig.prefix || ""}-M-${i + 1}`
@@ -54,6 +56,7 @@ const StallConfiguration = () => {
         price: stallConfig.medium.price,
         dimensions: "",
         mapMetadata: {
+          configured: false,
           mapWidth: 0,
           mapHeight: 0,
           mapWidthPercent: 0,
@@ -67,7 +70,7 @@ const StallConfiguration = () => {
     }
     for (let i = 0; i < stallConfig.large.count; i++) {
       stalls.push({
-        isConfigured: false,
+        available: true,
         stallName:
           stallConfig.namingPattern === "alphanumeric"
             ? `${stallConfig.prefix || ""}-L-${i + 1}`
@@ -76,6 +79,7 @@ const StallConfiguration = () => {
         price: stallConfig.large.price,
         dimensions: "",
         mapMetadata: {
+          configured: false,
           mapWidth: 0,
           mapHeight: 0,
           mapWidthPercent: 0,
@@ -92,7 +96,7 @@ const StallConfiguration = () => {
 
   const validateConfig = (): boolean => {
     if (
-      stallConfig.small.count < 0 || 
+      stallConfig.small.count < 0 ||
       stallConfig.medium.count < 0 ||
       stallConfig.large.count < 0
     ) {
@@ -107,7 +111,11 @@ const StallConfiguration = () => {
       toast.error("Stall prices cannot be negative.");
       return false;
     }
-    if(stallConfig.small.count === 0 && stallConfig.medium.count === 0 && stallConfig.large.count === 0) {
+    if (
+      stallConfig.small.count === 0 &&
+      stallConfig.medium.count === 0 &&
+      stallConfig.large.count === 0
+    ) {
       toast.error("At least one stall must be configured.");
       return false;
     }
@@ -141,9 +149,8 @@ const StallConfiguration = () => {
         large: { count: 0, price: 0 },
         namingPattern: "alphanumeric",
         prefix: "",
-      })
+      });
       toast.success("All stalls created successfully!");
-      
     } catch (err) {
       console.log("An error occurred while creating stalls:", err);
       toast.error("An error occurred while creating stalls. Please try again.");
@@ -286,7 +293,9 @@ const StallConfiguration = () => {
                     : "bg-[#0d1229] text-gray-400 border border-white/10"
                 }`}
               >
-                <div className="text-lg mb-1">{"[SIZE]-1, [SIZE]-2, [SIZE]-3..."}</div>
+                <div className="text-lg mb-1">
+                  {"[SIZE]-1, [SIZE]-2, [SIZE]-3..."}
+                </div>
                 <div className="text-xs opacity-75">Numeric</div>
               </button>
             </div>

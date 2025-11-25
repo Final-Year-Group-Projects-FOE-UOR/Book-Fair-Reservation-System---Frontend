@@ -16,14 +16,14 @@ export type StallConfig = {
 };
 
 export type Stall = {
-  id: string;
+  id?: string;
   available: boolean;
-  isConfigured: boolean;
   stallName: string;
   type: "SMALL" | "MEDIUM" | "LARGE";
   price: number;
   dimensions: string;
   mapMetadata: {
+    configured: boolean;
     mapWidth: number;
     mapHeight: number;
     mapWidthPercent: number;

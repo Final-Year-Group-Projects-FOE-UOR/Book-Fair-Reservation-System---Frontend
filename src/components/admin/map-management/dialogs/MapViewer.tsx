@@ -1,7 +1,5 @@
-/* eslint-disable react-hooks/rules-of-hooks */
-/* eslint-disable react-hooks/exhaustive-deps */
+/* eslint-disable react-hooks/refs */
 /* eslint-disable @next/next/no-img-element */
-/* eslint-disable @typescript-eslint/no-explicit-any */
 "use client";
 
 import React, { useEffect, useRef, useState } from "react";
@@ -55,6 +53,28 @@ export default function MapViewer({
     visible: false,
   });
 
+  // hover card state
+  const [hoverCard, setHoverCard] = useState<{
+    leftPercent: number;
+    topPercent: number;
+    showAbove: boolean;
+    details: {
+      id: string;
+      available: boolean;
+      isConfigured: boolean;
+      stallName: string;
+      type: "SMALL" | "MEDIUM" | "LARGE" | string;
+      price: number;
+    } | null;
+    visible: boolean;
+  }>({
+    leftPercent: 0,
+    topPercent: 0,
+    showAbove: true,
+    details: null,
+    visible: false,
+  });
+
   // Get current image width for calculations
   const getImageWidth = () => {
     return imageWrapperRef.current?.getBoundingClientRect().width || 1000;
@@ -70,13 +90,13 @@ export default function MapViewer({
     if (!editingStall) return;
     const s = stalls.find((x) => x.id === editingStall);
     if (!s) return;
-    setSelectedShape((s.mapMetadata.mapShape as ShapeType) ?? "circle");
+    setSelectedShape((s.mapMetadata?.mapShape as ShapeType) ?? "circle");
     // Load stored percentages
-    const w = s.mapMetadata.mapWidthPercent ?? 3;
-    const h = s.mapMetadata.mapHeightPercent ?? w;
+    const w = s.mapMetadata?.mapWidthPercent ?? 3;
+    const h = s.mapMetadata?.mapHeightPercent ?? w;
     setSelectedWidthPercent(w);
     setSelectedHeightPercent(h);
-    setSelectedRotation(s.mapMetadata.mapRotation ?? 0);
+    setSelectedRotation(s.mapMetadata?.mapRotation ?? 0);
   }, [editingStall, stalls]);
 
   const handleUpdateToDB = async (updatedStall: Stall) => {
@@ -88,7 +108,7 @@ export default function MapViewer({
     try {
       const response = await updateMapStall(jwt, updatedStall);
       if (response.success) {
-        // toast.success("Stall updated successfully");
+        // success
       } else {
         toast.error(
           response.message || "Failed to update stall. Please try again."
@@ -99,7 +119,6 @@ export default function MapViewer({
     }
   };
 
-  
   const handlePlaceAt = (x: number, y: number, stallId: string | null) => {
     if (!stallId) return;
     setStalls((prev) => {
@@ -120,14 +139,13 @@ export default function MapViewer({
                     ? selectedWidthPercent
                     : selectedHeightPercent,
                 mapRotation: selectedRotation,
+                configured: true,
               },
             }
           : s
       );
       const updateStall = updated.find((s) => s.id === stallId);
-      if (updateStall)
-      handleUpdateToDB(updateStall);
-      console.log(updated);
+      if (updateStall) handleUpdateToDB(updateStall);
       return updated;
     });
     setEditingStall(null);
@@ -150,22 +168,21 @@ export default function MapViewer({
                     ? selectedWidthPercent
                     : selectedHeightPercent,
                 mapRotation: selectedRotation,
+                configured: true,
               },
             }
           : s
       );
       const updateStall = updated.find((s) => s.id === editingStall);
-      if (updateStall)
-      handleUpdateToDB(updateStall);
+      if (updateStall) handleUpdateToDB(updateStall);
       return updated;
     });
     setEditingStall(null);
     setHoveredStall(null);
   };
 
-  const handleRemoveStall = () => {
+  const handleRemoveStall = async () => {
     if (!editingStall) return;
-    if (!confirm(`Remove ${editingStall} from map?`)) return;
     setStalls((prev) => {
       const updated = prev.map((s) =>
         s.id === editingStall
@@ -178,13 +195,14 @@ export default function MapViewer({
                 mapWidthPercent: 0,
                 mapHeightPercent: 0,
                 mapRotation: 0,
+                configured: false,
               },
+              available: true,
             }
           : s
       );
       const updateStall = updated.find((s) => s.id === editingStall);
-      if (updateStall)
-      handleUpdateToDB(updateStall);
+      if (updateStall) handleUpdateToDB(updateStall);
       return updated;
     });
     setEditingStall(null);
@@ -245,13 +263,63 @@ export default function MapViewer({
     // sync shape/size/rotation if exists (will be handled by effect)
   };
 
+  // hover handlers for hover card
+  const handleMarkerHoverEnter = (e: React.MouseEvent, stall: Stall) => {
+    e.stopPropagation();
+    const meta = stall.mapMetadata ?? {};
+    const left = meta.mapPosition?.x ?? 0;
+    const top = meta.mapPosition?.y ?? 0;
+    const showAbove = top > 18;
+    const details = {
+      id: stall.id ?? "N/A",
+      available: !!stall.available,
+      isConfigured:
+        !!meta.configured || !!meta.mapWidthPercent || !!meta.mapPosition,
+      stallName: stall.stallName ?? "",
+      type: (stall.type ?? "SMALL").toString().toUpperCase() as
+        | "SMALL"
+        | "MEDIUM"
+        | "LARGE"
+        | string,
+      price:
+        typeof stall.price === "number"
+          ? stall.price
+          : Number(stall.price ?? 0),
+    };
+    setHoverCard({
+      leftPercent: left,
+      topPercent: top,
+      showAbove,
+      details,
+      visible: true,
+    });
+  };
+
+  const handleMarkerHoverMove = (e: React.MouseEvent, stall: Stall) => {
+    e.stopPropagation();
+    const meta = stall.mapMetadata ?? {};
+    const left = meta.mapPosition?.x ?? 0;
+    const top = meta.mapPosition?.y ?? 0;
+    const showAbove = top > 18;
+    setHoverCard((h) => ({
+      ...h,
+      leftPercent: left,
+      topPercent: top,
+      showAbove,
+    }));
+  };
+
+  const handleMarkerHoverLeave = () => {
+    setHoverCard((h) => ({ ...h, visible: false }));
+  };
+
   // layout: left = scrollable map area, right = fixed panels (Controller + StallSelector)
   return (
     <div className={`flex font-geist-sans gap-4 h-full ${modalMode ? "" : ""}`}>
       {/* Left: scrollable image area */}
       <div
         ref={scrollContainerRef}
-        className="flex-1 overflow-auto bg-[#0b1220] rounded"
+        className="flex-1 overflow-auto beautiful-scrollbar bg-[#0b1220] rounded"
         onClick={handleMapClick}
         onMouseMove={handleMouseMove}
         onMouseLeave={handleMouseLeave}
@@ -263,7 +331,6 @@ export default function MapViewer({
         <div ref={imageWrapperRef} className="relative w-full p-4">
           {stallMapImage ? (
             // image scales to width of wrapper; markers use percentages so they stay in place
-            // eslint-disable-next-line @next/next/no-img-element
             <img
               src={stallMapImage}
               alt="Map"
@@ -317,7 +384,7 @@ export default function MapViewer({
           {stalls.map((stall) => {
             // Check if position exists and stall is available
             if (
-              !stall.mapMetadata.mapPosition ||
+              !stall.mapMetadata?.mapPosition ||
               (stall.mapMetadata.mapPosition.x === 0 &&
                 stall.mapMetadata.mapPosition.y === 0) ||
               !stall.available
@@ -336,6 +403,9 @@ export default function MapViewer({
               <div
                 key={stall.id}
                 onClick={(e) => handleMarkerClick(e, stall)}
+                onMouseEnter={(e) => handleMarkerHoverEnter(e, stall)}
+                onMouseMove={(e) => handleMarkerHoverMove(e, stall)}
+                onMouseLeave={() => handleMarkerHoverLeave()}
                 className="absolute transform -translate-x-1/2 -translate-y-1/2"
                 style={{
                   left: `${stall.mapMetadata.mapPosition.x}%`,
@@ -369,6 +439,73 @@ export default function MapViewer({
               </div>
             );
           })}
+
+          {/* Hover card rendered inside image wrapper so it scrolls with image */}
+          {hoverCard.visible && hoverCard.details && (
+            <div
+              className="absolute z-50 max-w-xs"
+              style={{
+                left: `${Math.max(2, Math.min(98, hoverCard.leftPercent))}%`,
+                top: hoverCard.showAbove
+                  ? `${Math.max(2, hoverCard.topPercent - 6)}%`
+                  : `${Math.min(98, hoverCard.topPercent + 6)}%`,
+                transform: hoverCard.showAbove
+                  ? "translate(-50%, -100%)"
+                  : "translate(-50%, 0%)",
+                pointerEvents: "none",
+              }}
+            >
+              <div className="bg-[#071027] border border-white/8 text-white rounded-lg shadow-lg p-3 w-64 pointer-events-auto">
+                <div className="flex items-start justify-between gap-2">
+                  <div>
+                    <div className="text-sm font-semibold">
+                      {hoverCard.details.stallName ||
+                        `Stall ${hoverCard.details.id}`}
+                    </div>
+                    <div className="text-xs text-gray-300 mt-1">
+                      {hoverCard.details.id}
+                    </div>
+                  </div>
+                  <div className="text-xs text-gray-300 text-right">
+                    <div className="font-semibold">
+                      {hoverCard.details.type}
+                    </div>
+                    <div className="text-green-300 font-medium">
+                      ${hoverCard.details.price.toFixed(2)}
+                    </div>
+                  </div>
+                </div>
+
+                <div className="mt-3 flex items-center justify-between text-xs text-gray-400">
+                  <div>
+                    <div>
+                      {hoverCard.details.available ? (
+                        <span className="text-green-300 font-semibold">
+                          Available
+                        </span>
+                      ) : (
+                        <span className="text-red-400 font-semibold">
+                          Not available
+                        </span>
+                      )}
+                    </div>
+                    <div className="mt-1">
+                      {hoverCard.details.isConfigured ? (
+                        <span className="text-gray-300">Configured</span>
+                      ) : (
+                        <span className="text-gray-500">Not configured</span>
+                      )}
+                    </div>
+                  </div>
+
+                  <div className="text-right">
+                    <div className="text-xs text-gray-400">Quick</div>
+                    <div className="text-xs text-gray-400">Info</div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          )}
         </div>
       </div>
 

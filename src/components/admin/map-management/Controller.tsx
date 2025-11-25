@@ -1,5 +1,6 @@
 import React from "react";
 import { ShapeType } from "./dialogs/MapViewer";
+import RemoveStallDialog from "./dialogs/RemoveStallDialog";
 
 type ControllerProps = {
   editingStall: string | null;
@@ -182,15 +183,7 @@ const Controller = ({
               Cancel
             </button>
           </div>
-          <button
-            onClick={(e) => {
-              e.stopPropagation();
-              handleRemoveStall();
-            }}
-            className="w-full px-3 py-1.5 text-xs rounded bg-red-600 text-white hover:bg-red-700"
-          >
-            Remove from Map
-          </button>
+          <RemoveStallDialog handleRemoveStall={handleRemoveStall} />
         </div>
       )}
 

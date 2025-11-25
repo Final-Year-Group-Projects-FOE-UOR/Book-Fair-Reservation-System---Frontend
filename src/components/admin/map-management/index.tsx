@@ -1,15 +1,13 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 "use client";
 import React, { useEffect, useState } from "react";
-import { MapPin, CheckCircle, X, Building, Trash, Upload } from "lucide-react";
-import MapUploader from "./MapUploader";
+import { MapPin, CheckCircle,Trash, Upload } from "lucide-react";
 import MapViewer from "./dialogs/MapViewer";
 import StallSelector from "./StallSelector";
 import MapEditDialog from "./dialogs/MapEditDialog";
 import ImageKitUploader from "@/components/common/document-upload/ImageKitUploader";
 import Cookies from "js-cookie";
 import toast from "react-hot-toast";
-import { Button } from "@/components/ui/button";
 import { addMap, getMap } from "@/actions/mapActions";
 import LoadingScreen from "@/components/common/loading";
 import { getStalls } from "@/actions/stallActions";
@@ -102,7 +100,7 @@ export default function MapManagement() {
         className={`min-h-[calc(100vh-80px)] bg-linear-to-br w-full font-geist-sans from-[#1a1f37] via-[#2d1b4e] to-[#1a1f37] p-8 opacity-100 relative overflow-hidden`}
       >
         <div className="bg-linear-to-br from-purple-500/10 to-indigo-600/10 border border-purple-500/20 rounded-2xl p-8 mb-6">
-          <div className="w-full flex flex-col gap-4 mb-[20px]">
+          <div className="w-full flex flex-col gap-4 mb-5">
             <ImageKitUploader
               onUploadSuccess={handleUploadSuccess}
               upload={upload}
@@ -116,8 +114,8 @@ export default function MapManagement() {
                 disabled={!selectedFile}
                 className={`px-4 py-2 rounded-lg font-semibold text-sm cursor-pointer hover:scale-[1.05] transition-all duration-300 flex items-center gap-2 ${
                   isPositioningMode
-                    ? "bg-gradient-to-r from-orange-500 to-red-600 text-white shadow-lg"
-                    : "bg-gradient-to-r from-blue-500 to-cyan-600 text-white"
+                    ? "bg-linear-to-r from-orange-500 to-red-600 text-white shadow-lg"
+                    : "bg-linear-to-r from-blue-500 to-cyan-600 text-white"
                 }`}
               >
                 <Upload className="w-4 h-4" />
@@ -142,8 +140,8 @@ export default function MapManagement() {
                     }}
                     className={`px-4 py-2 rounded-lg font-semibold text-sm cursor-pointer hover:scale-[1.05] transition-all duration-300 flex items-center gap-2 ${
                       isPositioningMode
-                        ? "bg-gradient-to-r from-orange-500 to-red-600 text-white shadow-lg"
-                        : "bg-gradient-to-r from-blue-500 to-cyan-600 text-white"
+                        ? "bg-linear-to-r from-orange-500 to-red-600 text-white shadow-lg"
+                        : "bg-linear-to-r from-blue-500 to-cyan-600 text-white"
                     }`}
                   >
                     <MapPin className="w-4 h-4" />
@@ -156,7 +154,7 @@ export default function MapManagement() {
                         localStorage.removeItem("tradeHallMap");
                       } catch {}
                     }}
-                    className="px-4 py-2 rounded-lg font-semibold text-sm cursor-pointer hover:scale-[1.05] transition-all duration-300 flex items-center gap-2 bg-gradient-to-r from-red-500/20 to-pink-600/20 border border-red-500/30 text-red-300 hover:from-red-500/30 hover:to-pink-600/30 hover:border-red-400/50 shadow-lg hover:shadow-red-500/20"
+                    className="px-4 py-2 rounded-lg font-semibold text-sm cursor-pointer hover:scale-[1.05] transition-all duration-300 flex items-center gap-2 bg-linear-to-r from-red-500/20 to-pink-600/20 border border-red-500/30 text-red-300 hover:from-red-500/30 hover:to-pink-600/30 hover:border-red-400/50 shadow-lg hover:shadow-red-500/20"
                   >
                     <Trash className="w-4 h-4" />
                     Remove Map
@@ -167,7 +165,7 @@ export default function MapManagement() {
               {isPositioningMode && (
                 <div className="bg-orange-500/20 border border-orange-500/40 rounded-lg p-3 mb-4">
                   <div className="flex items-start gap-2">
-                    <MapPin className="w-5 h-5 text-orange-400 flex-shrink-0 mt-0.5" />
+                    <MapPin className="w-5 h-5 text-orange-400 shrink-0 mt-0.5" />
                     <div>
                       <p className="text-sm text-white font-semibold mb-1">
                         Positioning Mode Active
