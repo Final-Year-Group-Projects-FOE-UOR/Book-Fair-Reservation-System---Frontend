@@ -2,7 +2,7 @@
 "use server";
 
 import axios from "axios";
-const Base_URL_auth = process.env.Base_URL_auth;
+const Base_URL = process.env.Base_URL;
 
 export const signup = async (email: string, password: string) => {
   "use server";
@@ -12,7 +12,7 @@ export const signup = async (email: string, password: string) => {
       password: password,
     };
 
-    const url = `${Base_URL_auth}/auth/register`;
+    const url = `${Base_URL}/auth/register`;
     const response = await axios.post(url, body);
     return response.data;
   } catch (err: any) {
@@ -27,7 +27,7 @@ export const login = async (email: string, password: string) => {
       email: email,
       password: password,
     };
-    const url = `${Base_URL_auth}/auth/login`;
+    const url = `${Base_URL}/users/login`;
     const response = await axios.post(url, body);
     return response.data;
   } catch (err: any) {
