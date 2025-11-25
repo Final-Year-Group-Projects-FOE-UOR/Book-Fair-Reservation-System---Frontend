@@ -23,8 +23,8 @@ const Login = () => {
   });
   const [error, setError] = useState("");
 
-  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
+  const handleSubmit = () => {
+    // Placeholder for form submission logic
     
   };
   return (
@@ -124,7 +124,7 @@ const Login = () => {
                   />
                 </div>
               </div>
-              {/* <LoginButton buttonText={isLogin ? "Login to Account" : "Create Account & Reserve Stalls"} onClick={handleSubmit} /> */}
+              <LoginButton buttonText={isLogin ? "Login to Account" : "Create Account & Reserve Stalls"} onClick={handleSubmit} />
 
               
             </form>
