@@ -32,7 +32,7 @@ const AdminLogin = () => {
       if (response && response.success) {
         toast.success("Login successful!");
         // Set cookie with token
-        Cookies.set("admin_token", response.data.token, { expires: 1 }); // Expires in 1 day
+        Cookies.set("jwt", response.data.token, { expires: 1 }); // Expires in 1 day
         Cookies.set("email", response.data.email, { expires: 1 }); // Expires in 1 day
         Cookies.set("role", response.data.role, { expires: 1 }); // Expires in 1 day
         router.push("/admin/dashboard");

@@ -12,21 +12,53 @@ import {
 import { Plus, User, Mail, Lock, UserPlus, X } from "lucide-react";
 import toast from "react-hot-toast";
 import { Button } from "@/components/ui/button";
+import Cookies from "js-cookie";
+import { createStaff } from "@/actions/adminActions";
+
 
 const CreateStaffDialog = () => {
   const [fullName, setFullName] = useState("");
   const [email, setEmail] = useState("");
   const [loading, setLoading] = useState(false);
+  const [open, setOpen] = useState(false);
 
   const handleSubmit = async () => {
     if (!fullName || !email) {
       toast.error("Please fill in all required fields.");
       return;
     }
+    const jwt = Cookies.get("jwt");
+    if(!jwt){
+      toast.error("Authentication token not found. Please log in again.");
+      return;
+    }
+    try{
+      setLoading(true);
+      const response = await createStaff(
+        jwt,
+        fullName,
+        email
+      )
+      console.log(response);
+      if(response.success){
+        toast.success("Staff member created successfully!");
+        setFullName("");
+        setEmail("");
+        setOpen(false);
+      }else{
+        toast.error(response.message || "Failed to create staff member.");
+        console.log(response.message);
+      }
+    }catch(err){
+      console.log("An error occurred while creating staff member:", err);
+      toast.error("An error occurred while creating staff member. Please try again.");
+    }finally{
+      setLoading(false);
+    }
   };
 
   return (
-    <Dialog>
+    <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger asChild>
         <button
           type="button"
@@ -97,6 +129,7 @@ const CreateStaffDialog = () => {
           {/* Action Buttons */}
           <div className="flex flex-col sm:flex-row gap-3 pt-4">
             <Button
+              onClick={handleSubmit}
               type="button"
               disabled={loading || !fullName || !email}
               className={`
