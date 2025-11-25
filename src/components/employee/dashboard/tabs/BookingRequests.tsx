@@ -2,10 +2,10 @@ import React from 'react';
 import { CheckCircle, X, Building, Mail } from 'lucide-react';
 
 interface BookingRequestsProps {
-  stats: { pending: number };
-  pendingRequests: any[];
-  approveBooking: (stallId: string) => void;
-  rejectBooking: (stallId: string) => void;
+  stats?: { pending: number };
+  pendingRequests?: any[];
+  approveBooking?: (stallId: string) => void;
+  rejectBooking?: (stallId: string) => void;
 }
 
 const BookingRequests: React.FC<BookingRequestsProps> = ({
@@ -19,15 +19,15 @@ const BookingRequests: React.FC<BookingRequestsProps> = ({
       <h2 className="text-2xl font-bold text-white flex items-center gap-3">
         <CheckCircle className="w-7 h-7 text-blue-400" />
         Pending Booking Requests
-        {stats.pending > 0 && (
+        {/* {stats.pending > 0 && (
           <span className="bg-red-500 text-white text-sm px-3 py-1 rounded-full">
             {stats.pending} pending
           </span>
-        )}
+        )} */}
       </h2>
     </div>
 
-    {pendingRequests.length === 0 ? (
+    {/* {pendingRequests.length === 0 ? (
       <div className="bg-gradient-to-br from-blue-500/10 to-cyan-600/10 border border-blue-500/20 rounded-2xl p-12 text-center">
         <CheckCircle className="w-16 h-16 text-blue-400 mx-auto mb-4 opacity-50" />
         <h3 className="text-xl font-bold text-white mb-2">No Pending Requests</h3>
@@ -90,7 +90,7 @@ const BookingRequests: React.FC<BookingRequestsProps> = ({
           </div>
         ))}
       </div>
-    )}
+    )} */}
   </div>
 );
 

@@ -1,5 +1,5 @@
 "use client";
-import { login } from "@/actions/authActions";
+import { initialResetPassword, login } from "@/actions/authActions";
 import AnimatedBackground from "@/components/common/backgrounds/animated-background";
 import {
   BookMarked,
@@ -15,8 +15,8 @@ import { useState } from "react";
 import toast from "react-hot-toast";
 import Cookies from "js-cookie";
 
-const EmployeeLogin = () => {
-  const [formData, setFormData] = useState({ email: "", password: "" });
+const EmployeeInitialPasswordReset = () => {
+  const [formData, setFormData] = useState({ password: "", confirmPassword: "" });
   const [loading, setLoading] = useState(false);
   const router = useRouter();
 
@@ -24,23 +24,36 @@ const EmployeeLogin = () => {
     router.push("/");
   };
 
+  const validate = () => {
+    if (formData.password.length < 6) {
+      toast.error("Password must be at least 6 characters long.");
+      return false;
+    }
+    if (formData.password !== formData.confirmPassword) {
+      toast.error("Passwords do not match.");
+      return false;
+    }
+    return true;
+  };
+
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
+    if (!validate()) {
+      return;
+    }
+    const email = Cookies.get("email");
+    if (!email) {
+      toast.error("Authentication token not found. Please log in again.");
+      return;
+    }
     setLoading(true);
     try {
-      const response = await login(formData.email, formData.password);
+      const response = await initialResetPassword(email, formData.password);
       if (response && response.success) {
-        toast.success("Login successful!");
+        toast.success("Password Reset successful!");
         // Set cookie with token
-        Cookies.set("jwt", response.data.token, { expires: 1 }); // Expires in 1 day
-        Cookies.set("email", response.data.email, { expires: 1 }); // Expires in 1 day
         Cookies.set("role", response.data.role, { expires: 1 }); // Expires in 1 day
-        const role = response.data.role;
-        if (role === "ROLE_MODERATOR_PASSWORD_CHANGE_REQUIRED") {
-          router.push("/employee/initial-password-reset");
-        } else {
-          router.push("/employee/dashboard");
-        }
+        router.push("/employee/dashboard");
       } else {
         toast.error("Login failed, please check your credentials");
         // Handle login failure (e.g., show error message)
@@ -70,33 +83,14 @@ const EmployeeLogin = () => {
                 <GraduationCap className="w-8 h-8 text-white" />
                 <Library className="w-4 h-4 text-yellow-300 absolute -top-1 -right-1 animate-floating-book" />
               </div>
-              <h2 className="text-3xl font-bold text-white">Employee Login</h2>
+              <h2 className="text-3xl font-bold text-white">Employee Password Reset</h2>
               <p className="text-gray-300 mt-2 flex items-center justify-center gap-2">
                 <BookMarked className="w-4 h-4 text-blue-400" />
-                Access the employee dashboard
+                Reset your initial password to access the dashboard
               </p>
             </div>
 
             <form onSubmit={handleSubmit} className="space-y-6">
-              <div>
-                <label className="block text-sm font-medium text-gray-300 mb-2">
-                  Email
-                </label>
-                <div className="relative">
-                  <Mail className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-5 h-5" />
-                  <input
-                    type="email"
-                    required
-                    value={formData.email}
-                    onChange={(e) =>
-                      setFormData({ ...formData, email: e.target.value })
-                    }
-                    className="w-full pl-10 pr-4 py-3 bg-[#1a1f37]/50 border border-white/10 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-blue-500/50 transition text-white placeholder-gray-500"
-                    placeholder="admin@bookfair.com"
-                  />
-                </div>
-              </div>
-
               <div className="mb-10">
                 <label className="block text-sm font-medium text-gray-300 mb-2">
                   Password
@@ -109,6 +103,25 @@ const EmployeeLogin = () => {
                     value={formData.password}
                     onChange={(e) =>
                       setFormData({ ...formData, password: e.target.value })
+                    }
+                    className="w-full pl-10 pr-4 py-3 bg-[#1a1f37]/50 border border-white/10 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-blue-500/50 transition text-white placeholder-gray-500"
+                    placeholder="Enter your password"
+                  />
+                </div>
+              </div>
+
+              <div className="mb-10">
+                <label className="block text-sm font-medium text-gray-300 mb-2">
+                  Confirm Password
+                </label>
+                <div className="relative">
+                  <Lock className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-5 h-5" />
+                  <input
+                    type="password"
+                    required
+                    value={formData.confirmPassword}
+                    onChange={(e) =>
+                      setFormData({ ...formData, confirmPassword: e.target.value })
                     }
                     className="w-full pl-10 pr-4 py-3 bg-[#1a1f37]/50 border border-white/10 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-blue-500/50 transition text-white placeholder-gray-500"
                     placeholder="Enter your password"
@@ -135,7 +148,7 @@ const EmployeeLogin = () => {
                     Loading...
                   </div>
                 ) : (
-                  "Login to Dashboard"
+                  "Reset Password"
                 )}
               </button>
             </form>
@@ -146,4 +159,4 @@ const EmployeeLogin = () => {
   );
 };
 
-export default EmployeeLogin;
+export default EmployeeInitialPasswordReset;

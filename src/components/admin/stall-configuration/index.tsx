@@ -4,105 +4,144 @@
 import { Building, CheckCircle } from "lucide-react";
 import React, { useState } from "react";
 import CustomInput from "./CustomInput";
+import { Stall, StallConfig } from "./types";
+import toast from "react-hot-toast";
+import Cookies from "js-cookie";
+import { createStall } from "@/actions/stallActions";
 
 const StallConfiguration = () => {
-  const [stallConfig, setStallConfig] = useState({
-    small: 15,
-    medium: 20,
-    large: 15,
+  const [loading, setLoading] = useState(false);
+  const [stallConfig, setStallConfig] = useState<StallConfig>({
+    small: { count: 0, price: 0 },
+    medium: { count: 0, price: 0 },
+    large: { count: 0, price: 0 },
     namingPattern: "alphanumeric",
     prefix: "",
   });
 
-  const [stalls, setStalls] = useState(() => {
-    const savedStalls = localStorage.getItem("tradeHallStalls");
-    return savedStalls ? JSON.parse(savedStalls) : [];
-  });
+  const generateStalls = () => {
+    const stalls: Stall[] = [];
+    for (let i = 0; i < stallConfig.small.count; i++) {
+      stalls.push({
+        isConfigured: false,
+        stallName:
+          stallConfig.namingPattern === "alphanumeric"
+            ? `${stallConfig.prefix || ""}-S-${i + 1}`
+            : `S-${i + 1}`,
+        type: "SMALL",
+        price: stallConfig.small.price,
+        dimensions: "",
+        mapMetadata: {
+          mapWidth: 0,
+          mapHeight: 0,
+          mapWidthPercent: 0,
+          mapHeightPercent: 0,
+          mapRotation: 0,
+          mapShape: "",
+          mapSize: 0,
+          mapPosition: { x: 0, y: 0 },
+        },
+      });
+    }
+    for (let i = 0; i < stallConfig.medium.count; i++) {
+      stalls.push({
+        isConfigured: false,
+        stallName:
+          stallConfig.namingPattern === "alphanumeric"
+            ? `${stallConfig.prefix || ""}-M-${i + 1}`
+            : `M-${i + 1}`,
+        type: "MEDIUM",
+        price: stallConfig.medium.price,
+        dimensions: "",
+        mapMetadata: {
+          mapWidth: 0,
+          mapHeight: 0,
+          mapWidthPercent: 0,
+          mapHeightPercent: 0,
+          mapRotation: 0,
+          mapShape: "",
+          mapSize: 0,
+          mapPosition: { x: 0, y: 0 },
+        },
+      });
+    }
+    for (let i = 0; i < stallConfig.large.count; i++) {
+      stalls.push({
+        isConfigured: false,
+        stallName:
+          stallConfig.namingPattern === "alphanumeric"
+            ? `${stallConfig.prefix || ""}-L-${i + 1}`
+            : `L-${i + 1}`,
+        type: "LARGE",
+        price: stallConfig.large.price,
+        dimensions: "",
+        mapMetadata: {
+          mapWidth: 0,
+          mapHeight: 0,
+          mapWidthPercent: 0,
+          mapHeightPercent: 0,
+          mapRotation: 0,
+          mapShape: "",
+          mapSize: 0,
+          mapPosition: { x: 0, y: 0 },
+        },
+      });
+    }
+    return stalls;
+  };
 
-  const generateStallsFromConfig = () => {
-    const { small, medium, large, namingPattern, prefix } = stallConfig;
-    const totalStalls = small + medium + large;
+  const validateConfig = (): boolean => {
+    if (
+      stallConfig.small.count < 0 || 
+      stallConfig.medium.count < 0 ||
+      stallConfig.large.count < 0
+    ) {
+      toast.error("Stall counts cannot be negative.");
+      return false;
+    }
+    if (
+      stallConfig.small.price < 0 ||
+      stallConfig.medium.price < 0 ||
+      stallConfig.large.price < 0
+    ) {
+      toast.error("Stall prices cannot be negative.");
+      return false;
+    }
+    if(stallConfig.small.count === 0 && stallConfig.medium.count === 0 && stallConfig.large.count === 0) {
+      toast.error("At least one stall must be configured.");
+      return false;
+    }
+    return true;
+  };
 
-    if (totalStalls === 0) {
-      alert("⚠️ Please configure at least one stall.");
+  const createStalls = async () => {
+    const jwt = Cookies.get("jwt") || "";
+    if (!jwt) {
+      toast.error("Authentication token not found. Please log in again.");
       return;
     }
-
-    if (
-      stalls.length > 0 &&
-      stalls.some((s: { reserved: any }) => s.reserved)
-    ) {
-      if (
-        !window.confirm(
-          "⚠️ Warning: Some stalls are already reserved.\n\nGenerating new stalls will RESET ALL bookings.\n\nAre you sure you want to continue?"
-        )
-      ) {
-        return;
-      }
+    if (!validateConfig()) {
+      return;
     }
-    const newStalls = [];
-
-    let stallNumber = 1;
-    let columnNumber = 1;
-    let rowLetter = "A";
-
-    const generateId = () => {
-      let id;
-      if (namingPattern === "alphanumeric") {
-        id = `${rowLetter}${columnNumber}`;
-        columnNumber++;
-        if (columnNumber > 10) {
-          columnNumber = 1;
-          rowLetter = String.fromCharCode(rowLetter.charCodeAt(0) + 1);
+    try {
+      setLoading(true);
+      // Call createStall for each stall
+      const stalls = generateStalls();
+      for (const stall of stalls) {
+        const response = await createStall(jwt, stall);
+        if (!response.success) {
+          toast.error(response.message || "Failed to create some stalls.");
+          console.log(response.message);
+          return;
         }
-      } else {
-        id = `${stallNumber}`;
-        stallNumber++;
       }
-      return prefix ? `${prefix}${id}` : id;
-    };
-
-    for (let i = 0; i < small; i++) {
-      newStalls.push({
-        id: generateId(),
-        size: "Small",
-        price: 100,
-        reserved: false,
-        businessName: null,
-        email: null,
-        mapPosition: null,
-      });
+      toast.success("All stalls created successfully!");
+    } catch (err) {
+      console.log("An error occurred while creating stalls:", err);
+      toast.error("An error occurred while creating stalls. Please try again.");
+    } finally {
+      setLoading(false);
     }
-
-    for (let i = 0; i < medium; i++) {
-      newStalls.push({
-        id: generateId(),
-        size: "Medium",
-        price: 150,
-        reserved: false,
-        businessName: null,
-        email: null,
-        mapPosition: null,
-      });
-    }
-
-    for (let i = 0; i < large; i++) {
-      newStalls.push({
-        id: generateId(),
-        size: "Large",
-        price: 200,
-        reserved: false,
-        businessName: null,
-        email: null,
-        mapPosition: null,
-      });
-    }
-
-    setStalls(newStalls);
-    const prefixText = prefix ? ` with prefix "${prefix}"` : "";
-    alert(
-      `✅ Generated ${totalStalls} stalls${prefixText}!\n\n${small} Small\n${medium} Medium\n${large} Large\n\nNext: Upload a map and position these stalls.`
-    );
   };
 
   return (
@@ -112,14 +151,25 @@ const StallConfiguration = () => {
       <div>
         <div className="bg-gradient-to-br from-green-500/10 to-blue-600/10 border border-green-500/20 rounded-xl sm:rounded-2xl p-4 sm:p-6 md:p-8 ">
           <div className="grid grid-cols-1 md:grid-cols-3 gap-4 sm:gap-6 mb-6">
-            
-
             <CustomInput
-              value={stallConfig.small}
-              onChange={(value) =>
+              count={stallConfig.small.count}
+              price={stallConfig.small.price}
+              onCountChange={(value) =>
                 setStallConfig({
                   ...stallConfig,
-                  small: value,
+                  small: {
+                    ...stallConfig.small,
+                    count: value,
+                  },
+                })
+              }
+              onPriceChange={(value) =>
+                setStallConfig({
+                  ...stallConfig,
+                  small: {
+                    ...stallConfig.small,
+                    price: value,
+                  },
                 })
               }
               label="Small Stalls"
@@ -127,11 +177,24 @@ const StallConfiguration = () => {
             />
 
             <CustomInput
-              value={stallConfig.medium}
-              onChange={(value) =>
+              count={stallConfig.medium.count}
+              price={stallConfig.medium.price}
+              onCountChange={(value) =>
                 setStallConfig({
                   ...stallConfig,
-                  medium: value,
+                  medium: {
+                    ...stallConfig.medium,
+                    count: value,
+                  },
+                })
+              }
+              onPriceChange={(value) =>
+                setStallConfig({
+                  ...stallConfig,
+                  medium: {
+                    ...stallConfig.medium,
+                    price: value,
+                  },
                 })
               }
               label="Medium Stalls"
@@ -139,11 +202,24 @@ const StallConfiguration = () => {
             />
 
             <CustomInput
-              value={stallConfig.large} 
-              onChange={(value) =>
+              count={stallConfig.large.count}
+              price={stallConfig.large.price}
+              onCountChange={(value) =>
                 setStallConfig({
                   ...stallConfig,
-                  large: value,
+                  large: {
+                    ...stallConfig.large,
+                    count: value,
+                  },
+                })
+              }
+              onPriceChange={(value) =>
+                setStallConfig({
+                  ...stallConfig,
+                  large: {
+                    ...stallConfig.large,
+                    price: value,
+                  },
                 })
               }
               label="Large Stalls"
@@ -186,7 +262,8 @@ const StallConfiguration = () => {
                 }`}
               >
                 <div className="text-lg mb-1">
-                  {stallConfig.prefix || ""}A1, A2...
+                  {`${stallConfig.prefix}-[SIZE]-1, ${stallConfig.prefix}-[SIZE]-2...` ||
+                    ""}
                 </div>
                 <div className="text-xs opacity-75">Alphanumeric</div>
               </button>
@@ -201,9 +278,7 @@ const StallConfiguration = () => {
                     : "bg-[#0d1229] text-gray-400 border border-white/10"
                 }`}
               >
-                <div className="text-lg mb-1">
-                  {stallConfig.prefix || ""}1, 2, 3...
-                </div>
+                <div className="text-lg mb-1">{"[SIZE]-1, [SIZE]-2, [SIZE]-3..."}</div>
                 <div className="text-xs opacity-75">Numeric</div>
               </button>
             </div>
@@ -211,11 +286,27 @@ const StallConfiguration = () => {
 
           <button
             type="button"
-            onClick={generateStallsFromConfig}
-            className="w-full py-4 bg-gradient-to-r cursor-pointer from-indigo-500 to-purple-600 text-white rounded-xl font-bold hover:from-indigo-600 hover:to-purple-700 transition transform hover:scale-[1.02] shadow-lg flex items-center justify-center gap-2"
+            onClick={createStalls}
+            disabled={loading}
+            className={`w-full py-4 rounded-xl font-bold transition transform 
+    flex items-center justify-center gap-2 shadow-lg ${
+      loading
+        ? "bg-indigo-500/60 text-white cursor-not-allowed opacity-70 scale-[0.99]"
+        : "bg-gradient-to-r from-indigo-500 to-purple-600 text-white hover:from-indigo-600 hover:to-purple-700 hover:scale-[1.02]"
+    }
+  `}
           >
-            <CheckCircle className="w-5 h-5" />
-            Generate Stalls
+            {loading ? (
+              <>
+                <span className="h-5 w-5 border-2 border-white border-t-transparent rounded-full animate-spin"></span>
+                Generating...
+              </>
+            ) : (
+              <>
+                <CheckCircle className="w-5 h-5" />
+                Generate Stalls
+              </>
+            )}
           </button>
         </div>
       </div>

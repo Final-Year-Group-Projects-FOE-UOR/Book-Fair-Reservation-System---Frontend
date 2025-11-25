@@ -1,4 +1,5 @@
 "use client";
+import { login } from "@/actions/authActions";
 import AnimatedBackground from "@/components/common/backgrounds/animated-background";
 import {
   BookMarked,
@@ -11,48 +12,40 @@ import {
 } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
+import toast from "react-hot-toast";
+import Cookies from "js-cookie";
 
 const AdminLogin = () => {
+  const [formData, setFormData] = useState({ email: "", password: "" });
+  const [loading, setLoading] = useState(false);
   const router = useRouter();
+
   const handleCardClick = () => {
     router.push("/");
   };
 
-  const handleSuccessLogin = () => {
-    router.push("/admin/dashboard");
-  };
-
-  // Predefined admin credentials
-  const adminCredentials = [
-    { email: "admin@bookfair.com", password: "admin123", name: "Admin User" },
-    {
-      email: "employee@bookfair.com",
-      password: "employee123",
-      name: "Employee User",
-    },
-  ];
-  const handleAdminLogin = (email: string, password: string) => {
-    const admin = adminCredentials.find(
-      (a) => a.email === email && a.password === password
-    );
-    if (admin) {
-      return true;
-    }
-    return false;
-  };
-
-  const [formData, setFormData] = useState({ email: "", password: "" });
-  const [error, setError] = useState("");
-
-  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    setError("");
-
-    const success = handleAdminLogin(formData.email, formData.password);
-    if (!success) {
-      setError("Invalid email or password. Please check your credentials.");
-    } else {
-      handleSuccessLogin();
+    setLoading(true);
+    try {
+      const response = await login(formData.email, formData.password);
+      if (response && response.success) {
+        toast.success("Login successful!");
+        // Set cookie with token
+        Cookies.set("jwt", response.data.token, { expires: 1 }); // Expires in 1 day
+        Cookies.set("email", response.data.email, { expires: 1 }); // Expires in 1 day
+        Cookies.set("role", response.data.role, { expires: 1 }); // Expires in 1 day
+        router.push("/admin/dashboard");
+      } else {
+        toast.error("Login failed, please check your credentials");
+        // Handle login failure (e.g., show error message)
+        console.log("Login failed:", response?.message);
+      }
+    } catch (err) {
+      console.log("An error occurred during login:", err);
+      toast.error("An error occurred during login. Please try again.");
+    } finally {
+      setLoading(false);
     }
   };
   return (
@@ -72,19 +65,12 @@ const AdminLogin = () => {
                 <GraduationCap className="w-8 h-8 text-white" />
                 <Library className="w-4 h-4 text-yellow-300 absolute -top-1 -right-1 animate-floating-book" />
               </div>
-              <h2 className="text-3xl font-bold text-white">Employee Login</h2>
+              <h2 className="text-3xl font-bold text-white">Admin Login</h2>
               <p className="text-gray-300 mt-2 flex items-center justify-center gap-2">
                 <BookMarked className="w-4 h-4 text-blue-400" />
                 Access the admin dashboard
               </p>
             </div>
-
-            {error && (
-              <div className="mb-4 bg-red-500/20 border border-red-500/50 text-red-300 px-4 py-3 rounded-xl text-sm flex items-center gap-2">
-                <X className="w-4 h-4" />
-                {error}
-              </div>
-            )}
 
             <form onSubmit={handleSubmit} className="space-y-6">
               <div>
@@ -106,7 +92,7 @@ const AdminLogin = () => {
                 </div>
               </div>
 
-              <div>
+              <div className="mb-10">
                 <label className="block text-sm font-medium text-gray-300 mb-2">
                   Password
                 </label>
@@ -127,21 +113,27 @@ const AdminLogin = () => {
 
               <button
                 type="submit"
-                className="w-full bg-gradient-to-r from-blue-500 to-cyan-600 text-white py-3 rounded-xl font-semibold hover:from-blue-600 hover:to-cyan-700 transform hover:scale-105 transition-all shadow-lg shadow-blue-500/50"
+                disabled={loading}
+                className={`
+    w-full cursor-pointer bg-gradient-to-r from-blue-500 to-cyan-600 text-white py-3 rounded-xl font-semibold 
+    transform transition-all shadow-lg shadow-blue-500/50
+    ${
+      loading
+        ? "opacity-60 cursor-not-allowed hover:scale-100"
+        : "hover:from-blue-600 hover:to-cyan-700 hover:scale-105"
+    }
+  `}
               >
-                Login to Dashboard
+                {loading ? (
+                  <div className="flex items-center justify-center gap-2">
+                    <span className="h-5 w-5 border-2 border-white border-t-transparent rounded-full animate-spin"></span>
+                    Loading...
+                  </div>
+                ) : (
+                  "Login to Dashboard"
+                )}
               </button>
             </form>
-
-            <div className="mt-6 bg-blue-500/10 border border-blue-500/20 rounded-xl p-4">
-              <p className="text-xs text-gray-300 text-center mb-2 font-semibold">
-                Demo Credentials:
-              </p>
-              <div className="space-y-1 text-xs text-gray-400">
-                <p className="text-center">admin@bookfair.com / admin123</p>
-                {/* <p className="text-center">employee@bookfair.com / employee123</p> */}
-              </div>
-            </div>
           </div>
         </div>
       </div>
