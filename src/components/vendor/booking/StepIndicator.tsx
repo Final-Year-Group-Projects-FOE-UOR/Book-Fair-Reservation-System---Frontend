@@ -4,6 +4,10 @@ interface StepIndicatorProps {
 }
 
 const StepIndicator = ({ bookingStep, setBookingStep }: StepIndicatorProps) => {
+  const handleClickStep = (step: number) => {
+    if(step === 3 || step === 2) return; // cannot go to step 2 or 3 manually
+    setBookingStep(step);
+  }
   return (
     <>
       <div className="mb-6 flex font-geist-sans flex-col md:flex-row md:items-center md:justify-between gap-4">
@@ -14,7 +18,7 @@ const StepIndicator = ({ bookingStep, setBookingStep }: StepIndicatorProps) => {
               className={`flex items-center gap-2 ${step < 3 ? "mr-2" : ""}`}
             >
               <div
-                onClick={() => setBookingStep(step)}
+                onClick={() => handleClickStep(step)}
                 className={`w-10 h-10 rounded-full cursor-pointer flex items-center justify-center font-bold text-sm transition-all ${
                   bookingStep === step
                     ? "bg-gradient-to-r from-pink-500 to-purple-600 text-white shadow-lg scale-110"

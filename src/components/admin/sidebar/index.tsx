@@ -13,17 +13,23 @@ import {
   Menu,
   Settings,
   Users,
+  X,
 } from "lucide-react";
 import { usePathname, useRouter } from "next/navigation";
-import React, { useEffect, useState } from "react";
+import React, { Fragment, useEffect, useState } from "react";
 import SidebarItem from "./SidebarItem";
 
 type AdminSidebarProps = {
   sidebarOpen: boolean;
   setSidebarOpen: (open: boolean) => void;
+  isHidden?: boolean;
 };
 
-const AdminSidebar = ({ sidebarOpen, setSidebarOpen }: AdminSidebarProps) => {
+const AdminSidebar = ({
+  sidebarOpen,
+  setSidebarOpen,
+  isHidden = false,
+}: AdminSidebarProps) => {
   const router = useRouter();
   const pathname = usePathname();
   const [currentView, setCurrentView] = useState("superadmin_landing");
@@ -54,7 +60,7 @@ const AdminSidebar = ({ sidebarOpen, setSidebarOpen }: AdminSidebarProps) => {
       <div
         className={`${
           sidebarOpen ? "w-64" : "w-20"
-        } transition-all fixed duration-300 min-h-screen bg-[#1e2337]/80 backdrop-blur-xl border-r border-white/10 flex-col  z-100 hidden md:flex`}
+        } transition-all fixed duration-300 min-h-screen bg-[#1e2337]/80 backdrop-blur-xl border-r border-white/10 flex-col  z-100 ${!isHidden ? "hidden md:flex" : "flex"}`}
       >
         <div className="p-6 flex items-center h-[80px] justify-between border-b border-white/10">
           {sidebarOpen && (
@@ -65,12 +71,14 @@ const AdminSidebar = ({ sidebarOpen, setSidebarOpen }: AdminSidebarProps) => {
               <span className="text-white font-bold text-lg">SuperAdmin</span>
             </div>
           )}
-          <button
-            onClick={() => setSidebarOpen(!sidebarOpen)}
-            className="text-gray-400 hover:text-white transition p-2 hover:bg-white/5 rounded-lg"
-          >
-            <Menu className="w-5 h-5" />
-          </button>
+          {!isHidden && (
+            <button
+              onClick={() => setSidebarOpen(!sidebarOpen)}
+              className="text-gray-400 hover:text-white transition p-2 hover:bg-white/5 rounded-lg"
+            >
+              <Menu className="w-5 h-5" />
+            </button>
+          )}
         </div>
 
         <nav className="flex-1 p-4 space-y-2">
@@ -151,21 +159,20 @@ const AdminSidebar = ({ sidebarOpen, setSidebarOpen }: AdminSidebarProps) => {
                 router.push("/admin/stall-configuration");
               }}
             />
-
-            <SidebarItem
-              icon={<MapPin className="w-5 h-5" />}
-              label="Map Management"
-              tag="mapManagement"
-              sidebarOpen={sidebarOpen}
-              superAdminTab={superAdminTab}
-              setSuperAdminTab={setSuperAdminTab}
-              onClick={() => {
-                setSuperAdminTab("mapManagement");
-                router.push("/admin/map-management");
-              }}
-            />
-
-            
+            <div className="lg:flex hidden">
+              <SidebarItem
+                icon={<MapPin className="w-5 h-5" />}
+                label="Map Management"
+                tag="mapManagement"
+                sidebarOpen={sidebarOpen}
+                superAdminTab={superAdminTab}
+                setSuperAdminTab={setSuperAdminTab}
+                onClick={() => {
+                  setSuperAdminTab("mapManagement");
+                  router.push("/admin/map-management");
+                }}
+              />
+            </div>
           </div>
         </nav>
 

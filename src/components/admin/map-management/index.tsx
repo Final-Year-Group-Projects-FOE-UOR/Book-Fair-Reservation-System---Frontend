@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 "use client";
 import React, { useEffect, useState } from "react";
-import { MapPin, CheckCircle,Trash, Upload } from "lucide-react";
+import { MapPin, CheckCircle, Trash, Upload } from "lucide-react";
 import MapViewer from "./dialogs/MapViewer";
 import StallSelector from "./StallSelector";
 import MapEditDialog from "./dialogs/MapEditDialog";
@@ -12,9 +12,10 @@ import { addMap, getMap } from "@/actions/mapActions";
 import LoadingScreen from "@/components/common/loading";
 import { getStalls } from "@/actions/stallActions";
 import { Stall } from "../stall-configuration/types";
-
+import { useRouter } from "next/navigation";
 
 export default function MapManagement() {
+  const router = useRouter();
   const [upload, setUpload] = useState<boolean>(false);
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
   const [isMapDialogOpen, setIsMapDialogOpen] = useState(false);
@@ -23,6 +24,7 @@ export default function MapManagement() {
   const [stallMapImage, setStallMapImage] = useState<string | null>();
   const [loading, setLoading] = useState(false);
   const [stalls, setStalls] = useState<Stall[]>([]);
+  const [isSmallScreen, setIsSmallScreen] = useState<boolean | null>(null);
 
   const getCurrentMap = async () => {
     const jwt = Cookies.get("jwt") || "";
@@ -53,7 +55,7 @@ export default function MapManagement() {
     try {
       setLoading(true);
       const response = await getStalls(jwt);
-      console.log(response.data)
+      console.log(response.data);
       if (response.success) {
         setStalls(response.data);
       } else {
@@ -64,12 +66,37 @@ export default function MapManagement() {
     } finally {
       setLoading(false);
     }
-  }
+  };
 
   useEffect(() => {
+    const mediaQuery = window.matchMedia("(max-width: 1023px)");
+
+    const handleViewportChange = (
+      event: MediaQueryList | MediaQueryListEvent,
+    ) => {
+      const mobile = event.matches;
+      setIsSmallScreen(mobile);
+      if (mobile) {
+        router.replace("/admin/dashboard");
+      }
+    };
+
+    handleViewportChange(mediaQuery);
+    mediaQuery.addEventListener("change", handleViewportChange);
+
+    return () => {
+      mediaQuery.removeEventListener("change", handleViewportChange);
+    };
+  }, [router]);
+
+  useEffect(() => {
+    if (isSmallScreen !== false) {
+      return;
+    }
+
     getCurrentMap();
     getStallsList();
-  }, []);
+  }, [isSmallScreen]);
 
   const handleUploadSuccess = async (response: any) => {
     const mapUrl = response.url;
@@ -92,6 +119,10 @@ export default function MapManagement() {
       setUpload(false);
     }
   };
+
+  if (isSmallScreen !== false) {
+    return null;
+  }
 
   return (
     <>

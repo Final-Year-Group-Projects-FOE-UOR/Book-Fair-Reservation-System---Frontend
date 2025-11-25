@@ -23,11 +23,11 @@ export default function AnimatedHeader({ icon, title, description }: AnimatedHea
           <Sparkles className="w-4 h-4 text-yellow-300 absolute -top-1 -right-1 animate-sparkle" />
         </div>
         <div>
-          <h2 className="text-2xl font-bold text-white flex items-center gap-2">
+          <h2 className="sm:text-2xl text-xl font-bold text-white flex items-center gap-2">
             {title}
-            <Bookmark className="w-6 h-6 text-blue-400 animate-bookmark-drop" />
+            <Bookmark className="sm:w-6 sm:h-6 w-4 h-4 text-blue-400 animate-bookmark-drop" />
           </h2>
-          <p className="text-[12px] text-gray-400 flex items-center gap-1">
+          <p className="sm:text-[12px] text-[11px] text-gray-400 flex items-center gap-1">
             <Feather className="w-3 h-3 text-cyan-400" />
             {description}
           </p>

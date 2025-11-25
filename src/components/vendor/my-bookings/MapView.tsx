@@ -48,7 +48,7 @@ const MapView: React.FC<MapViewProps> = ({
 
 
   return (
-    <div className="flex-1 overflow-auto font-geist-sans beautiful-scrollbar bg-[#0b1220] rounded">
+    <div className="flex md:min-w-full min-w-[1000px] overflow-auto font-geist-sans beautiful-scrollbar bg-[#0b1220] rounded">
       {/* SAME STRUCTURE AS ADMIN */}
       <div className="relative w-full p-4">
         {stallMapImage ? (

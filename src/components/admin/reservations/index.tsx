@@ -3,7 +3,10 @@
 import { Stall } from "@/components/vendor/types";
 import React, { useEffect, useState } from "react";
 import MapView from "./map";
-import { Reservation, ReservationResponse } from "@/components/vendor/my-bookings/types";
+import {
+  Reservation,
+  ReservationResponse,
+} from "@/components/vendor/my-bookings/types";
 import Cookies from "js-cookie";
 import toast from "react-hot-toast";
 import { getAllReservations } from "@/actions/reservationsActions";
@@ -88,18 +91,20 @@ const Reservations = () => {
     setData();
   }, []);
 
-  if(loading) {
-    return <LoadingScreen/>;
+  if (loading) {
+    return <LoadingScreen />;
   }
 
   return (
     <div
       className={`min-h-[calc(100vh-80px)] bg-linear-to-br w-full font-geist-sans from-[#1a1f37] via-[#2d1b4e] to-[#1a1f37] p-8 opacity-100 relative overflow-hidden`}
     >
-      <MapView
-        stallMapImage={"https://ik.imagekit.io/web92xyy0/s1_o03c7akip.jpg"}
-        reservations={reservations}
-      />
+      <div className="w-full overflow-auto rounded-md">
+        <MapView
+          stallMapImage={"https://ik.imagekit.io/web92xyy0/s1_o03c7akip.jpg"}
+          reservations={reservations}
+        />
+      </div>
     </div>
   );
 };

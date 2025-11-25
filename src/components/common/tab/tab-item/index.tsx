@@ -7,17 +7,18 @@ type TabItemProps = {
   tabName: string;
   icon: React.ReactNode;
   label: string;
-}
+};
 const TabItem = ({ tabName, icon, label }: TabItemProps) => {
- const router = useRouter();
- const pathname = usePathname();
+  const router = useRouter();
+  const pathname = usePathname();
 
- const isActive =
-   pathname.split("/")[1] === tabName ||  pathname.split("/").slice(0, 3).join("/") === `/${tabName}`;
+  const isActive =
+    pathname.split("/")[1] === tabName ||
+    pathname.split("/").slice(0, 3).join("/") === `/${tabName}`;
 
- const handletabNameChange = () => {
+  const handletabNameChange = () => {
     router.push(`/${tabName}`);
- }
+  };
 
   return (
     <button
@@ -27,13 +28,13 @@ const TabItem = ({ tabName, icon, label }: TabItemProps) => {
     >
       <div className="flex items-center font-geist-sans gap-2">
         {icon}
-        {label}
+        <span className="sm:flex hidden">{label}</span>
       </div>
       {isActive && (
         <div className="absolute bottom-0 left-0 right-0 h-1 bg-linear-to-r from-pink-500 to-purple-600 rounded-full"></div>
       )}
     </button>
   );
-}
+};
 
-export default TabItem
+export default TabItem;

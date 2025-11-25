@@ -29,7 +29,6 @@ const MyProfile = () => {
     setLoading(true);
     try {
       const response = await fetchVendorByEmail(jwt, email);
-      console.log(response);
       if (response.success) {
         setVendorInfo({
           userId: response.data.id,
@@ -54,7 +53,8 @@ const MyProfile = () => {
 
   const addGenre = (e: React.FormEvent) => {
     e.preventDefault();
-    const newGenre = genreInput.trim().at(0)?.toUpperCase() + genreInput.trim().slice(1);
+    const newGenre =
+      genreInput.trim().at(0)?.toUpperCase() + genreInput.trim().slice(1);
     if (!newGenre) return;
     if (vendorInfo.genres?.includes(newGenre)) {
       toast.error("This genre is already added.");
@@ -62,19 +62,15 @@ const MyProfile = () => {
     }
     setVendorInfo((prev) => ({
       ...prev,
-      genres: prev.genres
-        ? [...prev.genres, newGenre]
-        : [newGenre],
+      genres: prev.genres ? [...prev.genres, newGenre] : [newGenre],
     }));
     setGenreInput("");
   };
 
   const removeGenre = (g: string) => {
-    const newGenres =
-      vendorInfo.genres?.filter((genre) => genre !== g) || [];
     setVendorInfo((prev) => ({
       ...prev,
-      genres: newGenres,
+      genres: prev.genres?.filter((genre) => genre !== g) || [],
     }));
   };
 
@@ -86,33 +82,33 @@ const MyProfile = () => {
       return;
     }
     setButtonLoading(true);
-    try{
+    try {
       const response = await updateVendor(jwt, email, vendorInfo);
       if (response.success) {
         toast.success("Profile updated successfully!");
       } else {
         toast.error(response.message || "Failed to update profile.");
       }
-    }catch(error){
+    } catch (error) {
       toast.error("An error occurred while updating the profile.");
-    }finally{
+    } finally {
       setButtonLoading(false);
-    } 
-  }
+    }
+  };
 
-  if (loading) {
-    return <LoadingScreen />;
-  }
+  if (loading) return <LoadingScreen />;
 
   return (
-    <div className="bg-gradient-to-br font-geist-sans from-[#2a2f4a]/80 to-[#1e2337]/80 backdrop-blur-xl rounded-3xl border border-white/10 shadow-2xl p-8">
-      <h3 className="text-2xl font-bold text-white mb-4 flex items-center gap-2">
-        <User className="w-6 h-6 text-pink-400" />
+    <div className="bg-gradient-to-br font-geist-sans from-[#2a2f4a]/80 to-[#1e2337]/80 backdrop-blur-xl rounded-2xl sm:rounded-3xl border border-white/10 shadow-2xl p-5 sm:p-8 w-full max-w-3xl mx-auto">
+      <h3 className="text-xl sm:text-2xl font-bold text-white mb-5 sm:mb-6 flex items-center gap-2">
+        <User className="w-5 h-5 sm:w-6 sm:h-6 text-pink-400 shrink-0" />
         Profile Information
       </h3>
-      <div className="grid md:grid-cols-2 gap-6 mb-8">
+
+      {/* Business Name + Email */}
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-4 sm:gap-6 mb-6 sm:mb-8">
         <div>
-          <label className="block text-sm font-semibold text-gray-300 mb-2">
+          <label className="block text-xs sm:text-sm font-semibold text-gray-300 mb-1.5 sm:mb-2">
             Business Name
           </label>
           <input
@@ -121,12 +117,12 @@ const MyProfile = () => {
             onChange={(e) =>
               setVendorInfo({ ...vendorInfo, businessName: e.target.value })
             }
-            className="w-full px-4 py-3 bg-[#0d1229] border border-white/10 rounded-xl text-white focus:outline-none focus:border-pink-500 transition"
+            className="w-full px-3 sm:px-4 py-2.5 sm:py-3 bg-[#0d1229] border border-white/10 rounded-xl text-sm sm:text-base text-white focus:outline-none focus:border-pink-500 transition"
             placeholder="Your business name"
           />
         </div>
         <div>
-          <label className="block text-sm font-semibold text-gray-300 mb-2">
+          <label className="block text-xs sm:text-sm font-semibold text-gray-300 mb-1.5 sm:mb-2">
             Contact Email
           </label>
           <input
@@ -136,13 +132,15 @@ const MyProfile = () => {
             onChange={(e) =>
               setVendorInfo({ ...vendorInfo, email: e.target.value })
             }
-            className="w-full px-4 py-3 bg-[#0d1229] border border-white/10 rounded-xl text-white focus:outline-none focus:border-pink-500 transition disabled:cursor-not-allowed disabled:opacity-50"
+            className="w-full px-3 sm:px-4 py-2.5 sm:py-3 bg-[#0d1229] border border-white/10 rounded-xl text-sm sm:text-base text-white focus:outline-none focus:border-pink-500 transition disabled:cursor-not-allowed disabled:opacity-50"
             placeholder="you@example.com"
           />
         </div>
       </div>
-      <form onSubmit={(e) => addGenre(e)} className="mb-6">
-        <label className="block text-sm font-semibold text-gray-300 mb-2">
+
+      {/* Genres */}
+      <form onSubmit={addGenre} className="mb-5 sm:mb-6">
+        <label className="block text-xs sm:text-sm font-semibold text-gray-300 mb-1.5 sm:mb-2">
           Genres / Categories
         </label>
         <div className="flex gap-2 mb-3">
@@ -150,26 +148,26 @@ const MyProfile = () => {
             type="text"
             value={genreInput}
             onChange={(e) => setGenreInput(e.target.value)}
-            className="flex-1 px-4 py-3 bg-[#0d1229] border border-white/10 rounded-xl text-white focus:outline-none focus:border-pink-500 transition"
+            className="flex-1 min-w-0 px-3 sm:px-4 py-2.5 sm:py-3 bg-[#0d1229] border border-white/10 rounded-xl text-sm sm:text-base text-white focus:outline-none focus:border-pink-500 transition"
             placeholder="Add a genre"
           />
           <button
-          
             type="submit"
-            onClick={addGenre}
-            className="px-4 py-3 bg-gradient-to-r from-pink-500 to-purple-600 text-white rounded-xl font-semibold hover:from-pink-600 hover:to-purple-700 transition"
+            className="px-3 sm:px-4 py-2.5 sm:py-3 bg-gradient-to-r from-pink-500 to-purple-600 text-white text-sm sm:text-base rounded-xl font-semibold hover:from-pink-600 hover:to-purple-700 transition whitespace-nowrap shrink-0"
           >
             Add
           </button>
         </div>
         {vendorInfo.genres?.length === 0 ? (
-          <p className="text-sm text-gray-400">No genres added yet.</p>
+          <p className="text-xs sm:text-sm text-gray-400">
+            No genres added yet.
+          </p>
         ) : (
           <div className="flex flex-wrap gap-2">
             {vendorInfo.genres?.map((g) => (
               <span
                 key={g}
-                className="group inline-flex items-center gap-2 bg-pink-500/20 border border-pink-500/30 text-pink-300 px-3 py-2 rounded-full text-xs font-semibold"
+                className="inline-flex items-center gap-1.5 bg-pink-500/20 border border-pink-500/30 text-pink-300 px-3 py-1.5 rounded-full text-xs font-semibold"
               >
                 {g}
                 <button
@@ -184,12 +182,14 @@ const MyProfile = () => {
           </div>
         )}
       </form>
+
+      {/* Save Button */}
       <div className="flex justify-end">
         <button
           type="button"
           onClick={updateProfile}
           disabled={buttonLoading}
-          className="px-6 py-3 bg-gradient-to-r from-pink-500 to-purple-600 text-white rounded-xl font-semibold hover:from-pink-600 hover:to-purple-700 transition disabled:opacity-60 disabled:cursor-not-allowed flex items-center gap-2"
+          className="w-full sm:w-auto px-5 sm:px-6 py-2.5 sm:py-3 bg-gradient-to-r from-pink-500 to-purple-600 text-white text-sm sm:text-base rounded-xl font-semibold hover:from-pink-600 hover:to-purple-700 transition disabled:opacity-60 disabled:cursor-not-allowed flex items-center justify-center gap-2"
         >
           {buttonLoading && (
             <svg

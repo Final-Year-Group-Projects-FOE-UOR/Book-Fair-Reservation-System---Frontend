@@ -44,13 +44,14 @@ const StallAvailability = () => {
     <div
       className={`min-h-[calc(100vh-80px)] bg-linear-to-br w-full font-geist-sans from-[#1a1f37] via-[#2d1b4e] to-[#1a1f37] p-8 opacity-100 relative overflow-hidden`}
     >
-      <MapView
-        stallMapImage={"https://ik.imagekit.io/web92xyy0/s1_o03c7akip.jpg"}
-        stalls={stalls}
-        selectedStalls={selectedStalls}
-        setSelectedStalls={setSelectedStalls}
-      />
-     
+      <div className="w-full overflow-auto rounded-md">
+        <MapView
+          stallMapImage={"https://ik.imagekit.io/web92xyy0/s1_o03c7akip.jpg"}
+          stalls={stalls}
+          selectedStalls={selectedStalls}
+          setSelectedStalls={setSelectedStalls}
+        />
+      </div>
     </div>
   );
 }

@@ -1,5 +1,5 @@
 "use client";
- 
+
 import {
   Book,
   BookMarked,
@@ -14,9 +14,9 @@ import {
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 import React, { useState, useEffect } from "react";
 import InfoBox from "./InfoBox";
-import AnimatedBackground from "../common/backgrounds/animated-background";
 import LoginCard from "./LoginCard";
- 
+import AnimatedBackground from "@/components/common/backgrounds/animated-background";
+
 const Landing = () => {
   return (
     <AnimatedBackground>
@@ -31,7 +31,7 @@ const Landing = () => {
               </span>
               <Sparkles className="w-4 h-4 text-pink-400 animate-sparkle" />
             </div>
-            <h1 className="text-6xl font-bold text-white mb-4 drop-shadow-lg bg-linear-to-r from-pink-400 via-purple-400 to-blue-400 bg-clip-text  flex items-center justify-center gap-4">
+            <h1 className="2xl:text-6xl lg:text-5xl text-4xl font-bold text-white mb-4 drop-shadow-lg bg-linear-to-r from-pink-400 via-purple-400 to-blue-400 bg-clip-text  flex items-center justify-center gap-4">
               <Book className="w-16 h-16 text-pink-400 animate-floating-book" />
               Colombo International Bookfair
               <Library
@@ -39,16 +39,16 @@ const Landing = () => {
                 style={{ animationDelay: "2s" }}
               />
             </h1>
-            <p className="text-xl text-gray-300 mb-8 flex items-center justify-center gap-2">
+            <p className="2xl:text-xl text-lg text-gray-300 mb-8 flex items-center justify-center gap-2">
               <Feather className="w-5 h-5 text-purple-400" />
               Smart Stall Reservation System
               <Feather className="w-5 h-5 text-pink-400" />
             </p>
           </div>
         </div>
- 
+
         {/* Quick Stats Bar */}
-        <div className="grid grid-cols-3 gap-4 max-w-3xl mx-auto mb-12">
+        <div className="flex items-center justify-center md:flex-row flex-col md:gap-4 gap-2 md:max-w-3xl w-full mx-auto   mb-12">
           <InfoBox
             icon={<Calendar className="w-5 h-5 text-blue-400" />}
             title="Event Date"
@@ -65,10 +65,10 @@ const Landing = () => {
             value={13}
           />
         </div>
-        <div className="w-[60vw]">
+        <div className="xl:w-[60vw] w-full">
           <LoginCard />
         </div>
-        <div className="mt-12 w-[60vw] bg-linear-to-r from-[#2a2f4a]/60 to-[#1e2337]/60 backdrop-blur-xl border border-white/10 rounded-2xl p-6 flex items-center justify-between">
+        <div className="mt-12 xl:w-[60vw] w-full bg-linear-to-r from-[#2a2f4a]/60 to-[#1e2337]/60 backdrop-blur-xl border border-white/10 rounded-2xl p-6 flex items-center justify-between">
           <div className="flex items-center gap-4">
             <div className="relative">
               <Book className="w-8 h-8 text-yellow-400 animate-floating-book" />
@@ -89,7 +89,6 @@ const Landing = () => {
             <div className="text-center group">
               <div className="text-2xl font-bold text-white flex items-center justify-center gap-1">
                 50+
-                <BookMarked className="w-5 h-5 text-pink-400 group-hover:animate-bookmark-drop" />
               </div>
               <div className="text-xs text-gray-400">Stalls</div>
             </div>
@@ -100,7 +99,6 @@ const Landing = () => {
             <div className="text-center group">
               <div className="text-2xl font-bold text-white flex items-center justify-center gap-1">
                 24/7
-                <Library className="w-5 h-5 text-blue-400 group-hover:animate-floating-book" />
               </div>
               <div className="text-xs text-gray-400">Support</div>
             </div>
@@ -110,5 +108,5 @@ const Landing = () => {
     </AnimatedBackground>
   );
 };
- 
+
 export default Landing;

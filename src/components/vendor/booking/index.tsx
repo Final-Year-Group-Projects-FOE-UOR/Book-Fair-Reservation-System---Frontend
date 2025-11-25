@@ -137,7 +137,7 @@ const Booking = () => {
     <>
       {loading && <LoadingScreen />}
       {/* Booking Step Indicator */}
-      {stallMapImage && bookingStep === 1 && (
+      {bookingStep === 1 && (
         <div className="w-full flex justify-end items-center my-4">
           <button
             onClick={() => setUseMapView(!useMapView)}
@@ -165,15 +165,17 @@ const Booking = () => {
       {bookingStep === 1 && (
         <>
           {/* Conditionally render Map View or Grid View */}
-          {useMapView && stallMapImage ? (
-            <MapView
-              stallMapImage={
-                "https://ik.imagekit.io/web92xyy0/s1_o03c7akip.jpg"
-              }
-              stalls={stalls}
-              selectedStalls={selectedStalls}
-              setSelectedStalls={setSelectedStalls}
-            />
+          {useMapView ? (
+            <div className="w-full overflow-auto rounded-md">
+              <MapView
+                stallMapImage={
+                  "https://ik.imagekit.io/web92xyy0/s1_o03c7akip.jpg"
+                }
+                stalls={stalls}
+                selectedStalls={selectedStalls}
+                setSelectedStalls={setSelectedStalls}
+              />
+            </div>
           ) : (
             <GridView
               stalls={stalls}

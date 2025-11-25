@@ -39,22 +39,9 @@ const MapView: React.FC<MapViewProps> = ({
     setHoverCard((h) => ({ ...h, visible: false }));
   };
 
-  const handleSelect = (stall: Stall) => {
-    if (!stall.available) return;
-
-    setSelectedStalls((prev) => {
-      if (prev.includes(stall.id)) {
-        return prev.filter((id) => id !== stall.id);
-      }
-
-      if (prev.length >= maxSelectable) return prev;
-
-      return [...prev, stall.id];
-    });
-  };
 
   return (
-    <div className="flex-1 overflow-auto font-geist-sans beautiful-scrollbar bg-[#0b1220] rounded">
+    <div className="flex md:min-w-full min-w-[1000px] overflow-auto font-geist-sans beautiful-scrollbar bg-[#0b1220] rounded">
       <div className="relative w-full p-4">
         {stallMapImage ? (
           <img src={stallMapImage} alt="Map" className="w-full h-auto block" />
