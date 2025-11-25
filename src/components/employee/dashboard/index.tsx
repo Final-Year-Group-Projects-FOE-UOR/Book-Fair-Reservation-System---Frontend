@@ -3,10 +3,10 @@ import React, { useState } from "react";
 
 import DashboardHeader from "@/components/employee/dashboard/DashboardHeader";
 import DashboardTabs from "@/components/employee/dashboard/DashboardTabs";
-import BookingRequests from "@/components/employee/dashboard/tabs/BookingRequests";
 import StallAvailability from "@/components/employee/dashboard/tabs/StallAvailability";
 import AllReservations from "@/components/employee/dashboard/tabs/AllReservations";
 import { useQueryState } from "nuqs";
+import BookingRequests from "@/components/admin/booking-requests";
 
 const EmployeeDashboard = () => {
   const [employeeTab, setEmployeeTab] = useQueryState("currentPage");

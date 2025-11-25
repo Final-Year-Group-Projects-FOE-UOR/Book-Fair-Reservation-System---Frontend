@@ -1,19 +1,30 @@
 "use client";
 
-import { Stall } from "@/components/vendor/types";
+import {
+  CheckCircle,
+  X,
+  CalendarX,
+  Sparkles,
+  MapPin,
+  Grid,
+} from "lucide-react";
 import React, { useEffect, useState } from "react";
-import MapView from "./map";
-import { Reservation, ReservationResponse } from "@/components/vendor/my-bookings/types";
+import { Reservation, ReservationResponse } from "./types";
+import NoBookings from "./NoBookings";
+import LoadingScreen from "@/components/common/loading";
 import Cookies from "js-cookie";
 import toast from "react-hot-toast";
-import { getAllReservations } from "@/actions/reservationsActions";
+import { getAllReservationsbyEmail } from "@/actions/reservationsActions";
 import { getStalls } from "@/actions/stallActions";
-import LoadingScreen from "@/components/common/loading";
+import { Stall } from "../types";
+import MapView from "./MapView";
+import GridView from "./GridView";
 
-const Reservations = () => {
+const MyBookings: React.FC = () => {
   const [reservations, setReservations] = useState<Reservation[]>([]);
-  const [stalls, setStalls] = useState<Stall[]>([]);
   const [loading, setLoading] = useState(false);
+  const [useMapView, setUseMapView] = useState(false);
+  const [stalls, setStalls] = useState<Stall[]>([]);
 
   const fetchReservations = async () => {
     const jwt = Cookies.get("jwt");
@@ -24,7 +35,7 @@ const Reservations = () => {
     }
     setLoading(true);
     try {
-      const reservations = await getAllReservations(jwt);
+      const reservations = await getAllReservationsbyEmail(jwt, email);
       if (reservations.success) {
         console.log(reservations.data);
         return reservations.data;
@@ -69,7 +80,6 @@ const Reservations = () => {
             ),
             reservationDate: reservation.reservationDate,
             status: reservation.status,
-            userEmail: reservation.userEmail,
           };
         },
       );
@@ -88,20 +98,46 @@ const Reservations = () => {
     setData();
   }, []);
 
-  if(loading) {
-    return <LoadingScreen/>;
+  if (loading) {
+    return <LoadingScreen />;
+  }
+
+  if (reservations.length === 0) {
+    return <NoBookings />;
   }
 
   return (
-    <div
-      className={`min-h-[calc(100vh-80px)] bg-linear-to-br w-full font-geist-sans from-[#1a1f37] via-[#2d1b4e] to-[#1a1f37] p-8 opacity-100 relative overflow-hidden`}
-    >
-      <MapView
-        stallMapImage={"https://ik.imagekit.io/web92xyy0/s1_o03c7akip.jpg"}
-        reservations={reservations}
-      />
-    </div>
+    <>
+      <div className="w-full flex justify-end items-center my-4">
+        <button
+          onClick={() => setUseMapView(!useMapView)}
+          className={`px-4 py-2 cursor-pointer rounded-xl font-semibold transition flex items-center gap-2 ${
+            useMapView
+              ? "bg-gradient-to-r from-purple-500 to-pink-600 text-white shadow-lg"
+              : "bg-[#2a2f4a] text-gray-300 border border-white/10 hover:border-purple-500/50"
+          }`}
+        >
+          {useMapView ? (
+            <MapPin className="w-4 h-4" />
+          ) : (
+            <Grid className="w-4 h-4" />
+          )}
+          {useMapView ? "Map View" : "Grid View"}
+        </button>
+      </div>
+
+      {useMapView ? (
+        <MapView
+          stallMapImage={"https://ik.imagekit.io/web92xyy0/s1_o03c7akip.jpg"}
+          reservations={reservations}
+        />
+      ) : (
+        <GridView
+          reservations={reservations}
+        />
+      )}
+    </>
   );
 };
 
-export default Reservations;
+export default MyBookings;

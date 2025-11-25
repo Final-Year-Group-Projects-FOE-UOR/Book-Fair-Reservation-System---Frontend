@@ -1,9 +1,7 @@
-import EmployeeDashboard from '@/components/employee/dashboard'
+import EmployeeDashboard from '@/components/employee/dashboard';
 
 const EmployeeDashboardPage = () => {
-  return (
-    <EmployeeDashboard />
-  )
+  return <EmployeeDashboard />;
 }
 
 export default EmployeeDashboardPage

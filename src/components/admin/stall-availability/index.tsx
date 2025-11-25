@@ -1,25 +1,56 @@
 "use client";
 
-import React, { useState } from 'react'
-import { Stall } from '../reservations/types';
-import StallCard from './StallCard';
+import React, { useEffect, useState } from 'react'
+import { Stall } from '@/components/vendor/types';
+import Cookies from 'js-cookie';
+import { getStalls } from '@/actions/stallActions';
+import LoadingScreen from '@/components/common/loading';
+import MapView from './map';
 
 const StallAvailability = () => {
-  const [stalls, setStalls] = useState<Stall[]>(() => {
-    const savedStalls = localStorage.getItem("tradeHallStalls");
-    return savedStalls ? JSON.parse(savedStalls) : [];
-   });
+  const [stalls, setStalls] = useState<Stall[]>([]);
+  const [selectedStalls, setSelectedStalls] = useState<(number | null)[]>([]);
+  const [loading, setLoading] = useState(false);
+
+  const getAllConfiguredStalls = async () => {
+    const jwt = Cookies.get("jwt");
+    if (!jwt) return;
+    try {
+      setLoading(true);
+      const response = await getStalls(jwt);
+      if (response.success) {
+        const fetchedStalls = response.data;
+        const configuredStalls = fetchedStalls.filter(
+          (stall: Stall) => stall.mapMetadata?.configured === true,
+        );
+        setStalls(configuredStalls);
+      }
+    } catch (error) {
+      console.log("An error occurred while fetching configured stalls:", error);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  useEffect(() => {
+      getAllConfiguredStalls();
+    }, []);
+
+  if(loading) {
+    return <LoadingScreen/>
+  }
+  
   return (
     <div
       className={`min-h-[calc(100vh-80px)] bg-linear-to-br w-full font-geist-sans from-[#1a1f37] via-[#2d1b4e] to-[#1a1f37] p-8 opacity-100 relative overflow-hidden`}
     >
-      <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-3 sm:gap-4">
-        {stalls
-          .filter((s) => !s.isEmpty)
-          .map((stall) => (
-            <StallCard key={stall.id} stall={stall} />
-          ))}
-      </div>
+      <MapView
+        stallMapImage={"https://ik.imagekit.io/web92xyy0/s1_o03c7akip.jpg"}
+        stalls={stalls}
+        selectedStalls={selectedStalls}
+        setSelectedStalls={setSelectedStalls}
+      />
+     
     </div>
   );
 }

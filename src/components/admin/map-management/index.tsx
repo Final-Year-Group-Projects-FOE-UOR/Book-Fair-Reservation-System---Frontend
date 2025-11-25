@@ -207,18 +207,6 @@ export default function MapManagement() {
                 setHoveredStall={setHoveredStall}
                 isPositioningMode={isPositioningMode}
               />
-
-              {/* <div className="flex items-center justify-end mt-3">
-                <div className="flex items-center gap-4">
-                  <p className="text-xs text-green-400 font-semibold">
-                    {stalls.filter((s) => s.mapPosition && !s.isEmpty).length}{" "}
-                    stalls positioned
-                  </p>
-                  <p className="text-xs text-blue-400 font-semibold">
-                    ✓ Visible to all vendors
-                  </p>
-                </div>
-              </div> */}
             </div>
           )}
         </div>

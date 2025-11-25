@@ -1,24 +1,36 @@
+"use client";
+
 import { BookOpen, CheckCircle, Grid, LogOut, MapPin } from "lucide-react";
 import { VendorInfo } from "../types";
 import AnimatedHeader from "@/components/common/headers/AnimatedHeader";
+import Cookies from "js-cookie";
+import { useRouter } from "next/navigation";
 
 interface VendorHeaderProps {
   vendorInfo: VendorInfo;
-  stallMapImage: string | null;
-  useMapView: boolean;
-  setUseMapView: React.Dispatch<React.SetStateAction<boolean>>;
-  handleVendorLogout: () => void;
-  bookingStep?: number;
+  // stallMapImage: string | null;
+  // useMapView: boolean;
+  // setUseMapView: React.Dispatch<React.SetStateAction<boolean>>;
+  // bookingStep?: number;
 }
 
 const VendorHeader = ({
   vendorInfo,
-  handleVendorLogout,
-  stallMapImage,
-  useMapView,
-  setUseMapView,
-  bookingStep,
+  // stallMapImage,
+  // useMapView,
+  // setUseMapView,
+  // bookingStep,
 }: VendorHeaderProps) => {
+
+  const router = useRouter();
+
+  const handleLogout = () => {
+    Cookies.remove("jwt");
+    Cookies.remove("email");
+    Cookies.remove("role");
+    router.push("/auth/login");
+  }
+
   return (
     <div className="flex justify-between font-geist-sans items-center mb-6">
       <AnimatedHeader
@@ -27,7 +39,7 @@ const VendorHeader = ({
         description="Manage and review booking requests"
       />
       <div className="flex items-center gap-4">
-        {stallMapImage && bookingStep === 1 && (
+        {/* {stallMapImage && bookingStep === 1 && (
           <button
             onClick={() => setUseMapView(!useMapView)}
             className={`px-4 py-2 rounded-xl font-semibold transition flex items-center gap-2 ${
@@ -43,9 +55,9 @@ const VendorHeader = ({
             )}
             {useMapView ? "Map View" : "Grid View"}
           </button>
-        )}
+        )} */}
         <button
-          onClick={handleVendorLogout}
+          onClick={handleLogout}
           className="px-6 py-3 bg-gradient-to-r from-red-500 to-pink-600 text-white rounded-xl font-semibold hover:from-red-600 hover:to-pink-700 transition shadow-lg flex items-center gap-2"
         >
           <LogOut className="w-5 h-5" />

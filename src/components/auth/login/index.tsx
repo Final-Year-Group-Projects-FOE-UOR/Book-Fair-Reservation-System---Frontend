@@ -38,7 +38,7 @@ const Login = () => {
         Cookies.set("jwt", response.data.token, { expires: 1 }); // Expires in 1 day
         Cookies.set("email", response.data.email, { expires: 1 }); // Expires in 1 day
         Cookies.set("role", response.data.role, { expires: 1 });   // Expires in 1 day
-        router.push("/dashboard");
+        router.push("/my-bookings");
       } else {
         setError("Login failed, please check your credentials");  
         console.log("Login failed:", response?.message);
@@ -59,7 +59,7 @@ const Login = () => {
         Cookies.set("jwt", response.data.token, { expires: 1 }); // Expires in 1 day
         Cookies.set("email", response.data.email, { expires: 1 }); // Expires in 1 day
         Cookies.set("role", response.data.role, { expires: 1 });   // Expires in 1 day
-        router.push("/dashboard");
+        router.push("/my-bookings");
       } else {
         setError("Signup failed, please check your details");
         console.log("Signup failed:", response?.message);

@@ -386,8 +386,7 @@ export default function MapViewer({
             if (
               !stall.mapMetadata?.mapPosition ||
               (stall.mapMetadata.mapPosition.x === 0 &&
-                stall.mapMetadata.mapPosition.y === 0) ||
-              !stall.available
+                stall.mapMetadata.mapPosition.y === 0) 
             )
               return null;
 

@@ -68,7 +68,7 @@ const ResetPasswordDialog = ({ staff }: { staff: Staff }) => {
           {/* Staff Info */}
           <div className="p-4 bg-white/5 border border-white/10 rounded-xl">
             <p className="text-sm text-gray-400">Staff Member</p>
-            <p className="text-white font-medium">{staff.name}</p>
+            <p className="text-white font-medium">{staff.username}</p>
             <p className="text-sm text-gray-400 mt-1">{staff.email}</p>
           </div>
 
