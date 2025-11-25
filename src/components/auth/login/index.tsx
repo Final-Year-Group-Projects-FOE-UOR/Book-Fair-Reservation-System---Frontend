@@ -12,6 +12,8 @@ import {
 } from "lucide-react";
 import { useRouter } from "next/navigation";
 import React, { useState } from "react";
+import Cookies from "js-cookie";
+import { vendorLogin, vendorSignup } from "@/actions/vendorAuthActions";
 
 const Login = () => {
   const router = useRouter();
@@ -27,6 +29,47 @@ const Login = () => {
     // Placeholder for form submission logic
     
   };
+
+  const handleLogin = async () => {
+    try{
+      const response = await vendorLogin(formData.email, formData.password);
+      if (response && response.success) {   
+        // Set cookie with token    
+        Cookies.set("jwt", response.data.token, { expires: 1 }); // Expires in 1 day
+        Cookies.set("email", response.data.email, { expires: 1 }); // Expires in 1 day
+        Cookies.set("role", response.data.role, { expires: 1 });   // Expires in 1 day
+        router.push("/dashboard");
+      } else {
+        setError("Login failed, please check your credentials");  
+        console.log("Login failed:", response?.message);
+      }   
+      
+    }
+    catch (err) {
+      console.log("An error occurred during login:", err);
+    }
+  };
+
+  const handleSignup = async() => {
+    try{
+
+      const response = await vendorSignup(formData.businessName, formData.email, formData.password);
+      if (response && response.success) {
+        // Set cookie with token
+        Cookies.set("jwt", response.data.token, { expires: 1 }); // Expires in 1 day
+        Cookies.set("email", response.data.email, { expires: 1 }); // Expires in 1 day
+        Cookies.set("role", response.data.role, { expires: 1 });   // Expires in 1 day
+        router.push("/dashboard");
+      } else {
+        setError("Signup failed, please check your details");
+        console.log("Signup failed:", response?.message);
+      }
+
+    }catch(err){
+      console.log("An error occurred during signup:", err);
+    }
+
+  }
   return (
     <AnimatedBackground className="items-center justify-center">
       <div className="flex w-full  min-h-full flex-col items-center justify-center">
@@ -124,7 +167,9 @@ const Login = () => {
                   />
                 </div>
               </div>
-              <LoginButton buttonText={isLogin ? "Login to Account" : "Create Account & Reserve Stalls"} onClick={handleSubmit} />
+              <LoginButton buttonText={isLogin ? "Login to Account" : "Create Account & Reserve Stalls"} onClick={
+                isLogin ? handleLogin : handleSignup
+              } />
 
               
             </form>
