@@ -1,4 +1,6 @@
-import React from "react";
+"use client";
+
+import React, { useState } from "react";
 import {
   Dialog,
   DialogContent,
@@ -8,22 +10,52 @@ import {
   DialogTrigger,
 } from "@/components/ui/dialog";
 import { Trash2, AlertTriangle, X, UserX } from "lucide-react";
+import toast from "react-hot-toast";
+import { Staff } from "../types";
+import Cookies from "js-cookie";
+import { deleteStaff } from "@/actions/staffActions";
 
 type DeleteStaffDialogProps = {
-  staffName?: string;
-  staffEmail?: string;
+  staff: Staff;
   onConfirm?: () => void;
-  onCancel?: () => void;
 };
 
-const DeleteStaffDialog = ({
-  staffName = "John Doe",
-  staffEmail = "john.doe@example.com",
-  onConfirm,
-  onCancel,
-}: DeleteStaffDialogProps) => {
+const DeleteStaffDialog = ({ staff, onConfirm }: DeleteStaffDialogProps) => {
+  const [loading, setLoading] = useState(false);
+  const [open, setOpen] = useState(false);
+
+  const handleDeleteStaff = async () => {
+    const jwt = Cookies.get("jwt");
+    if (!jwt) {
+      toast.error("Authentication token not found. Please log in again.");
+      return;
+    }
+    try {
+      const email = staff.email;
+      setLoading(true);
+      const response = await deleteStaff(jwt, email);
+      if (response.success) {
+        toast.success("Staff member deleted successfully!");
+        if (onConfirm) {
+          onConfirm();
+        }
+        setOpen(false);
+      } else {
+        toast.error(response.message || "Failed to delete staff member.");
+        console.log(response.message);
+      }
+    } catch (err) {
+      console.log("An error occurred while deleting staff member:", err);
+      toast.error(
+        "An error occurred while deleting staff member. Please try again."
+      );
+    } finally {
+      setLoading(false);
+    }
+  };
+
   return (
-    <Dialog>
+    <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger asChild>
         <button
           type="button"
@@ -66,14 +98,14 @@ const DeleteStaffDialog = ({
             <div className="flex items-center gap-2">
               <span className="text-xs font-semibold text-gray-400">Name:</span>
               <span className="text-sm text-white font-medium">
-                {staffName}
+                {staff.name}
               </span>
             </div>
             <div className="flex items-center gap-2">
               <span className="text-xs font-semibold text-gray-400">
                 Email:
               </span>
-              <span className="text-sm text-gray-300">{staffEmail}</span>
+              <span className="text-sm text-gray-300">{staff.email}</span>
             </div>
           </div>
 
@@ -86,15 +118,32 @@ const DeleteStaffDialog = ({
           <div className="flex flex-col sm:flex-row gap-3 pt-2">
             <button
               type="button"
-              onClick={onConfirm}
-              className="flex-1 py-3 bg-gradient-to-r from-red-500/20 to-pink-600/20 border border-red-500/30 text-red-300 rounded-xl text-sm font-bold hover:from-red-500/30 hover:to-pink-600/30 hover:border-red-400/50 transition-all duration-300 flex items-center justify-center gap-2 hover:shadow-lg hover:shadow-red-500/20 hover:scale-[1.02] group"
+              onClick={handleDeleteStaff}
+              disabled={loading}
+              className={`flex-1 py-3 border rounded-xl text-sm font-bold transition-all duration-300 
+    flex items-center justify-center gap-2 group ${
+      loading
+        ? "bg-red-500/20 border-red-400/40 text-red-300 cursor-not-allowed opacity-60 scale-[0.99]"
+        : "bg-gradient-to-r from-red-500/20 to-pink-600/20 border-red-500/30 text-red-300 hover:from-red-500/30 hover:to-pink-600/30 hover:border-red-400/50 hover:shadow-lg hover:shadow-red-500/20 hover:scale-[1.02]"
+    }
+  `}
             >
-              <Trash2 className="w-4 h-4 group-hover:scale-110 transition-transform" />
-              Yes, Delete Staff
+              {loading ? (
+                <div className="flex items-center gap-2">
+                  <span className="h-4 w-4 border-2 border-red-300 border-t-transparent rounded-full animate-spin"></span>
+                  Deleting...
+                </div>
+              ) : (
+                <>
+                  <Trash2 className="w-4 h-4 group-hover:scale-110 transition-transform" />
+                  Yes, Delete Staff
+                </>
+              )}
             </button>
+
             <button
               type="button"
-              onClick={onCancel}
+              onClick={() => setOpen(false)}
               className="flex-1 py-3 bg-gradient-to-r from-gray-600/20 to-gray-700/20 border border-gray-500/30 text-gray-300 rounded-xl text-sm font-bold hover:from-gray-600/30 hover:to-gray-700/30 hover:border-gray-400/50 transition-all duration-300 flex items-center justify-center gap-2 hover:scale-[1.02] group"
             >
               <X className="w-4 h-4 group-hover:scale-110 transition-transform" />

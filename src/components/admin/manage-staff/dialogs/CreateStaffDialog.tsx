@@ -13,7 +13,7 @@ import { Plus, User, Mail, Lock, UserPlus, X } from "lucide-react";
 import toast from "react-hot-toast";
 import { Button } from "@/components/ui/button";
 import Cookies from "js-cookie";
-import { createStaff } from "@/actions/adminActions";
+import { createStaff } from "@/actions/staffActions";
 
 
 const CreateStaffDialog = () => {

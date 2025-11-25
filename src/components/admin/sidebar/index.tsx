@@ -142,12 +142,12 @@ const AdminSidebar = ({ sidebarOpen, setSidebarOpen }: AdminSidebarProps) => {
             <SidebarItem
               icon={<Settings className="w-5 h-5" />}
               label="Stall Configuration"
-              tag="stallConfig"
+              tag="stallconfig"
               sidebarOpen={sidebarOpen}
               superAdminTab={superAdminTab}
               setSuperAdminTab={setSuperAdminTab}
               onClick={() => {
-                setSuperAdminTab("stallConfig");
+                setSuperAdminTab("stallconfig");
                 router.push("/admin/stall-configuration");
               }}
             />

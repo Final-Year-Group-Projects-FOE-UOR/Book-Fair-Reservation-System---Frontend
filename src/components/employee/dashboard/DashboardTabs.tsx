@@ -21,11 +21,11 @@ const DashboardTabs: React.FC<DashboardTabsProps> = ({ employeeTab, setEmployeeT
       <div className="flex items-center gap-2">
         <CheckCircle className="w-5 h-5" />
         Booking Requests
-        {stats.pending > 0 && (
+        {/* {stats.pending > 0 && (
           <span className="bg-red-500 text-white text-xs px-2 py-0.5 rounded-full font-bold">
             {stats.pending}
           </span>
-        )}
+        )} */}
       </div>
       {employeeTab === 'requests' && (
         <div className="absolute bottom-0 left-0 right-0 h-1 bg-gradient-to-r from-blue-500 to-cyan-600 rounded-full"></div>
