@@ -1,23 +1,21 @@
 "use client";
 import { User, X } from "lucide-react";
 import { useEffect, useState } from "react";
-import { VendorInfo } from "./types";
+import { VendorInfo } from "../types";
 
 interface MyProfileProps {
   vendorInfo: VendorInfo;
   onSave: (updatedData: VendorInfo) => void;
 }
 
-
 const MyProfile = ({ vendorInfo, onSave }: MyProfileProps) => {
   const [updatedVendorInfo, setUpdatedVendorInfo] = useState(vendorInfo);
   const [genreInput, setGenreInput] = useState("");
 
-    useEffect(() => {
+  useEffect(() => {
     setUpdatedVendorInfo(vendorInfo);
   }, [vendorInfo]);
 
- 
   const addGenre = () => {
     const newGenre = genreInput.trim();
     if (!newGenre) return;
@@ -30,7 +28,8 @@ const MyProfile = ({ vendorInfo, onSave }: MyProfileProps) => {
 
   const removeGenre = (g: string) => {
     //remove genre g from updatedGenres
-    const newGenres = updatedVendorInfo.genres?.filter((genre) => genre !== g) || [];
+    const newGenres =
+      updatedVendorInfo.genres?.filter((genre) => genre !== g) || [];
     setUpdatedVendorInfo((prev) => ({
       ...prev,
       genres: newGenres,

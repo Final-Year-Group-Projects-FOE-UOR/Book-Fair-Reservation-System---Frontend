@@ -2,7 +2,7 @@
 
 import { CheckCircle } from "lucide-react";
 import React from "react";
-import { Stall, VendorInfo } from "./types";
+import { Stall, VendorInfo } from "../types";
 
 interface GridViewProps {
   stalls: Stall[];
@@ -15,21 +15,19 @@ const GridView: React.FC<GridViewProps> = ({
   stalls,
   selectedStalls,
   vendorInfo,
-  setSelectedStalls
- 
+  setSelectedStalls,
 }) => {
+  const handleStallClick = (stall: Stall) => {
+    if (stall.reserved || stall.pending) return;
 
-      const handleStallClick = (stall: Stall) => {
-      if (stall.reserved || stall.pending) return;
-  
-      if (selectedStalls.includes(stall.id)) {
-        setSelectedStalls(selectedStalls.filter((id) => id !== stall.id));
-      } else {
-        if (selectedStalls.length < 3) {
-          setSelectedStalls([...selectedStalls, stall.id]);
-        }
+    if (selectedStalls.includes(stall.id)) {
+      setSelectedStalls(selectedStalls.filter((id) => id !== stall.id));
+    } else {
+      if (selectedStalls.length < 3) {
+        setSelectedStalls([...selectedStalls, stall.id]);
       }
-    };
+    }
+  };
   return (
     <div className="grid grid-cols-5 gap-4 mb-8">
       {stalls
@@ -49,12 +47,12 @@ const GridView: React.FC<GridViewProps> = ({
                 isMyPending
                   ? "bg-orange-500/20 border-orange-500 cursor-default"
                   : isMyReservation
-                  ? "bg-green-500/20 border-green-500 cursor-default"
-                  : isSelected
-                  ? "bg-pink-500/20 border-pink-500 scale-105"
-                  : stall.reserved || stall.pending
-                  ? "bg-gray-700/30 border-gray-600 cursor-not-allowed opacity-50"
-                  : "bg-blue-500/10 border-blue-500/30 hover:bg-blue-500/20 hover:scale-105"
+                    ? "bg-green-500/20 border-green-500 cursor-default"
+                    : isSelected
+                      ? "bg-pink-500/20 border-pink-500 scale-105"
+                      : stall.reserved || stall.pending
+                        ? "bg-gray-700/30 border-gray-600 cursor-not-allowed opacity-50"
+                        : "bg-blue-500/10 border-blue-500/30 hover:bg-blue-500/20 hover:scale-105"
               }`}
             >
               <div className="text-center">

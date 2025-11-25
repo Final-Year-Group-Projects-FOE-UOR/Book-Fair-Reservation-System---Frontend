@@ -1,12 +1,11 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 "use server";
 
-import { VendorInfo } from "@/components/vendor/dashboard/types";
+import { VendorInfo } from "@/components/vendor/types";
 import axios from "axios";
-const Base_URL = 'http://localhost:8000/api/v3';
+const Base_URL = "http://localhost:8000/api/v3";
 
-
-export const fetchVendorByEmail = async (jwt: string,email:string) => {
+export const fetchVendorByEmail = async (jwt: string, email: string) => {
   "use server";
   const url = `${Base_URL}/vendors?email=${email}`;
   console.log(url);
@@ -32,7 +31,10 @@ export const fetchVendorByEmail = async (jwt: string,email:string) => {
   }
 };
 
-export const saveVendorProfile = async (jwt: string, vendorData:VendorInfo) => {
+export const saveVendorProfile = async (
+  jwt: string,
+  vendorData: VendorInfo,
+) => {
   "use server";
   const url = `${Base_URL}/vendors?email=${vendorData.email}`;
   console.log(url);
@@ -61,4 +63,3 @@ export const saveVendorProfile = async (jwt: string, vendorData:VendorInfo) => {
     }
   }
 };
-

@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { ShapeType } from "./dialogs/MapViewer";
 import RemoveStallDialog from "./dialogs/RemoveStallDialog";
 
@@ -35,6 +35,56 @@ const Controller = ({
   handleCancelEdit,
   handleRemoveStall,
 }: ControllerProps) => {
+  useEffect(() => {
+    const handleKeyDown = (event: KeyboardEvent) => {
+      const key = event.key.toLowerCase();
+      const step = event.shiftKey ? 1 : 0.1; // Larger step with Shift key
+      const rotationStep = event.shiftKey ? 15 : 5; // Larger rotation step with Shift
+
+      switch (key) {
+        // Width controls: Q (decrease) and E (increase)
+        case "q":
+          event.preventDefault();
+          handleWidthChange(Math.max(0.5, selectedWidthPercent - step));
+          break;
+        case "e":
+          event.preventDefault();
+          handleWidthChange(Math.min(20, selectedWidthPercent + step));
+          break;
+
+        // Height controls: A (decrease) and D (increase)
+        case "a":
+          event.preventDefault();
+          handleHeightChange(Math.max(0.5, selectedHeightPercent - step));
+          break;
+        case "d":
+          event.preventDefault();
+          handleHeightChange(Math.min(20, selectedHeightPercent + step));
+          break;
+
+        // Rotation controls: Z (decrease) and C (increase)
+        case "z":
+          event.preventDefault();
+          setSelectedRotation((selectedRotation - rotationStep + 360) % 360);
+          break;
+        case "c":
+          event.preventDefault();
+          setSelectedRotation((selectedRotation + rotationStep) % 360);
+          break;
+      }
+    };
+
+    window.addEventListener("keydown", handleKeyDown);
+    return () => window.removeEventListener("keydown", handleKeyDown);
+  }, [
+    selectedWidthPercent,
+    selectedHeightPercent,
+    selectedRotation,
+    handleWidthChange,
+    handleHeightChange,
+    setSelectedRotation,
+  ]);
+
   return (
     <div className="z-20 bg-[#0b1220]/90 font-geist-sans backdrop-blur rounded-md p-3 flex flex-col gap-3 border border-white/5 min-w-[280px]">
       {editingStall && (
@@ -149,7 +199,7 @@ const Controller = ({
                 (selectedShape === "square"
                   ? selectedWidthPercent
                   : selectedHeightPercent) * 3,
-                60
+                60,
               )}px`,
               borderRadius: selectedShape === "circle" ? "9999px" : "4px",
               background: "rgba(249,115,22,0.3)",

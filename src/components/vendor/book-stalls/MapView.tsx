@@ -2,20 +2,24 @@
 
 import { MapPin } from "lucide-react";
 import React from "react";
-import {  Stall, VendorInfo } from "./types";
+import { Stall, VendorInfo } from "../types";
 import Image from "next/image";
 
 interface MapViewProps {
-  stallMapImage: string ;
+  stallMapImage: string;
   stalls: Stall[];
   selectedStalls: (string | null)[];
   vendorInfo: VendorInfo;
   setSelectedStalls: React.Dispatch<React.SetStateAction<(string | null)[]>>;
-
 }
 
-const MapView = ({stallMapImage,vendorInfo,stalls,selectedStalls,setSelectedStalls}:MapViewProps)=>{
-
+const MapView = ({
+  stallMapImage,
+  vendorInfo,
+  stalls,
+  selectedStalls,
+  setSelectedStalls,
+}: MapViewProps) => {
   const handleMapClick = (e: React.MouseEvent<HTMLImageElement>) => {
     if (!stallMapImage) return;
 
@@ -34,7 +38,7 @@ const MapView = ({stallMapImage,vendorInfo,stalls,selectedStalls,setSelectedStal
       if (!stall.mapPosition || stall.isEmpty) return;
       const distance = Math.sqrt(
         Math.pow(stall.mapPosition.x - x, 2) +
-          Math.pow(stall.mapPosition.y - y, 2)
+          Math.pow(stall.mapPosition.y - y, 2),
       );
       if (distance < minDistance) {
         minDistance = distance;
@@ -93,12 +97,12 @@ const MapView = ({stallMapImage,vendorInfo,stalls,selectedStalls,setSelectedStal
                   isMyPending
                     ? "bg-orange-500 text-white ring-4 ring-orange-400/50 animate-pulse"
                     : isMyReservation
-                    ? "bg-green-500 text-white ring-4 ring-green-400/50"
-                    : isSelected
-                    ? "bg-pink-500 text-white ring-4 ring-pink-400/50 scale-125"
-                    : stall.reserved || stall.pending
-                    ? "bg-gray-600 text-gray-400 opacity-50"
-                    : "bg-blue-500 text-white hover:scale-110"
+                      ? "bg-green-500 text-white ring-4 ring-green-400/50"
+                      : isSelected
+                        ? "bg-pink-500 text-white ring-4 ring-pink-400/50 scale-125"
+                        : stall.reserved || stall.pending
+                          ? "bg-gray-600 text-gray-400 opacity-50"
+                          : "bg-blue-500 text-white hover:scale-110"
                 }`}
               >
                 <span className="text-[12px] leading-none">{stall.id}</span>

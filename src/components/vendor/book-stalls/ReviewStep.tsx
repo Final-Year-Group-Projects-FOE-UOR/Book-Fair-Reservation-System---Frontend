@@ -2,7 +2,7 @@
 
 import { Bookmark, CheckCircle, X } from "lucide-react";
 import React, { useEffect } from "react";
-import {  Stall, VendorInfo } from "./types";
+import { Stall, VendorInfo } from "../types";
 
 interface ReviewStepProps {
   selectedStallObjects: Stall[];
@@ -20,14 +20,13 @@ const ReviewStep: React.FC<ReviewStepProps> = ({
   genres,
   onSubmit,
   handleRemoveStallClick,
-  goBack
+  goBack,
 }) => {
-
   useEffect(() => {
     if (selectedStallObjects.length === 0) {
-      goBack();}
-
-    }, [selectedStallObjects]);
+      goBack();
+    }
+  }, [selectedStallObjects]);
 
   return (
     <div className="bg-gradient-to-br from-[#2a2f4a]/80 to-[#1e2337]/80 backdrop-blur-xl rounded-3xl border border-white/10 shadow-2xl p-8">
@@ -36,10 +35,10 @@ const ReviewStep: React.FC<ReviewStepProps> = ({
         Review Selection
       </h3>
       {selectedStallObjects.length > 0 && (
-      //   <p className="text-gray-400">
-      //     No stalls selected. Go back to selection.
-      //   </p>
-      // ) : (
+        //   <p className="text-gray-400">
+        //     No stalls selected. Go back to selection.
+        //   </p>
+        // ) : (
         <div className="grid grid-cols-3 gap-4 mb-6">
           {selectedStallObjects.map((stall) => (
             <div
@@ -50,9 +49,7 @@ const ReviewStep: React.FC<ReviewStepProps> = ({
               <div className="text-xs text-gray-300 mb-2">{stall.size}</div>
               <button
                 type="button"
-                onClick={()=>
-                  handleRemoveStallClick(stall) 
-                }
+                onClick={() => handleRemoveStallClick(stall)}
                 className="absolute top-2 right-2 text-gray-400 hover:text-white"
               >
                 <X className="w-4 h-4" />

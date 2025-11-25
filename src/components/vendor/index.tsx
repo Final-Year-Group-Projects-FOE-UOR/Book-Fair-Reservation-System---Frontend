@@ -5,17 +5,17 @@ import LoadingScreen from "@/components/common/loading";
 import Cookies from "js-cookie";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
-import FloatingButton from "./FloatingButton";
-import { generateInitialStalls } from "./GenerateInitialStalls";
-import GridView from "./GridView";
-import VendorHeader from "./Header";
-import MapView from "./MapView";
-import MyBookings from "./MyBookings";
-import MyProfile from "./MyProfile";
-import ReviewStep from "./ReviewStep";
-import StepIndicator from "./StepIndicator";
-import SubmittedStep from "./SubmittedStep";
-import Tabs from "./Tabs";
+import FloatingButton from "./book-stalls/FloatingButton";
+import { generateInitialStalls } from "./book-stalls/GenerateInitialStalls";
+import GridView from "./book-stalls/GridView";
+import VendorHeader from "./vendor-layout/Header";
+import MapView from "./book-stalls/MapView";
+import MyBookings from "./my-bookings/MyBookings";
+import MyProfile from "./my-profile/MyProfile";
+import ReviewStep from "./book-stalls/ReviewStep";
+import StepIndicator from "./book-stalls/StepIndicator";
+import SubmittedStep from "./book-stalls/SubmittedStep";
+import Tabs from "./vendor-layout/Tabs";
 import { Stall, VendorInfo } from "./types";
 
 const Vendor = () => {
@@ -46,10 +46,10 @@ const Vendor = () => {
   });
   const [selectedStalls, setSelectedStalls] = useState<(string | null)[]>([]);
   const selectedStallObjects = stalls.filter((s) =>
-    selectedStalls.includes(s.id)
+    selectedStalls.includes(s.id),
   );
   const myReservations = stalls.filter(
-    (s) => s.businessName === vendorInfo.businessName
+    (s) => s.businessName === vendorInfo.businessName,
   );
 
   useEffect(() => {
@@ -65,8 +65,8 @@ const Vendor = () => {
             const list = Array.isArray(data.data)
               ? data.data
               : data.data
-              ? [data.data]
-              : [];
+                ? [data.data]
+                : [];
             if (list.length > 0 && list[0]) {
               const vendor = list[0];
               // Ensure we have the fields we expect before using them
@@ -81,7 +81,7 @@ const Vendor = () => {
               } else {
                 console.warn(
                   "fetchVendorByEmail returned vendor object but missing expected fields:",
-                  vendor
+                  vendor,
                 );
                 router.push("/");
               }
@@ -91,7 +91,7 @@ const Vendor = () => {
                 "No vendor record found for email:",
                 email,
                 "response:",
-                data
+                data,
               );
               setIsLoading(false);
               router.push("/");
@@ -168,7 +168,7 @@ const Vendor = () => {
       const jwt = Cookies.get("jwt");
       if (jwt) {
         const response = await saveVendorProfile(jwt, vendorInfo);
-   
+
         if (response && response.success) {
           console.log("Profile changes saved successfully");
         } else {
@@ -198,7 +198,7 @@ const Vendor = () => {
 
     setStalls(updatedStalls);
     alert(
-      " Booking request submitted! Your request is now pending admin approval."
+      " Booking request submitted! Your request is now pending admin approval.",
     );
     setBookingStep(3); // show submitted state
   };

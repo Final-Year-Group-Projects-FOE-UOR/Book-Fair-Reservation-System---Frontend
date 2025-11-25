@@ -15,8 +15,12 @@ import { Button } from "@/components/ui/button";
 import Cookies from "js-cookie";
 import { createStaff } from "@/actions/staffActions";
 
+type CreateStaffDialogProps = {
+  uponSuccess: () => void;
+};
 
-const CreateStaffDialog = () => {
+
+const CreateStaffDialog = ({ uponSuccess }: CreateStaffDialogProps) => {
   const [fullName, setFullName] = useState("");
   const [email, setEmail] = useState("");
   const [loading, setLoading] = useState(false);
@@ -42,6 +46,7 @@ const CreateStaffDialog = () => {
       console.log(response);
       if(response.success){
         toast.success("Staff member created successfully!");
+        uponSuccess();
         setFullName("");
         setEmail("");
         setOpen(false);

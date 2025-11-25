@@ -10,7 +10,6 @@ import { getAllStaff } from "@/actions/staffActions";
 import LoadingScreen from "@/components/common/loading";
 
 const ManageStaff = () => {
-  const [showAddAdminModal, setShowAddAdminModal] = useState(false);
   const [staffList, setStaffList] = useState<Staff[]>([]);
   const [loading, setLoading] = useState(false);
 
@@ -23,9 +22,9 @@ const ManageStaff = () => {
       setLoading(true);
       const response = await getAllStaff(jwt);
       if(response.success){
-        const staffList = response.data.map((staff: any) => ({
+        const staffList = response.data.map((staff: Staff) => ({
           id: staff.id,
-          name: staff.username,
+          username: staff.username,
           email: staff.email,
           role: staff.role,
         }));
@@ -53,7 +52,7 @@ const ManageStaff = () => {
       className={`min-h-[calc(100vh-80px)] bg-linear-to-br w-full font-geist-sans from-[#1a1f37] via-[#2d1b4e] to-[#1a1f37] p-8 opacity-100 relative overflow-hidden`}
     >
       <div className="flex justify-between items-center mb-4 sm:mb-6">
-        <CreateStaffDialog />
+        <CreateStaffDialog uponSuccess={getStaffList} />
       </div>
 
       <div className="grid gap-4">

@@ -1,5 +1,4 @@
-
-import Vendor from "@/components/vendor/dashboard";
+import Vendor from "@/components/vendor";
 
 const VendorDashboardPage = () => {
   return <Vendor />;
