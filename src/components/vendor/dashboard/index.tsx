@@ -1,5 +1,8 @@
 "use client";
 
+import { fetchVendorByEmail, saveVendorProfile } from "@/actions/vendorActions";
+import LoadingScreen from "@/components/common/loading";
+import Cookies from "js-cookie";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import FloatingButton from "./FloatingButton";
@@ -13,17 +16,19 @@ import ReviewStep from "./ReviewStep";
 import StepIndicator from "./StepIndicator";
 import SubmittedStep from "./SubmittedStep";
 import Tabs from "./Tabs";
-import { Stall } from "./types";
+import { Stall, VendorInfo } from "./types";
 
 const Vendor = () => {
-  const [vendorInfo, setVendorInfo] = useState({ businessName: "", email: "" });
+  const [vendorInfo, setVendorInfo] = useState<VendorInfo>({
+    businessName: "",
+    email: "",
+    genres: [],
+  });
   const [vendorHomeTab, setVendorHomeTab] = useState("booking");
-  const [genres, setGenres] = useState<string[]>([
-    "new genre",
-    "another genre",
-  ]);
   const [bookingStep, setBookingStep] = useState(1);
   const router = useRouter();
+
+  const [isLoading, setIsLoading] = useState<boolean>(true);
 
   const [stallMapImage, setStallMapImage] = useState(() => {
     // Sample Trade Hall Map (SVG as data URL)
@@ -48,16 +53,69 @@ const Vendor = () => {
   );
 
   useEffect(() => {
-    const fetchVendorData = () => {
-      const storedVendorInfo = {
-        businessName: "Demo Vendor",
-        email: "DemoVendor@gmail.com",
-      };
-      setVendorInfo(storedVendorInfo);
+    const fetchVendorData = async () => {
+      const email = Cookies.get("email");
+      const jwt = Cookies.get("jwt");
+      if (email && jwt) {
+        try {
+          setIsLoading(true);
+          const data = await fetchVendorByEmail(jwt, email);
+          if (data) {
+            // Prefer an array format if present
+            const list = Array.isArray(data.data)
+              ? data.data
+              : data.data
+              ? [data.data]
+              : [];
+            if (list.length > 0 && list[0]) {
+              const vendor = list[0];
+              // Ensure we have the fields we expect before using them
+              if (vendor && (vendor.businessName || vendor.userEmail)) {
+                setVendorInfo({
+                  businessName: vendor.businessName ?? "",
+                  email: vendor.userEmail ?? "",
+                  genres: vendor.genres || [],
+                });
+
+                setIsLoading(false);
+              } else {
+                console.warn(
+                  "fetchVendorByEmail returned vendor object but missing expected fields:",
+                  vendor
+                );
+                router.push("/");
+              }
+            } else {
+              // No vendor found in the response
+              console.log(
+                "No vendor record found for email:",
+                email,
+                "response:",
+                data
+              );
+              setIsLoading(false);
+              router.push("/");
+            }
+          } else {
+            console.log("Failed to fetch vendor data: empty response");
+            setIsLoading(false);
+            router.push("/");
+          }
+        } catch (error) {
+          console.error("Failed to fetch vendor data:", error);
+          setIsLoading(false);
+          router.push("/");
+        }
+      } else {
+        // Not logged in -> redirect
+        console.log("No email or JWT found in cookies.");
+        setIsLoading(false);
+        router.push("/");
+      }
     };
 
     fetchVendorData();
-  }, []);
+  }, [router]);
 
   // Listen for storage changes from other tabs
   useEffect(() => {
@@ -75,7 +133,26 @@ const Vendor = () => {
   }, []);
 
   const handleVendorLogout = () => {
-    setVendorInfo({ businessName: "", email: "" });
+    try {
+      // Clear auth cookies set during login
+      Cookies.remove("jwt");
+      Cookies.remove("email");
+      Cookies.remove("role");
+    } catch (e) {
+      // ignore cookie removal errors (e.g., SSR/no-cookie environment)
+      console.warn("Failed to remove cookies during logout", e);
+    }
+
+    // Reset local state and UI
+    setVendorInfo({ businessName: "", email: "", genres: [] });
+    setSelectedStalls([]);
+    setBookingStep(1);
+    setVendorHomeTab("booking");
+
+    // Optionally clear any stored session state if you want full sign-out
+    // localStorage.removeItem('tradeHallStalls');
+
+    // Redirect to the public landing/login page
     router.push("/");
   };
 
@@ -84,14 +161,25 @@ const Vendor = () => {
     setBookingStep(1);
   };
 
-  const saveProfileChanges = (
-    businessName: string,
-    email: string,
-    newGenres: string[]
-  ) => {
-    setVendorInfo({ businessName, email });
-    setGenres(newGenres);
+  const saveProfileChanges = async (vendorInfo: VendorInfo) => {
+    setVendorInfo(vendorInfo);
+    console.log("Saving profile changes...", vendorInfo);
+    try {
+      const jwt = Cookies.get("jwt");
+      if (jwt) {
+        const response = await saveVendorProfile(jwt, vendorInfo);
+   
+        if (response && response.success) {
+          console.log("Profile changes saved successfully");
+        } else {
+          console.error("Failed to save profile changes:", response?.message);
+        }
+      }
+    } catch (err) {
+      console.error("An error occurred while saving profile changes:", err);
+    }
   };
+
   const confirmReservation = () => {
     const updatedStalls = stalls.map((stall) => {
       if (selectedStalls.includes(stall.id)) {
@@ -145,6 +233,10 @@ const Vendor = () => {
     setSelectedStalls([]);
     setBookingStep(1);
   };
+  if (isLoading) {
+    return <LoadingScreen />;
+  }
+
   return (
     <div
       className={`min-h-screen bg-gradient-to-br from-[#1a1f37] via-[#2d1b4e] to-[#1a1f37] p-8 transition-opacity duration-500
@@ -173,13 +265,8 @@ const Vendor = () => {
         {vendorHomeTab === "profile" && (
           <MyProfile
             vendorInfo={vendorInfo}
-            genres={genres}
             onSave={(updatedVendorInfo) =>
-              saveProfileChanges(
-                updatedVendorInfo.businessName,
-                updatedVendorInfo.email,
-                updatedVendorInfo.genres
-              )
+              saveProfileChanges(updatedVendorInfo)
             }
           />
         )}
@@ -227,7 +314,7 @@ const Vendor = () => {
                 handleRemoveStallClick={handleRemoveStallClick}
                 selectedStalls={selectedStalls}
                 vendorInfo={vendorInfo}
-                genres={genres}
+                genres={vendorInfo.genres || []}
                 onSubmit={confirmReservation}
                 goBack={() => setBookingStep(1)}
               />
