@@ -5,40 +5,36 @@ import { VendorInfo } from "./types";
 
 interface MyProfileProps {
   vendorInfo: VendorInfo;
-  genres: string[];
-
-  onSave: (updatedData: {
-    businessName: string;
-    email: string;
-    genres: string[];
-  }) => void;
+  onSave: (updatedData: VendorInfo) => void;
 }
 
 
-const MyProfile = ({ vendorInfo, genres, onSave }: MyProfileProps) => {
+const MyProfile = ({ vendorInfo, onSave }: MyProfileProps) => {
   const [updatedVendorInfo, setUpdatedVendorInfo] = useState(vendorInfo);
-  const [updatedGenres, setUpdatedGenres] = useState(genres);
   const [genreInput, setGenreInput] = useState("");
 
     useEffect(() => {
     setUpdatedVendorInfo(vendorInfo);
   }, [vendorInfo]);
 
-  useEffect(() => {
-    setUpdatedGenres(genres);
-  }, [genres]);
-
+ 
   const addGenre = () => {
     const newGenre = genreInput.trim();
     if (!newGenre) return;
-    setUpdatedGenres([...updatedGenres, newGenre]);
+    setUpdatedVendorInfo((prev) => ({
+      ...prev,
+      genres: prev.genres ? [...prev.genres, newGenre] : [newGenre],
+    }));
     setGenreInput("");
   };
 
   const removeGenre = (g: string) => {
     //remove genre g from updatedGenres
-    const newGenres = updatedGenres.filter((genre) => genre !== g);
-    setUpdatedGenres(newGenres);
+    const newGenres = updatedVendorInfo.genres?.filter((genre) => genre !== g) || [];
+    setUpdatedVendorInfo((prev) => ({
+      ...prev,
+      genres: newGenres,
+    }));
   };
   return (
     <div className="bg-gradient-to-br from-[#2a2f4a]/80 to-[#1e2337]/80 backdrop-blur-xl rounded-3xl border border-white/10 shadow-2xl p-8">
@@ -102,11 +98,11 @@ const MyProfile = ({ vendorInfo, genres, onSave }: MyProfileProps) => {
             Add
           </button>
         </div>
-        {updatedGenres.length === 0 ? (
+        {updatedVendorInfo.genres?.length === 0 ? (
           <p className="text-sm text-gray-400">No genres added yet.</p>
         ) : (
           <div className="flex flex-wrap gap-2">
-            {updatedGenres.map((g) => (
+            {updatedVendorInfo.genres?.map((g) => (
               <span
                 key={g}
                 className="group inline-flex items-center gap-2 bg-pink-500/20 border border-pink-500/30 text-pink-300 px-3 py-2 rounded-full text-xs font-semibold"
@@ -129,7 +125,7 @@ const MyProfile = ({ vendorInfo, genres, onSave }: MyProfileProps) => {
           type="button"
           onClick={() => {
             alert("Profile updated (stored in this session).");
-            onSave({ ...updatedVendorInfo, genres: updatedGenres });
+            onSave(updatedVendorInfo);
           }}
           className="px-6 py-3 bg-gradient-to-r from-pink-500 to-purple-600 text-white rounded-xl font-bold hover:from-pink-600 hover:to-purple-700 transition"
         >
