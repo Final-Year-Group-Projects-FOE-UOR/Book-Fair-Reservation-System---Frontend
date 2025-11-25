@@ -1,5 +1,5 @@
 "use client";
-
+ 
 import {
   Book,
   BookMarked,
@@ -16,7 +16,7 @@ import React, { useState, useEffect } from "react";
 import InfoBox from "./InfoBox";
 import AnimatedBackground from "../common/backgrounds/animated-background";
 import LoginCard from "./LoginCard";
-
+ 
 const Landing = () => {
   return (
     <AnimatedBackground>
@@ -46,7 +46,7 @@ const Landing = () => {
             </p>
           </div>
         </div>
-
+ 
         {/* Quick Stats Bar */}
         <div className="grid grid-cols-3 gap-4 max-w-3xl mx-auto mb-12">
           <InfoBox
@@ -110,5 +110,5 @@ const Landing = () => {
     </AnimatedBackground>
   );
 };
-
+ 
 export default Landing;
