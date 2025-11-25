@@ -17,6 +17,7 @@ export interface StallMapPosition {
 export interface VendorInfo {
   businessName: string;
   email: string;
+  genres: string[];
 }
 
 export interface StepIndicatorProps {
