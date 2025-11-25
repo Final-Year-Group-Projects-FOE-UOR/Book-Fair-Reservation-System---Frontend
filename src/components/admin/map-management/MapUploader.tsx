@@ -79,28 +79,6 @@ export default function MapUploader({
           </div>
         </div>
       </label>
-
-      {/* {stallMapImage && (
-        <div className="bg-[#1a1f37]/50 rounded-xl p-4 border border-white/10">
-          <div className="flex items-center justify-between mb-3">
-            <div className="flex items-center gap-2">
-              <div className="w-5 h-5 rounded-full bg-green-400/20 flex items-center justify-center text-green-400">
-                ✓
-              </div>
-              <span className="text-white font-semibold">
-                Map Uploaded Successfully
-              </span>
-            </div>
-            <div className="flex items-center gap-2">
-              <div className="bg-green-500/20 px-3 py-1 rounded-full">
-                <span className="text-green-300 text-xs font-semibold">
-                  💾 Saved to localStorage
-                </span>
-              </div>
-            </div>
-          </div>
-        </div>
-      )} */}
     </div>
   );
 }

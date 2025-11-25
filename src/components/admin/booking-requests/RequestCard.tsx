@@ -5,7 +5,7 @@ import { Calendar, CheckCircle, Mail, Store, Tag, X } from 'lucide-react';
 import { BookingRequest } from './types';
 import Cookies from 'js-cookie';
 import toast from 'react-hot-toast';
-import { approvePendingRequest } from '@/actions/reservationsActions';
+import { approvePendingRequest, cancelReservation } from '@/actions/reservationsActions';
 
 type RequestCardProps = {
   bookingRequest: BookingRequest;
@@ -25,7 +25,9 @@ const RequestCard = ({ bookingRequest, setData }: RequestCardProps) => {
     try{
       setApproveLoading(true);
       const response = await approvePendingRequest(jwt, bookingRequest.id);
+      console.log(response);
       if(response.success){
+        console.log("Approved")
         toast.success("Booking request approved successfully!");
         setData();
       }else{
@@ -45,18 +47,27 @@ const RequestCard = ({ bookingRequest, setData }: RequestCardProps) => {
       toast.error("Authentication token not found. Please log in again.");
       return;
     }
-    try{
+    try {
       setRejectLoading(true);
-      // Simulate API call to reject booking request
-      await new Promise(resolve => setTimeout(resolve, 1000));
-      toast.success("Booking request rejected successfully!");
-    }catch(error){
+      const response = await cancelReservation(jwt, bookingRequest.id);
+      if (response.success) {
+        toast.success("Booking request rejected successfully!");
+        setData();
+      } else {
+        toast.error(
+          "Failed to reject the booking request. Please try again later.",
+        );
+      }
+    } catch (error) {
       console.log(error);
-      toast.error("Failed to reject the booking request. Please try again later.");
-    }finally{
+      toast.error(
+        "Failed to reject the booking request. Please try again later.",
+      );
+    } finally {
       setRejectLoading(false);
     }
-  }
+  };
+
 
   return (
     <div className="bg-gradient-to-br font-geist-sans from-[#2a2f4a]/80 to-[#1e2337]/80 backdrop-blur-xl border border-orange-500/30 rounded-2xl p-6 relative overflow-hidden group hover:border-orange-400/50 transition-all duration-300 hover:shadow-xl hover:shadow-orange-500/10">

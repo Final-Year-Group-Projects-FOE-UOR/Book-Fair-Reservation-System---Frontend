@@ -1,6 +1,6 @@
 "use client";
 
-import { CheckCircle, Clock, QrCode, CalendarDays } from "lucide-react";
+import { CheckCircle, Clock, QrCode, CalendarDays, X } from "lucide-react";
 import { Reservation } from "./types";
 import toast from "react-hot-toast";
 import Cookies from "js-cookie";
@@ -40,6 +40,7 @@ const GridCard = ({ reservation }: GridCardProps) => {
   };
 
   const isConfirmed = reservation.status === "CONFIRMED";
+  const isCancelled = reservation.status === "CANCELLED";
 
   const formattedDate = reservation.reservationDate
     ? new Date(reservation.reservationDate).toLocaleDateString("en-US", {
@@ -84,11 +85,18 @@ const GridCard = ({ reservation }: GridCardProps) => {
               Confirmed
             </span>
           </>
-        ) : (
+        ) : !isCancelled ? (
           <>
             <Clock className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-orange-400 shrink-0" />
             <span className="text-xs sm:text-sm font-semibold text-orange-400">
               Pending Approval
+            </span>
+          </>
+        ) : (
+          <>
+            <X className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-red-400 shrink-0" />
+            <span className="text-xs sm:text-sm font-semibold text-red-400">
+              Cancelled
             </span>
           </>
         )}

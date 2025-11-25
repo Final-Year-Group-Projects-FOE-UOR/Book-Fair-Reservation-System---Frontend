@@ -2,7 +2,10 @@
 
 import React, { useEffect, useState } from "react";
 import RequestCard from "./RequestCard";
-import { Reservation, ReservationResponse } from "@/components/vendor/my-bookings/types";
+import {
+  Reservation,
+  ReservationResponse,
+} from "@/components/vendor/my-bookings/types";
 import Cookies from "js-cookie";
 import toast from "react-hot-toast";
 import { getPendingReservations } from "@/actions/reservationsActions";
@@ -61,7 +64,7 @@ const BookingRequests = () => {
       toast.error("Authentication token not found. Please log in again.");
       return;
     }
-    try{
+    try {
       const response = await fetchVendorByEmail(jwt, email);
       if (response.success) {
         const vendorData = response.data;
@@ -70,16 +73,20 @@ const BookingRequests = () => {
           email: vendorData.userEmail,
         };
       }
-    }catch(err){
+    } catch (err) {
       console.log("An error occurred while fetching vendor info:", err);
     }
-  }
+  };
 
   const setData = async () => {
     setLoading(true);
     try {
       const reservations = await fetchReservations();
       const stalls = await getAllConfiguredStalls();
+      if (reservations === null || stalls === null) {
+        setBookingRequests([]);
+        return;
+      }
 
       const configuredBookings = await Promise.all(
         reservations.map(async (reservation: ReservationResponse) => {
@@ -108,20 +115,18 @@ const BookingRequests = () => {
       setBookingRequests(configuredBookings);
     } catch (error) {
       console.log(error);
-    }finally{
+    } finally {
       setLoading(false);
     }
   };
-
 
   useEffect(() => {
     setData();
   }, []);
 
-  if(loading){
-    return <LoadingScreen/>
+  if (loading) {
+    return <LoadingScreen />;
   }
-  
 
   return (
     <div
@@ -134,7 +139,11 @@ const BookingRequests = () => {
       ) : (
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 sm:gap-5">
           {bookingRequests.map((bookingRequest) => (
-            <RequestCard key={bookingRequest.id} bookingRequest={bookingRequest} setData={setData} />
+            <RequestCard
+              key={bookingRequest.id}
+              bookingRequest={bookingRequest}
+              setData={setData}
+            />
           ))}
         </div>
       )}

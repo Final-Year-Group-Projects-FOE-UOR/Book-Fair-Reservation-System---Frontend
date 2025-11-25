@@ -5,7 +5,10 @@ import { Calendar, CheckCircle, Mail, Store, Tag, X } from "lucide-react";
 import { BookingRequest } from "./types";
 import Cookies from "js-cookie";
 import toast from "react-hot-toast";
-import { approvePendingRequest } from "@/actions/reservationsActions";
+import {
+  approvePendingRequest,
+  cancelReservation,
+} from "@/actions/reservationsActions";
 
 type RequestCardProps = {
   bookingRequest: BookingRequest;
@@ -51,8 +54,15 @@ const RequestCard = ({ bookingRequest, setData }: RequestCardProps) => {
     }
     try {
       setRejectLoading(true);
-      await new Promise((resolve) => setTimeout(resolve, 1000));
-      toast.success("Booking request rejected successfully!");
+      const response = await cancelReservation(jwt, bookingRequest.id);
+      if (response.success) {
+        toast.success("Booking request rejected successfully!");
+        setData();
+      } else {
+        toast.error(
+          "Failed to reject the booking request. Please try again later.",
+        );
+      }
     } catch (error) {
       console.log(error);
       toast.error(

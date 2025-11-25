@@ -470,7 +470,7 @@ export default function MapViewer({
                       {hoverCard.details.type}
                     </div>
                     <div className="text-green-300 font-medium">
-                      ${hoverCard.details.price.toFixed(2)}
+                      Rs. {hoverCard.details.price.toFixed(2)}
                     </div>
                   </div>
                 </div>

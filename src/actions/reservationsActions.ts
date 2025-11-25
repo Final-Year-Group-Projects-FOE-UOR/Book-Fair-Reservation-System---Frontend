@@ -120,3 +120,26 @@ export const getQRCode = async (jwt: string, imageName: string) => {
   }
 };
 
+export const cancelReservation = async (jwt: string, id: number) => {
+  "use server";
+  const url = `${Base_URL}/reservations/cancel/${id}`;
+  try {
+    const response = await axios.delete(url, {
+      headers: {
+        Authorization: `Bearer ${jwt}`,
+        "Content-Type": "application/json",
+        Accept: "application/json",
+      },
+    });
+    return response.data;
+  } catch (error: any) {
+    if (error.response && error.response.data) {
+      console.log("error", error.response.data);
+      return error.response.data;
+    } else {
+      console.log("error", error);
+      return { success: false, message: "An unexpected error occurred" };
+    }
+  }
+};
+
