@@ -16,6 +16,8 @@ export type StallConfig = {
 };
 
 export type Stall = {
+  id: string;
+  available: boolean;
   isConfigured: boolean;
   stallName: string;
   type: "SMALL" | "MEDIUM" | "LARGE";

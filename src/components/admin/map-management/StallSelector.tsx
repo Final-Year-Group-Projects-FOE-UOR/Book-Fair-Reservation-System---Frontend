@@ -1,6 +1,5 @@
 "use client";
 import React from "react";
-import type { Stall } from "./types";
 
 type Props = {
   stalls: Stall[];

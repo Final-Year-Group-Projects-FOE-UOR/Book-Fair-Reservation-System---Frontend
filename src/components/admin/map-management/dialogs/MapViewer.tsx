@@ -1,17 +1,17 @@
-/* eslint-disable react-hooks/refs */
-/* eslint-disable react-hooks/set-state-in-effect */
+/* eslint-disable react-hooks/rules-of-hooks */
+/* eslint-disable react-hooks/exhaustive-deps */
 /* eslint-disable @next/next/no-img-element */
 /* eslint-disable @typescript-eslint/no-explicit-any */
 "use client";
 
 import React, { useEffect, useRef, useState } from "react";
-import type { Stall, MapPosition } from "../types";
 import Controller from "../Controller";
 import StallSelector from "../StallSelector";
+import { Stall } from "../../stall-configuration/types";
+import Cookies from "js-cookie";
+import toast from "react-hot-toast";
+import { updateMapStall } from "@/actions/mapActions";
 
-/**
- * Export shared Shape type so Controller can import it.
- */
 export type ShapeType = "circle" | "rectangle" | "square";
 
 type Props = {
@@ -70,21 +70,36 @@ export default function MapViewer({
     if (!editingStall) return;
     const s = stalls.find((x) => x.id === editingStall);
     if (!s) return;
-    setSelectedShape((s as any).mapShape ?? "circle");
-    // Load stored percentages or convert old pixel values
-    const w = (s as any).mapWidthPercent ?? 3;
-    const h = (s as any).mapHeightPercent ?? w;
+    setSelectedShape((s.mapMetadata.mapShape as ShapeType) ?? "circle");
+    // Load stored percentages
+    const w = s.mapMetadata.mapWidthPercent ?? 3;
+    const h = s.mapMetadata.mapHeightPercent ?? w;
     setSelectedWidthPercent(w);
     setSelectedHeightPercent(h);
-    setSelectedRotation((s as any).mapRotation ?? 0);
+    setSelectedRotation(s.mapMetadata.mapRotation ?? 0);
   }, [editingStall, stalls]);
 
-  const persist = (updated: Stall[]) => {
+  const handleUpdateToDB = async (updatedStall: Stall) => {
+    const jwt = Cookies.get("jwt") || "";
+    if (!jwt) {
+      toast.error("Authentication error. Please log in again.");
+      return;
+    }
     try {
-      localStorage.setItem("tradeHallStalls", JSON.stringify(updated));
-    } catch {}
+      const response = await updateMapStall(jwt, updatedStall);
+      if (response.success) {
+        // toast.success("Stall updated successfully");
+      } else {
+        toast.error(
+          response.message || "Failed to update stall. Please try again."
+        );
+      }
+    } catch (err) {
+      console.log(err);
+    }
   };
 
+  
   const handlePlaceAt = (x: number, y: number, stallId: string | null) => {
     if (!stallId) return;
     setStalls((prev) => {
@@ -92,21 +107,27 @@ export default function MapViewer({
         s.id === stallId
           ? {
               ...s,
-              mapPosition: {
-                x: Number(x.toFixed(2)),
-                y: Number(y.toFixed(2)),
-              } as MapPosition,
-              mapShape: selectedShape,
-              mapWidthPercent: selectedWidthPercent,
-              mapHeightPercent:
-                selectedShape === "square"
-                  ? selectedWidthPercent
-                  : selectedHeightPercent,
-              mapRotation: selectedRotation,
+              mapMetadata: {
+                ...s.mapMetadata,
+                mapPosition: {
+                  x: Number(x.toFixed(2)),
+                  y: Number(y.toFixed(2)),
+                },
+                mapShape: selectedShape,
+                mapWidthPercent: selectedWidthPercent,
+                mapHeightPercent:
+                  selectedShape === "square"
+                    ? selectedWidthPercent
+                    : selectedHeightPercent,
+                mapRotation: selectedRotation,
+              },
             }
           : s
       );
-      persist(updated);
+      const updateStall = updated.find((s) => s.id === stallId);
+      if (updateStall)
+      handleUpdateToDB(updateStall);
+      console.log(updated);
       return updated;
     });
     setEditingStall(null);
@@ -120,17 +141,22 @@ export default function MapViewer({
         s.id === editingStall
           ? {
               ...s,
-              mapShape: selectedShape,
-              mapWidthPercent: selectedWidthPercent,
-              mapHeightPercent:
-                selectedShape === "square"
-                  ? selectedWidthPercent
-                  : selectedHeightPercent,
-              mapRotation: selectedRotation,
+              mapMetadata: {
+                ...s.mapMetadata,
+                mapShape: selectedShape,
+                mapWidthPercent: selectedWidthPercent,
+                mapHeightPercent:
+                  selectedShape === "square"
+                    ? selectedWidthPercent
+                    : selectedHeightPercent,
+                mapRotation: selectedRotation,
+              },
             }
           : s
       );
-      persist(updated);
+      const updateStall = updated.find((s) => s.id === editingStall);
+      if (updateStall)
+      handleUpdateToDB(updateStall);
       return updated;
     });
     setEditingStall(null);
@@ -145,15 +171,20 @@ export default function MapViewer({
         s.id === editingStall
           ? {
               ...s,
-              mapPosition: undefined,
-              mapShape: undefined,
-              mapWidthPercent: undefined,
-              mapHeightPercent: undefined,
-              mapRotation: undefined,
+              mapMetadata: {
+                ...s.mapMetadata,
+                mapPosition: { x: 0, y: 0 },
+                mapShape: "circle",
+                mapWidthPercent: 0,
+                mapHeightPercent: 0,
+                mapRotation: 0,
+              },
             }
           : s
       );
-      persist(updated);
+      const updateStall = updated.find((s) => s.id === editingStall);
+      if (updateStall)
+      handleUpdateToDB(updateStall);
       return updated;
     });
     setEditingStall(null);
@@ -284,13 +315,20 @@ export default function MapViewer({
 
           {/* markers positioned by percentage inside wrapper */}
           {stalls.map((stall) => {
-            if (!stall.mapPosition || stall.isEmpty) return null;
-            const shape = (stall as any).mapShape ?? "circle";
-            // Use percentage values, with fallback for old pixel-based data
-            const widthPercent = (stall as any).mapWidthPercent ?? 3;
+            // Check if position exists and stall is available
+            if (
+              !stall.mapMetadata.mapPosition ||
+              (stall.mapMetadata.mapPosition.x === 0 &&
+                stall.mapMetadata.mapPosition.y === 0) ||
+              !stall.available
+            )
+              return null;
+
+            const shape = stall.mapMetadata.mapShape ?? "circle";
+            const widthPercent = stall.mapMetadata.mapWidthPercent ?? 3;
             const heightPercent =
-              (stall as any).mapHeightPercent ?? widthPercent;
-            const rotation = (stall as any).mapRotation ?? 0;
+              stall.mapMetadata.mapHeightPercent ?? widthPercent;
+            const rotation = stall.mapMetadata.mapRotation ?? 0;
             const isActive =
               hoveredStall === stall.id || editingStall === stall.id;
 
@@ -300,8 +338,8 @@ export default function MapViewer({
                 onClick={(e) => handleMarkerClick(e, stall)}
                 className="absolute transform -translate-x-1/2 -translate-y-1/2"
                 style={{
-                  left: `${stall.mapPosition.x}%`,
-                  top: `${stall.mapPosition.y}%`,
+                  left: `${stall.mapMetadata.mapPosition.x}%`,
+                  top: `${stall.mapMetadata.mapPosition.y}%`,
                   width: `${widthPercent}%`,
                   height: `${heightPercent}%`,
                   transform: `translate(-50%, -50%) rotate(${rotation}deg)`,

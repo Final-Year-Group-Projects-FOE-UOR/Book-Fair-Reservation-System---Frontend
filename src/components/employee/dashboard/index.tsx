@@ -6,16 +6,13 @@ import DashboardTabs from "@/components/employee/dashboard/DashboardTabs";
 import BookingRequests from "@/components/employee/dashboard/tabs/BookingRequests";
 import StallAvailability from "@/components/employee/dashboard/tabs/StallAvailability";
 import AllReservations from "@/components/employee/dashboard/tabs/AllReservations";
+import { useQueryState } from "nuqs";
 
 const EmployeeDashboard = () => {
-  const [fadeIn, setFadeIn] = useState(false);
-  const [employeeTab, setEmployeeTab] = useState("requests");
-  const [currentView, setCurrentView] = useState("employee_dashboard");
+  const [employeeTab, setEmployeeTab] = useQueryState("currentPage");
   return (
     <div
-      className={`min-h-screen font-geist-sans bg-gradient-to-br from-[#1a1f37] via-[#2d1b4e] to-[#1a1f37] p-8 transition-opacity duration-500 ${
-        fadeIn ? "opacity-100" : "opacity-0"
-      } relative overflow-hidden`}
+      className={`min-h-screen font-geist-sans bg-gradient-to-br from-[#1a1f37] via-[#2d1b4e] to-[#1a1f37] p-8 transition-opacity duration-500 opacity-100 relative overflow-hidden`}
     >
       {/* Background Effects */}
       <div className="background-orbs">
@@ -42,24 +39,16 @@ const EmployeeDashboard = () => {
       ></div>
 
       <div className="max-w-7xl mx-auto relative z-10">
-        <DashboardHeader setCurrentView={setCurrentView} />
+        <DashboardHeader />
 
         <div className="bg-gradient-to-br from-[#2a2f4a]/80 to-[#1e2337]/80 backdrop-blur-xl rounded-2xl sm:rounded-3xl border border-white/10 shadow-2xl p-4 sm:p-6 md:p-8">
-          <DashboardTabs
-            employeeTab={employeeTab}
-            setEmployeeTab={setEmployeeTab}
-          />
+          <DashboardTabs />
 
-          {employeeTab === "requests" && <BookingRequests />}
-          {/* 
+          {employeeTab === null && <BookingRequests />}
 
-          {employeeTab === "availability" && (
-            <StallAvailability stats={stats} stalls={stalls} />
-          )}
+          {employeeTab === "availability" && <StallAvailability />}
 
-          {employeeTab === "reservations" && (
-            <AllReservations reservations={reservations} />
-          )} */}
+          {employeeTab === "reservations" && <AllReservations />}
         </div>
       </div>
     </div>

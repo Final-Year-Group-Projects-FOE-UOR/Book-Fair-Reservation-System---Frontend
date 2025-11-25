@@ -135,7 +135,15 @@ const StallConfiguration = () => {
           return;
         }
       }
+      setStallConfig({
+        small: { count: 0, price: 0 },
+        medium: { count: 0, price: 0 },
+        large: { count: 0, price: 0 },
+        namingPattern: "alphanumeric",
+        prefix: "",
+      })
       toast.success("All stalls created successfully!");
+      
     } catch (err) {
       console.log("An error occurred while creating stalls:", err);
       toast.error("An error occurred while creating stalls. Please try again.");
