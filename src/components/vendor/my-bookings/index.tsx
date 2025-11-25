@@ -130,16 +130,13 @@ const MyBookings: React.FC = () => {
 
       {useMapView ? (
         <div className="w-full overflow-auto rounded-md">
-
-        <MapView
-          stallMapImage={"https://ik.imagekit.io/web92xyy0/s1_o03c7akip.jpg"}
-          reservations={reservations}
+          <MapView
+            stallMapImage={"https://ik.imagekit.io/web92xyy0/s1_o03c7akip.jpg"}
+            reservations={reservations}
           />
-          </div>
+        </div>
       ) : (
-        <GridView
-          reservations={reservations}
-        />
+        <GridView reservations={reservations} />
       )}
     </>
   );

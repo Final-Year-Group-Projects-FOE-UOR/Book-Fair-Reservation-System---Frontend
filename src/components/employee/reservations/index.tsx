@@ -3,7 +3,10 @@
 import { Stall } from "@/components/vendor/types";
 import React, { useEffect, useState } from "react";
 import MapView from "./map";
-import { Reservation, ReservationResponse } from "@/components/vendor/my-bookings/types";
+import {
+  Reservation,
+  ReservationResponse,
+} from "@/components/vendor/my-bookings/types";
 import Cookies from "js-cookie";
 import toast from "react-hot-toast";
 import { getAllReservations } from "@/actions/reservationsActions";
@@ -88,18 +91,18 @@ const Reservations = () => {
     setData();
   }, []);
 
-  if(loading) {
-    return <LoadingScreen/>;
+  if (loading) {
+    return <LoadingScreen />;
   }
 
   return (
-    <div
-      className={` relative overflow-hidden`}
-    >
-      <MapView
-        stallMapImage={"https://ik.imagekit.io/web92xyy0/s1_o03c7akip.jpg"}
-        reservations={reservations}
-      />
+    <div className={` relative overflow-hidden`}>
+      <div className="w-full overflow-auto rounded-md">
+        <MapView
+          stallMapImage={"https://ik.imagekit.io/web92xyy0/s1_o03c7akip.jpg"}
+          reservations={reservations}
+        />
+      </div>
     </div>
   );
 };

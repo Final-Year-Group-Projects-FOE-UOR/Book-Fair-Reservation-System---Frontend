@@ -3,7 +3,7 @@ import {Building, CheckCircle } from "lucide-react";
 
 const Tabs = () => {
   return (
-    <div className="flex gap-4 mb-6 border-b border-white/10">
+    <div className="flex items-center w-full justify-center gap-4 mb-6 border-b border-white/10">
       <TabItem
         tabName={"employee/booking-requests"}
         icon={<CheckCircle className="w-5 h-5" />}

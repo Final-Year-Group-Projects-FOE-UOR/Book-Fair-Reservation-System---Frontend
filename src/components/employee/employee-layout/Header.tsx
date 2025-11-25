@@ -18,17 +18,19 @@ const EmployeeHeader = () => {
   return (
     <div className="flex justify-between font-geist-sans items-center mb-6">
       <AnimatedHeader
-        icon={<BookOpen className="w-8 h-8 text-white animate-floating-book" />}
+        icon={
+          <BookOpen className="sm:w-8 sm:h-8 h-6 w-6 text-white animate-floating-book" />
+        }
         title={`Welcome Back!`}
         description="Manage and review booking requests"
       />
       <div className="flex items-center gap-4">
         <button
           onClick={handleLogout}
-          className="px-6 py-3 bg-gradient-to-r from-red-500 to-pink-600 text-white rounded-xl font-semibold hover:from-red-600 hover:to-pink-700 transition shadow-lg flex items-center gap-2"
+          className="sm:px-6 px-3 py-3 bg-gradient-to-r from-red-500 to-pink-600 text-white rounded-xl font-semibold hover:from-red-600 hover:to-pink-700 transition shadow-lg flex items-center gap-2"
         >
-          <LogOut className="w-5 h-5" />
-          Logout
+          <LogOut className="sm:w-5 sm:h-5 w-4 h-4" />
+          <span className="sm:flex hidden">Logout</span>
         </button>
       </div>
     </div>

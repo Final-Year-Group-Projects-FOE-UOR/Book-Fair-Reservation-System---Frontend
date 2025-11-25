@@ -1,11 +1,11 @@
 "use client";
 
-import React, { useEffect, useState } from 'react'
-import { Stall } from '@/components/vendor/types';
-import Cookies from 'js-cookie';
-import { getStalls } from '@/actions/stallActions';
-import LoadingScreen from '@/components/common/loading';
-import MapView from './map';
+import React, { useEffect, useState } from "react";
+import { Stall } from "@/components/vendor/types";
+import Cookies from "js-cookie";
+import { getStalls } from "@/actions/stallActions";
+import LoadingScreen from "@/components/common/loading";
+import MapView from "./map";
 
 const StallAvailability = () => {
   const [stalls, setStalls] = useState<Stall[]>([]);
@@ -33,26 +33,25 @@ const StallAvailability = () => {
   };
 
   useEffect(() => {
-      getAllConfiguredStalls();
-    }, []);
+    getAllConfiguredStalls();
+  }, []);
 
-  if(loading) {
-    return <LoadingScreen/>
+  if (loading) {
+    return <LoadingScreen />;
   }
-  
+
   return (
-    <div
-      className={` relative overflow-hidden`}
-    >
-      <MapView
-        stallMapImage={"https://ik.imagekit.io/web92xyy0/s1_o03c7akip.jpg"}
-        stalls={stalls}
-        selectedStalls={selectedStalls}
-        setSelectedStalls={setSelectedStalls}
-      />
-     
+    <div className={` relative overflow-hidden`}>
+      <div className="w-full overflow-auto rounded-md">
+        <MapView
+          stallMapImage={"https://ik.imagekit.io/web92xyy0/s1_o03c7akip.jpg"}
+          stalls={stalls}
+          selectedStalls={selectedStalls}
+          setSelectedStalls={setSelectedStalls}
+        />
+      </div>
     </div>
   );
-}
+};
 
-export default StallAvailability
+export default StallAvailability;

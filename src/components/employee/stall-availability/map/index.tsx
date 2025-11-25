@@ -54,7 +54,7 @@ const MapView: React.FC<MapViewProps> = ({
   };
 
   return (
-    <div className="flex-1 overflow-auto font-geist-sans beautiful-scrollbar bg-[#0b1220] rounded">
+    <div className="flex md:min-w-full min-w-[1000px] overflow-auto font-geist-sans beautiful-scrollbar bg-[#0b1220] rounded">
       <div className="relative w-full p-4">
         {stallMapImage ? (
           <img src={stallMapImage} alt="Map" className="w-full h-auto block" />
