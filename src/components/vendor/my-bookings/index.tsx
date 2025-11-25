@@ -1,10 +1,6 @@
 "use client";
 
 import {
-  CheckCircle,
-  X,
-  CalendarX,
-  Sparkles,
   MapPin,
   Grid,
 } from "lucide-react";
@@ -131,7 +127,7 @@ const MyBookings: React.FC = () => {
       {useMapView ? (
         <div className="w-full overflow-auto rounded-md">
           <MapView
-            stallMapImage={"https://ik.imagekit.io/web92xyy0/s1_o03c7akip.jpg"}
+            stallMapImage={Cookies.get("mapUrl") || null}
             reservations={reservations}
           />
         </div>

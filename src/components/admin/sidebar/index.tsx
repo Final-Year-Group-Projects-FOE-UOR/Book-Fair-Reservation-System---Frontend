@@ -18,6 +18,7 @@ import {
 import { usePathname, useRouter } from "next/navigation";
 import React, { Fragment, useEffect, useState } from "react";
 import SidebarItem from "./SidebarItem";
+import Cookies from "js-cookie";
 
 type AdminSidebarProps = {
   sidebarOpen: boolean;
@@ -35,6 +36,15 @@ const AdminSidebar = ({
   const [currentView, setCurrentView] = useState("superadmin_landing");
   const [superAdminTab, setSuperAdminTab] = useState("dashboard");
   const [loading, setLoading] = useState(false);
+
+
+  const handleLogout = () => {
+    Cookies.remove("jwt");
+    Cookies.remove("email");
+    Cookies.remove("role");
+    Cookies.remove("mapUrl");
+    router.push("/admin/login");
+  };
 
   // Derive superAdminTab from pathname directly
   const getSuperAdminTab = (path: string) => {
@@ -178,13 +188,7 @@ const AdminSidebar = ({
 
         <div className="p-4 border-t border-white/10">
           <button
-            onClick={() => {
-              if (window.location.pathname.startsWith("/adminx")) {
-                window.location.href = "/";
-              } else {
-                setCurrentView("superadmin_landing");
-              }
-            }}
+            onClick={handleLogout}
             className={`w-full flex items-center gap-3 px-4 py-3 rounded-xl transition bg-linear-to-r from-red-500/20 to-pink-600/20 text-red-300 hover:from-red-500/30 hover:to-pink-600/30 border border-red-500/30`}
           >
             <LogOut className="w-5 h-5" />

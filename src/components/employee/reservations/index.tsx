@@ -99,7 +99,7 @@ const Reservations = () => {
     <div className={` relative overflow-hidden`}>
       <div className="w-full overflow-auto rounded-md">
         <MapView
-          stallMapImage={"https://ik.imagekit.io/web92xyy0/s1_o03c7akip.jpg"}
+          stallMapImage={Cookies.get("mapUrl") || null}
           reservations={reservations}
         />
       </div>

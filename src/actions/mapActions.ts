@@ -7,7 +7,7 @@ const Base_URL = process.env.Base_URL;
 
 export const addMap = async (jwt: string, mapUrl: string) => {
   "use server";
-  const url = `${Base_URL}/admin/map/update`;
+  const url = `${Base_URL}/map/update`;
   try {
     const body = {
       mapUrl,
@@ -34,7 +34,7 @@ export const addMap = async (jwt: string, mapUrl: string) => {
 
 export const getMap = async (jwt: string) => {
   "use server";
-  const url = `${Base_URL}/admin/map`;
+  const url = `${Base_URL}/map/get`;
   try {
     const response = await axios.get(url, {
       headers: {
@@ -65,6 +65,29 @@ export const updateMapStall = async (jwt: string, stall: Stall) => {
     };
     console.log(body);
     const response = await axios.put(url, body, {
+      headers: {
+        Authorization: `Bearer ${jwt}`,
+        "Content-Type": "application/json",
+        Accept: "application/json",
+      },
+    });
+    return response.data;
+  } catch (error: any) {
+    if (error.response && error.response.data) {
+      console.log("error", error.response.data);
+      return error.response.data;
+    } else {
+      console.log("error", error);
+      return { success: false, message: "An unexpected error occurred" };
+    }
+  }
+};
+
+export const deleteMap = async (jwt: string) => {
+  "use server";
+  const url = `${Base_URL}/map/delete`;
+  try {
+    const response = await axios.delete(url, {
       headers: {
         Authorization: `Bearer ${jwt}`,
         "Content-Type": "application/json",

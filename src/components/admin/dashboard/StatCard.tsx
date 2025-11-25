@@ -39,12 +39,7 @@ export default function StatCard({
         >
           {icon}
         </div>
-        {trend && (
-          <div className="flex items-center gap-1 text-green-400 text-sm font-semibold">
-            <TrendingUp className="w-4 h-4" />
-            {trend}
-          </div>
-        )}
+        
       </div>
       <div>
         <div className="text-2xl sm:text-3xl font-bold text-white mb-1">

@@ -20,6 +20,7 @@ const VendorHeader = ({
     Cookies.remove("jwt");
     Cookies.remove("email");
     Cookies.remove("role");
+    Cookies.remove("mapUrl");
     router.push("/auth/login");
   }
 
@@ -33,7 +34,7 @@ const VendorHeader = ({
       <div className="flex items-center gap-4">
         <button
           onClick={handleLogout}
-          className="sm:px-6 px-3 py-3 bg-gradient-to-r from-red-500 to-pink-600 text-white rounded-xl font-semibold hover:from-red-600 hover:to-pink-700 transition shadow-lg flex items-center gap-2"
+          className="sm:px-6 cursor-pointer px-3 py-3 bg-gradient-to-r from-red-500 to-pink-600 text-white rounded-xl font-semibold hover:from-red-600 hover:to-pink-700 transition shadow-lg flex items-center gap-2"
         >
           <LogOut className="sm:w-5 sm:h-5 w-4 h-4" />
           <span className="sm:flex hidden">Logout</span>

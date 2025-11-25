@@ -13,6 +13,7 @@ import LoadingScreen from "@/components/common/loading";
 import { getStalls } from "@/actions/stallActions";
 import { Stall } from "../stall-configuration/types";
 import { useRouter } from "next/navigation";
+import DeleteMapDialog from "./dialogs/DeleteMapDialog";
 
 export default function MapManagement() {
   const router = useRouter();
@@ -26,25 +27,25 @@ export default function MapManagement() {
   const [stalls, setStalls] = useState<Stall[]>([]);
   const [isSmallScreen, setIsSmallScreen] = useState<boolean | null>(null);
 
-  const getCurrentMap = async () => {
-    const jwt = Cookies.get("jwt") || "";
-    if (!jwt) {
-      toast.error("Authentication error. Please log in again.");
-      return;
-    }
-    try {
-      setLoading(true);
-      const response = await getMap(jwt);
-      if (response.success && response.data.mapUrl) {
-        setStallMapImage(response.data.mapUrl);
-      } else {
-        setStallMapImage(null);
-      }
-    } catch (err) {
-      console.log(err);
-    } finally {
-    }
-  };
+  // const getCurrentMap = async () => {
+  //   const jwt = Cookies.get("jwt") || "";
+  //   if (!jwt) {
+  //     toast.error("Authentication error. Please log in again.");
+  //     return;
+  //   }
+  //   try {
+  //     setLoading(true);
+  //     const response = await getMap(jwt);
+  //     if (response.success && response.data.mapUrl) {
+  //       setStallMapImage(response.data.mapUrl);
+  //     } else {
+  //       setStallMapImage(null);
+  //     }
+  //   } catch (err) {
+  //     console.log(err);
+  //   } finally {
+  //   }
+  // };
 
   const getStallsList = async () => {
     const jwt = Cookies.get("jwt") || "";
@@ -93,8 +94,9 @@ export default function MapManagement() {
     if (isSmallScreen !== false) {
       return;
     }
-
-    getCurrentMap();
+    const mapUrl = Cookies.get("mapUrl") || null;
+    setStallMapImage(mapUrl);
+    // getCurrentMap();
     getStallsList();
   }, [isSmallScreen]);
 
@@ -109,6 +111,7 @@ export default function MapManagement() {
       const addMapRes = await addMap(jwt, mapUrl);
       if (addMapRes.success) {
         toast.success("Map updated successfully!");
+        Cookies.set("mapUrl", mapUrl, { expires: 1 });
         setStallMapImage(mapUrl);
       } else {
         toast.error("Failed to update map. Please try again.");
@@ -158,10 +161,7 @@ export default function MapManagement() {
             <div className="bg-[#1a1f37]/50 rounded-xl p-4 border border-white/10">
               <div className="flex items-center justify-between mb-3">
                 <div className="flex items-center gap-2">
-                  <CheckCircle className="w-5 h-5 text-green-400" />
-                  <span className="text-white font-semibold">
-                    Map Uploaded Successfully
-                  </span>
+
                 </div>
                 <div className="flex items-center gap-2">
                   <button
@@ -178,18 +178,7 @@ export default function MapManagement() {
                     <MapPin className="w-4 h-4" />
                     {isPositioningMode ? "Exit Positioning" : "Position Stalls"}
                   </button>
-                  <button
-                    onClick={() => {
-                      setStallMapImage(null);
-                      try {
-                        localStorage.removeItem("tradeHallMap");
-                      } catch {}
-                    }}
-                    className="px-4 py-2 rounded-lg font-semibold text-sm cursor-pointer hover:scale-[1.05] transition-all duration-300 flex items-center gap-2 bg-linear-to-r from-red-500/20 to-pink-600/20 border border-red-500/30 text-red-300 hover:from-red-500/30 hover:to-pink-600/30 hover:border-red-400/50 shadow-lg hover:shadow-red-500/20"
-                  >
-                    <Trash className="w-4 h-4" />
-                    Remove Map
-                  </button>
+                  <DeleteMapDialog setStallMapImage={setStallMapImage} />
                 </div>
               </div>
 

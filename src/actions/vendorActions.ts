@@ -124,3 +124,26 @@ export const addReservation = async (
     }
   }
 };
+
+export const getAllVendors = async (jwt: string) => {
+  "use server";
+  const url = `${Base_URL}/vendors/all`;
+  try {
+    const response = await axios.get(url, {
+      headers: {
+        Authorization: `Bearer ${jwt}`,
+        "Content-Type": "application/json",
+        Accept: "application/json",
+      },
+    });
+    return response.data;
+  } catch (error: any) {
+    if (error.response && error.response.data) {
+      console.log("error", error.response.data);
+      return error.response.data;
+    } else {
+      console.log("error", error);
+      return { success: false, message: "An unexpected error occurred" };
+    }
+  }
+};

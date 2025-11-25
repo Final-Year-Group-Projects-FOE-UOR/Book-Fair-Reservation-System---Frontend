@@ -14,9 +14,11 @@ import { useRouter } from "next/navigation";
 import React, { useState } from "react";
 import Cookies from "js-cookie";
 import { vendorLogin, vendorSignup } from "@/actions/vendorAuthActions";
+import { getMap } from "@/actions/mapActions";
 
 const Login = () => {
   const router = useRouter();
+  const [loading, setLoading] = useState(false);
   const [isLogin, setIsLogin] = useState(true);
   const [formData, setFormData] = useState({
     businessName: "",
@@ -25,16 +27,30 @@ const Login = () => {
   });
   const [error, setError] = useState("");
 
-  const handleSubmit = () => {
-    // Placeholder for form submission logic
-    
-  };
+  const getCurrentMap = async (jwt: string) => {
+    try{
+      const response = await getMap(jwt);
+      if (response.success && response.data.mapUrl) {
+        console.log("Current map URL:", response.data.mapUrl);
+        return response.data.mapUrl;
+      } else {
+        return null;
+      }
+    }catch(err){
+      console.log("An error occurred while fetching the map:", err);
+    }
+  }
 
   const handleLogin = async () => {
     try{
+      setLoading(true);
       const response = await vendorLogin(formData.email, formData.password);
       if (response && response.success) {   
-        // Set cookie with token    
+        // Set cookie with token 
+        const mapUrl = await getCurrentMap(response.data.token);
+        if(mapUrl){
+          Cookies.set("mapUrl", mapUrl, { expires: 1 }); // Expires in 1 day
+        }   
         Cookies.set("jwt", response.data.token, { expires: 1 }); // Expires in 1 day
         Cookies.set("email", response.data.email, { expires: 1 }); // Expires in 1 day
         Cookies.set("role", response.data.role, { expires: 1 });   // Expires in 1 day
@@ -47,7 +63,9 @@ const Login = () => {
     }
     catch (err) {
       console.log("An error occurred during login:", err);
-    }
+    }finally{
+      setLoading(false);
+    } 
   };
 
   const handleSignup = async() => {
@@ -105,7 +123,7 @@ const Login = () => {
               </div>
             )}
 
-            <form onSubmit={handleSubmit} className="space-y-6">
+            <form  className="space-y-6">
               {!isLogin && (
                 <div>
                   <label className="block text-sm font-medium text-gray-300 mb-2">
@@ -154,7 +172,7 @@ const Login = () => {
                   Password
                 </label>
                 <div className="relative">
-                  {/* <Lock className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-5 h-5" /> */}
+
                   <input
                     type="password"
                     required
@@ -167,7 +185,7 @@ const Login = () => {
                   />
                 </div>
               </div>
-              <LoginButton buttonText={isLogin ? "Login to Account" : "Create Account & Reserve Stalls"} onClick={
+              <LoginButton loading={loading} buttonText={isLogin ? "Login to Account" : "Create Account & Reserve Stalls"} onClick={
                 isLogin ? handleLogin : handleSignup
               } />
 

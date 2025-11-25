@@ -13,11 +13,26 @@ import { useRouter } from "next/navigation";
 import { useState } from "react";
 import toast from "react-hot-toast";
 import Cookies from "js-cookie";
+import { getMap } from "@/actions/mapActions";
 
 const EmployeeLogin = () => {
   const [formData, setFormData] = useState({ email: "", password: "" });
   const [loading, setLoading] = useState(false);
   const router = useRouter();
+
+  const getCurrentMap = async (jwt: string) => {
+    try {
+      const response = await getMap(jwt);
+      if (response.success && response.data.mapUrl) {
+        console.log("Current map URL:", response.data.mapUrl);
+        return response.data.mapUrl;
+      } else {
+        return null;
+      }
+    } catch (err) {
+      console.log("An error occurred while fetching the map:", err);
+    }
+  };
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -25,6 +40,10 @@ const EmployeeLogin = () => {
     try {
       const response = await login(formData.email, formData.password);
       if (response && response.success) {
+        const mapUrl = await getCurrentMap(response.data.token);
+        if (mapUrl) {
+          Cookies.set("mapUrl", mapUrl, { expires: 1 }); // Expires in 1 day
+        }
         toast.success("Login successful!");
         Cookies.set("jwt", response.data.token, { expires: 1 });
         Cookies.set("email", response.data.email, { expires: 1 });

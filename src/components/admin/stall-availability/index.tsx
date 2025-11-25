@@ -46,7 +46,7 @@ const StallAvailability = () => {
     >
       <div className="w-full overflow-auto rounded-md">
         <MapView
-          stallMapImage={"https://ik.imagekit.io/web92xyy0/s1_o03c7akip.jpg"}
+          stallMapImage={Cookies.get("mapUrl") || null}
           stalls={stalls}
           selectedStalls={selectedStalls}
           setSelectedStalls={setSelectedStalls}

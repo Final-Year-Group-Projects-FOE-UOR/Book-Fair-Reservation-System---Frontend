@@ -12,6 +12,7 @@ const EmployeeHeader = () => {
     Cookies.remove("jwt");
     Cookies.remove("email");
     Cookies.remove("role");
+    Cookies.remove("mapUrl");
     router.push("/auth/login");
   };
 

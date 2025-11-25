@@ -120,7 +120,7 @@ export default function AdminLayout({
           setSidebarOpen={setSidebarOpen}
         />
         <div
-          className={`flex inset ${
+          className={`flex min-h-[calc(100vh)] bg-linear-to-br w-full font-geist-sans from-[#1a1f37] via-[#2d1b4e] to-[#1a1f37] inset ${
             sidebarOpen ? "md:pl-64 pl-0" : "md:pl-20 pl-0"
           } w-full pt-20 `}
         >

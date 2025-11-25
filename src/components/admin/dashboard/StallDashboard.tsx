@@ -3,16 +3,10 @@ import React from "react";
 import ProgressCircle from "./ProgressCircle";
 import StatCard from "./StatCard";
 import { Target, Eye, CheckCircle, Users, LayoutDashboard } from "lucide-react";
-
-export type Stall = {
-  id: string;
-  size: "small" | "medium" | "large";
-  reserved: boolean;
-  isEmpty: boolean;
-};
+import { ConfiguredStall } from "./types";
 
 type Props = {
-  stalls: Stall[];
+  stalls: ConfiguredStall[];
   stats: { total: number; reserved: number; available: number };
   vendorsCount: number;
 };
@@ -85,9 +79,9 @@ export default function StallDashboard({ stalls, stats, vendorsCount }: Props) {
               Stall Sizes
             </div>
             <div className="space-y-4">
-              {["small", "medium", "large"].map((size, idx) => {
+              {["SMALL", "MEDIUM", "LARGE"].map((size, idx) => {
                 const count = stalls.filter(
-                  (s) => s.size === size && !s.isEmpty
+                  (s) => s.size === size
                 ).length;
                 const reserved = stalls.filter(
                   (s) => s.size === size && s.reserved
@@ -103,7 +97,7 @@ export default function StallDashboard({ stalls, stats, vendorsCount }: Props) {
                   <div key={size}>
                     <div className="flex justify-between items-center mb-2">
                       <span className="text-xs text-gray-300 capitalize font-medium">
-                        {size}
+                        {size.toLowerCase()}
                       </span>
                       <span className="text-xs text-gray-400">
                         {reserved}/{count}
